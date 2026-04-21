@@ -1,0 +1,3 @@
+[submodule "apps/frontend/src/picojs"]
+	path = apps/frontend/src/picojs
+	url = https://github.com/sahmedhusain/picojs-framework.git
