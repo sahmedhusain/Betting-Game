@@ -8,6 +8,7 @@
 
 # Vercel
 .vercel
+.env
 .env*.local
 
 # Logs
@@ -99,3 +100,4 @@ $RECYCLE.BIN/
 *.lnk
 
 PLAN.md
+DATABASE_SCHEMA.md
