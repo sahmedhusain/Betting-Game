@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/internal/config"
+	"backend/internal/routes"
 	"log"
 	"os"
 
@@ -17,6 +18,7 @@ func main() {
 	app := fiber.New() //Start fiber server
 
 	app.Use(logger.New())
+	routes.SetupRoutes(app) //Routes setup
 
 	app.Get("/api/health", func(c *fiber.Ctx) error {
 		return c.Status(200).JSON(fiber.Map{

@@ -48,6 +48,6 @@ func ConnectDB() {
 
 }
 
-func getCollection(collectionName string) *mongo.Collection {
+func GetCollection(collectionName string) *mongo.Collection {
 	return DB.Database("betting_game").Collection(collectionName)
 }
