@@ -21,7 +21,7 @@ func ValidatePlayerName(name string) error {
 	}
 
 	if utf8.RuneCountInString(name) > constants.MaxPlayerNameLength {
-		return fmt.Errorf("player_name must be at most %d characters", constants.MaxPlayerNameLength)
+		return fmt.Errorf(constants.ErrPlayerNameMaxLength, constants.MaxPlayerNameLength)
 	}
 
 	if !playerNameRegex.MatchString(name) {

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"backend/internal/constants"
 	"backend/internal/models"
 	"backend/internal/repository"
 	"backend/internal/validation"
@@ -20,11 +21,11 @@ func (s *GameService) PrepareSession(session *models.GameSession) error {
 	}
 
 	if session.FinalScore < 0 {
-		return errors.New("score cannot be negative")
+		return errors.New(constants.ErrScoreCannotBeNegative)
 	}
 
 	if session.HandsPlayed < 0 {
-		return errors.New("hands_played cannot be negative")
+		return errors.New(constants.ErrHandsPlayedCannotBeNegative)
 	}
 
 	return nil

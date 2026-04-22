@@ -43,7 +43,7 @@ func GetLeaderboard(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(200).JSON(entries)
+	return c.Status(fiber.StatusOK).JSON(entries)
 }
 
 func SaveScore(c *fiber.Ctx) error {
