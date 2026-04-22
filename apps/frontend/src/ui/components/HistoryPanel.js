@@ -20,12 +20,14 @@ export function HistoryPanel({ history }) {
 
     h(
       'div',
-      { class: 'flex-1 min-h-0 space-y-3 overflow-y-auto pr-2 custom-scrollbar' },
+      { class: 'flex-1 min-h-0 space-y-3 overflow-y-auto pr-2 custom-scrollbar', key: 'history-list' },
       ...history.slice().reverse().map((entry, i) => {
         const isWin = entry.result === HAND_RESULTS.WIN;
+        const entryId = history.length - i;
         return h(
           'div',
           {
+            key: `hand-${entryId}`,
             class:
               'flex items-center justify-between bg-white/[0.03] p-5 rounded-3xl border border-white/5 hover:bg-white/5 transition-all'
           },

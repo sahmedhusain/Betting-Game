@@ -1,46 +1,20 @@
 import { initialState, initStore } from './state/State.js';
 import { engine } from './engine/Engine.js';
-import { createApp } from './picojs/framework/core.js';
-import { PHASES, ROUTES } from './utils/constants.js';
+import { createApp, eventRegistry } from './picojs/framework/core.js';
+import { registerEventHandler } from './picojs/framework/events.js';
 import { resolveView } from './ui/UI.js';
+import { EVENTS } from './utils/constants.js';
+import {
+  phaseFromHash,
+  handleRouting,
+  handleSideEffects,
+  handleKeyboard
+} from './services/AppController.js';
 
+const routingHandlerId = registerEventHandler(EVENTS.HASHCHANGE, handleRouting);
+const keyboardHandlerId = registerEventHandler(EVENTS.KEYDOWN, handleKeyboard);
 
-function phaseFromHash() {
-  const hash = window.location.hash || ROUTES.LANDING;
-  if (hash === ROUTES.PLAY) return PHASES.PLAYING;
-  if (hash === ROUTES.GAME_OVER) return PHASES.GAME_OVER;
-  return PHASES.LANDING;
-}
-
-function handleRouting() {
-  const phase = phaseFromHash();
-  if (store.getState().gamePhase !== phase) {
-    store.setState({ gamePhase: phase });
-  }
-}
-
-let lastPhase = null;
-
-function handleSideEffects() {
-  const state = store.getState();
-
-  const hash = state.gamePhase === PHASES.PLAYING
-    ? ROUTES.PLAY
-    : state.gamePhase === PHASES.GAME_OVER
-      ? ROUTES.GAME_OVER
-      : ROUTES.LANDING;
-
-  if (window.location.hash !== hash) {
-    window.location.hash = hash;
-  }
-
-  if (state.gamePhase === PHASES.LANDING && lastPhase !== PHASES.LANDING) {
-    engine.loadLeaderboard();
-  }
-
-  lastPhase = state.gamePhase;
-}
-
+// Initialize the application
 const store = createApp({
   view: (state) => resolveView(state, engine),
   initialState: { ...initialState, gamePhase: phaseFromHash() },
@@ -50,6 +24,9 @@ const store = createApp({
 initStore(store);
 
 store.subscribe(handleSideEffects);
-window.addEventListener('hashchange', handleRouting);
+
+// Global browser events
+window.addEventListener(EVENTS.HASHCHANGE, (e) => eventRegistry.handlers[routingHandlerId](e));
+document.addEventListener(EVENTS.KEYDOWN, (e) => eventRegistry.handlers[keyboardHandlerId](e));
 
 handleSideEffects();

@@ -1,6 +1,6 @@
 import { createElement as h } from '../../picojs/framework/core.js';
 import { store } from '../../state/State.js';
-import { ROUTES, TEXT } from '../../utils/constants.js';
+import { ROUTES, TEXT, KEYS } from '../../utils/constants.js';
 import { PLAYER_NAME_MAX_LEN, PLAYER_NAME_MIN_LEN, normalizePlayerName, validatePlayerName } from '../../utils/helpers.js';
 
 export function LandingNameForm({ state, engine }) {
@@ -24,7 +24,7 @@ export function LandingNameForm({ state, engine }) {
 
   };
 
-  return h('div', { class: 'max-w-sm mx-auto mb-10 group' },
+  return h('div', { class: 'max-w-sm mx-auto mb-10 group', key: 'landing-form' },
     h('p', { class: 'text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-4' }, TEXT.landing.identifyPlayer),
     h('input', {
       type: 'text',
@@ -32,9 +32,13 @@ export function LandingNameForm({ state, engine }) {
       maxlength: PLAYER_NAME_MAX_LEN,
       spellcheck: false,
       autocomplete: 'off',
+      'data-focuskey': 'player-name',
       class: 'w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-center font-black tracking-widest text-white focus:border-emerald-500/50 focus:bg-white/10 outline-none transition-all placeholder:text-white/10',
       value: state.playerName,
-      oninput: handleNameInput
+      oninput: handleNameInput,
+      onkeydown: (e) => {
+        if (e.key === KEYS.ENTER) handleStart();
+      }
     }),
     showNameError
       ? h('p', { class: 'mt-3 text-xs font-bold text-rose-300 text-left' }, nameError)

@@ -13,7 +13,10 @@ function getPlayerScore(entry) {
 export function Leaderboard({ scores = [] }) {
   return h('div', { class: 'grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6' },
     scores.length > 0
-      ? scores.slice(0, 3).map((player, i) => h('div', { class: 'glass-panel p-6 rounded-3xl flex flex-col items-center gap-2 min-w-0' },
+      ? scores.slice(0, 3).map((player, i) => h('div', {
+        class: 'glass-panel p-6 rounded-3xl flex flex-col items-center gap-2 min-w-0',
+        key: `rank-${player.player_name || i}-${player.score || 0}`
+      },
         h('span', { class: 'text-[10px] font-black text-emerald-500' }, TEXT.leaderboard.rank(i + 1)),
         h('p', { class: 'font-black font-outfit text-lg md:text-xl truncate w-full text-center' }, getPlayerName(player)),
         h('p', { class: 'text-slate-500 font-mono text-sm font-bold' }, formatScore(getPlayerScore(player)))

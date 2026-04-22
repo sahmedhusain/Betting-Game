@@ -1,6 +1,6 @@
 import { createElement as h } from '../../picojs/framework/core.js';
 
-export function TileRenderer({ tile, compact = false }) {
+export function TileRenderer({ tile, compact = false, key }) {
   const isSpecial = tile.type !== 'NUMBER';
   const accentColor = isSpecial ? 'text-emerald-400' : 'text-slate-200';
   const value = tile.type === 'NUMBER' ? tile.faceValue : tile.name[0];
@@ -12,6 +12,7 @@ export function TileRenderer({ tile, compact = false }) {
   const valueSize = compact ? 'text-3xl' : 'text-4xl sm:text-5xl';
 
   return h('div', {
+    key,
     class: `group relative ${tileSize} flex flex-col items-center justify-between transition-all duration-500 hover:-translate-y-2 md:hover:-translate-y-4 cursor-pointer select-none`
   },
     h('div', {
