@@ -1,0 +1,23 @@
+@layer components {
+  .glass-panel {
+    @apply backdrop-blur-[32px] border border-white/10 bg-white/[0.02] shadow-2xl;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 1px var(--glass-highlight);
+  }
+
+  .liquid-button {
+    @apply relative overflow-hidden transition-all duration-500 active:scale-95;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .liquid-button:hover {
+    @apply border-white/20;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%);
+    box-shadow: 0 0 20px rgba(255,255,255,0.05);
+  }
+
+  .liquid-blob {
+    @apply absolute blur-[120px] rounded-full opacity-20 pointer-events-none;
+    z-index: -1;
+  }
+}

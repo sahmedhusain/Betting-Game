@@ -1,23 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahjong Hand Betting Game</title>
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;600&display=swap"
-        rel="stylesheet">
-
+    <title>Mahjong Betting</title>
     <link rel="stylesheet" href="./styles/main.css">
 </head>
+<body class="flex items-center justify-center p-8">
+    <div class="fixed inset-0 overflow-hidden -z-10 pointer-events-none">
+        <div class="liquid-blob w-[500px] h-[500px] bg-emerald-500/20 top-[-10%] left-[-10%] animate-float" style="animation-duration: 15s"></div>
+        <div class="liquid-blob w-[600px] h-[600px] bg-blue-500/10 bottom-[-20%] right-[-10%] animate-float" style="animation-duration: 20s; animation-delay: -5s"></div>
+        <div class="liquid-blob w-[400px] h-[400px] bg-purple-500/10 top-[20%] right-[10%] animate-float" style="animation-duration: 18s; animation-delay: -2s"></div>
+    </div>
 
-<body class="bg-dark text-slate-100 font-inter min-h-screen flex items-center justify-center p-4">
-    <div id="root" class="w-full max-w-4xl"></div>
+    <div id="root" class="w-full max-w-7xl mx-auto min-h-[80vh] flex flex-col items-center justify-center">
+    </div>
     <script type="module" src="./src/main.js"></script>
 </body>
-
 </html>
