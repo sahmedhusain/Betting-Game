@@ -34,7 +34,9 @@ export function getTileValue(tile) {
 export function updateDynamicValue(tileName, delta) {
     if (dynamicTileValues[tileName] !== undefined) {
         dynamicTileValues[tileName] += delta;
+        return dynamicTileValues[tileName];
     }
+    return 0;
 }
 
 // Genarate a standard deck of 144 tiles (4 copies of each tile type)
@@ -70,4 +72,8 @@ export function generateBaseDeck() {
         addTile(TILE_TYPES.DRAGON, SUITS.NONE, dragon, INITIAL_BASE_VALUE);
     }
     return deck;
+}
+
+export function calculateHandValue(hand) {
+    return hand.reduce((total, tile) => total + getTileValue(tile), 0);
 }
