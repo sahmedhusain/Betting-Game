@@ -9,15 +9,15 @@ let lastPhase = null;
 
 // --- Routing Logic ---
 function handleRouting() {
-    const hash = window.location.hash || '#/landing';
-    let phase = PHASES.LANDING;
+  const hash = window.location.hash || '#/landing';
+  let phase = PHASES.LANDING;
 
-    if (hash === '#/play') phase = PHASES.PLAYING;
-    if (hash === '#/gameover') phase = PHASES.GAME_OVER;
+  if (hash === '#/play') phase = PHASES.PLAYING;
+  if (hash === '#/gameover') phase = PHASES.GAME_OVER;
 
-    if (store.getState().gamePhase !== phase) {
-        store.setState({ gamePhase: phase });
-    }
+  if (store.getState().gamePhase !== phase) {
+    store.setState({ gamePhase: phase });
+  }
 }
 
 const root = document.getElementById('root');
@@ -25,22 +25,22 @@ eventRegistry.root = root;
 eventRegistry.events.forEach(ev => attachDelegatedListener(root, ev));
 
 function updateUI() {
-    const state = store.getState();
+  const state = store.getState();
 
-    // Sync Phase -> Hash
-    const hash = state.gamePhase === PHASES.PLAYING ? '#/play' :
-        state.gamePhase === PHASES.GAME_OVER ? '#/gameover' : '#/landing';
+  // Sync Phase -> Hash
+  const hash = state.gamePhase === PHASES.PLAYING ? '#/play' :
+    state.gamePhase === PHASES.GAME_OVER ? '#/gameover' : '#/landing';
 
-    if (window.location.hash !== hash) {
-        window.location.hash = hash;
-    }
+  if (window.location.hash !== hash) {
+    window.location.hash = hash;
+  }
 
-    if (state.gamePhase === PHASES.LANDING && lastPhase !== PHASES.LANDING) {
-        engine.loadLeaderboard();
-    }
+  if (state.gamePhase === PHASES.LANDING && lastPhase !== PHASES.LANDING) {
+    engine.loadLeaderboard();
+  }
 
-    render(resolveView(state, engine), root);
-    lastPhase = state.gamePhase;
+  render(resolveView(state, engine), root);
+  lastPhase = state.gamePhase;
 }
 
 store.subscribe(updateUI);
