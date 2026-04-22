@@ -1,101 +1,95 @@
 import { store } from '../state/State.js';
 import { Deck } from './Deck.js';
-import { getTileValue, updateDynamicValue, TILE_TYPES } from './TileConfig.js';
+import { TILE_TYPES, calculateHandValue, updateDynamicValue } from './TileConfig.js';
+import { GAME_CONFIG, PHASES } from '../utils/constants.js';
+import { Api } from '../services/Api.js';
 
-export class GameEngine {
-
+class GameEngine {
     constructor() {
-        this.deck = null;
+        this.deck = new Deck();
     }
 
     startGame(playerName) {
         this.deck = new Deck();
-
-        // Reset the PicoJS framework states
+        const initialHand = this.deck.draw(GAME_CONFIG.HAND_SIZE);
+        
         store.setState({
-            playerName: playerName,
-            score: 0,
-            currentHand: [],
-            currentHandValue: 0,
+            playerName,
+            gamePhase: PHASES.PLAYING,
+            currentHand: initialHand,
+            currentHandValue: calculateHandValue(initialHand),
+            score: GAME_CONFIG.INITIAL_SCORE,
             history: [],
-            gamePhase: 'PLAYING',
-            errorMessage: '',
             ...this.deck.getStats()
         });
-        this.dealNewHand();
-    }
-    // Start with five tiles to the player
-    dealNewHand() {
-        const newHand = this.deck.draw(5);
 
-        if (newHand.length < 5) {
+        // Backend Log
+        Api.logGameSession({ player_name: playerName, action: 'START_GAME' });
+    }
+
+    betHigher() { this.processBet('HIGHER'); }
+    betLower() { this.processBet('LOWER'); }
+
+    processBet(betType) {
+        const state = store.getState();
+        const currentVal = state.currentHandValue;
+        
+        // Draw Next Hand
+        const nextHand = this.deck.draw(GAME_CONFIG.HAND_SIZE);
+        
+        // Deck Exhaustion Check
+        if (nextHand.length < GAME_CONFIG.HAND_SIZE) {
             this.endGame();
             return;
         }
 
-        const handValue = this.calculateHandValue(newHand); // Calculate the score of the on-hand tiles
+        const nextVal = calculateHandValue(nextHand);
+        
+        // Determine Win/Loss
+        let isWin = false;
+        if (betType === 'HIGHER' && nextVal > currentVal) isWin = true;
+        if (betType === 'LOWER' && nextVal < currentVal) isWin = true;
+        if (nextVal === currentVal) isWin = true; // Tie favor
 
-        store.setState({
-            currentHand: newHand,
-            currentHandValue: handValue,
-            ...this.deck.getStats()
-        });
-    }
-
-    calculateHandValue(hand) {
-        return hand.reduce((total, tile) => total + getTileValue(tile), 0);
-    }
-
-    submitHand() {
-        const state = store.getState();
-        const value = state.currentHandValue;
-
-        // Add on-hand value to total score
-        const newScore = state.score + value;
-
-        state.currentHand.forEach(tile => {
+        // Dynamic Scaling 
+        let boundaryHit = false;
+        nextHand.forEach(tile => {
             if (tile.type !== TILE_TYPES.NUMBER) {
-                updateDynamicValue(tile.name, 1);
+                const newVal = updateDynamicValue(tile.name, isWin ? 1 : -1);
+                if (newVal <= GAME_CONFIG.DYNAMIC_MIN || newVal >= GAME_CONFIG.DYNAMIC_MAX) {
+                    boundaryHit = true;
+                }
             }
         });
-        // Save to history
-        const newHistory = [...state.history, { hand: state.currentHand, value }];
-        this.deck.discard(state.currentHand);
-        // Update state
+
+        // Scoring
+        const scoreDelta = isWin ? Math.abs(nextVal - currentVal) + GAME_CONFIG.WIN_SCORE_BASE : GAME_CONFIG.LOSS_PENALTY;
+        const newScore = Math.max(0, state.score + scoreDelta);
+
+        // State Update
         store.setState({
             score: newScore,
-            history: newHistory,
+            currentHand: nextHand,
+            currentHandValue: nextVal,
+            history: [...state.history, { hand: state.currentHand, value: currentVal, result: isWin ? 'WIN' : 'LOSS' }],
             ...this.deck.getStats()
         });
-        this.dealNewHand(); // Next hand
+
+        this.deck.discard(state.currentHand);
+
+        // Check Game Over
+        if (boundaryHit) {
+            this.endGame();
+        }
     }
 
     async endGame() {
         const state = store.getState();
-        store.setState({ gamePhase: 'GAME_OVER' });
-        const payload = {
-            username: state.playerName,
-            score: state.score,
-            hands_played: state.history.length
-        };
-
-        try {
-            // Log the game session (POST /api/games)
-            await fetch('http://localhost:8080/api/games', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            // Update the Leaderboard (POST /api/scores)
-            await fetch('http://localhost:8080/api/scores', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-        } catch (error) {
-            console.error("Failed to save to backend:", error);
-            store.setState({ errorMessage: 'Failed to sync score with server.' });
-        }
+        store.setState({ gamePhase: PHASES.GAME_OVER });
+        
+        // Save to database
+        await Api.saveScore(state.playerName, state.score);
     }
 }
+
 export const engine = new GameEngine();
