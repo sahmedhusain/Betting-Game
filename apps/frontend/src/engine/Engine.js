@@ -11,6 +11,7 @@ import {
   createHistoryEntry,
   isWinningBet
 } from './gameRules.js';
+import { HistoryService } from '../services/HistoryService.js';
 
 class GameEngine {
   constructor() {
@@ -106,6 +107,7 @@ class GameEngine {
   async endGame() {
     const state = store.getState();
     store.setState({ gamePhase: PHASES.GAME_OVER });
+    HistoryService.saveGame(state.playerName, state.score);
 
     try {
       await Api.saveScore(state.playerName, state.score);

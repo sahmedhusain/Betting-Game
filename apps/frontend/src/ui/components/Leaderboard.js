@@ -36,7 +36,7 @@ export function Leaderboard({ scores = [] }) {
             h('p', { class: `font-black font-outfit text-base tracking-tight truncate ${i === 0 ? 'text-white' : 'text-slate-200'}` }, getPlayerName(player)),
             h('div', { class: 'flex items-center gap-2' },
               h('span', { class: 'text-[10px] font-bold text-slate-500 uppercase tracking-widest' }, getOrdinal(i + 1)),
-              i === 0 && h('span', { class: 'text-[9px] font-black bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full uppercase tracking-tighter' }, 'Legend')
+              i === 0 && h('span', { class: 'text-[9px] font-black bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full uppercase tracking-tighter' }, TEXT.leaderboard.legend)
             )
           )
         ),

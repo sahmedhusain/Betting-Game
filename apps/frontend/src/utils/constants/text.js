@@ -1,6 +1,9 @@
 export const I18N = {
   en: {
     landing: {
+      branding: 'BETTING GAME',
+      goBack: 'Go Back',
+      registration: 'Registration',
       title: 'MAHJONG\nBETTING',
       subtitle: 'Premium betting experience powered by state-of-the-art tile mechanics.',
       logoSubtitle: 'STRATEGIC TILE ENGINE',
@@ -31,20 +34,37 @@ export const I18N = {
       betHigher: 'Bet Higher',
       waitingForFirstBet: 'Waiting for first bet...',
       handHistory: 'Hand History',
-      sessionHand: (number) => `SESSION HAND #${number}`,
+      sessionHand: (number) => `GAME HAND #${number}`,
       handValue: 'Hand Value'
     },
     leaderboard: {
       unknownPlayer: 'Unknown',
+      legend: 'Legend',
       rank: (rank) => `RANK 0${rank}`,
       emptyState: 'No legends recorded yet. Will you be the first?'
     },
     end: {
-      sessionTerminated: 'Session Terminated',
-      gameOver: 'GAME\nOVER',
-      finalBankroll: 'Final Bankroll',
-      hallOfFameNotice: 'Your performance has been recorded in the Hall of Fame.',
-      returnToLobby: 'Return to Lobby'
+      sessionTerminated: 'BET GAME\nTERMINATED',
+      gameOver: 'CAUGHT\nUP!',
+      finalBankroll: 'New earnings',
+      returnToLobby: 'Return to Terminal',
+      playAgain: 'Play Again',
+      activityHistory: 'Activity History',
+      anonymous: 'Anonymous',
+      records: 'Records',
+      lifetimeEarnings: 'Total Earnings',
+      personalBest: 'Personal Best',
+      newTag: 'New record',
+      balance: 'Balance',
+      noHistory: 'No history recorded',
+      comments: {
+        newBest: 'Personal best!',
+        nearFifth: 'So close to 5th place! Try again!',
+        nearFirst: 'So close to 1st place! Try again!',
+        solid: 'Solid performance!',
+        keepUp: 'Keep it up!',
+        bankrupt: 'Regroup and try again.'
+      }
     },
     validation: {
       playerNameRequired: 'Player name is required.',
