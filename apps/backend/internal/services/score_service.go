@@ -1,7 +1,8 @@
-package service
+package services
 
 import (
 	"backend/internal/repository"
+	"backend/internal/validation"
 	"errors"
 )
 
@@ -13,11 +14,17 @@ func NewScoreService() *ScoreService {
 
 // handle validation and persistence
 func (s *ScoreService) ProcessAndSave(username string, score int, handsPlayed int) error {
-	if username == "" {
-		return errors.New("username cannot be empty")
+	username = validation.NormalizePlayerName(username)
+	if err := validation.ValidatePlayerName(username); err != nil {
+		return err
 	}
+
 	if score < 0 {
 		return errors.New("score cannot be negative")
+	}
+
+	if handsPlayed < 0 {
+		return errors.New("hands_played cannot be negative")
 	}
 
 	return repository.SaveScore(username, score, handsPlayed)

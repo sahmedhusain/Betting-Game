@@ -7,7 +7,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-var scoreService = service.NewScoreService()
+const (
+	defaultLeaderboardLimit = int64(5)
+	maxLeaderboardLimit     = int64(20)
+)
+
+var scoreService = services.NewScoreService()
 
 type ScoreInput struct {
 	Username    string `json:"player_name"`
@@ -15,12 +20,34 @@ type ScoreInput struct {
 	HandsPlayed int    `json:"hands_played"`
 }
 
+type LeaderboardEntry struct {
+	PlayerName string `json:"player_name"`
+	Score      int    `json:"score"`
+}
+
 func GetLeaderboard(c *fiber.Ctx) error {
-	users, err := repository.GetTopUsers(5)
+	limit := int64(c.QueryInt("limit", int(defaultLeaderboardLimit)))
+	if limit <= 0 {
+		limit = defaultLeaderboardLimit
+	}
+	if limit > maxLeaderboardLimit {
+		limit = maxLeaderboardLimit
+	}
+
+	users, err := repository.GetTopUsers(limit)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch leaderboard"})
 	}
-	return c.Status(200).JSON(users)
+
+	entries := make([]LeaderboardEntry, 0, len(users))
+	for _, user := range users {
+		entries = append(entries, LeaderboardEntry{
+			PlayerName: user.Username,
+			Score:      user.HighestScore,
+		})
+	}
+
+	return c.Status(200).JSON(entries)
 }
 
 func SaveScore(c *fiber.Ctx) error {

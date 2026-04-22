@@ -23,6 +23,7 @@ func main() {
 	// MIDDLEWARE
 	app.Use(logger.New())
 	app.Use(recover.New())
+	app.Use(middleware.SetupRateLimiter())
 	app.Use(middleware.SetupCORS())
 
 	routes.SetupRoutes(app)

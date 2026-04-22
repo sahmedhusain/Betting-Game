@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-var gameService = service.NewGameService()
+var gameService = services.NewGameService()
 
 func SaveGameSession(c *fiber.Ctx) error {
 	var input ScoreInput
@@ -22,7 +22,10 @@ func SaveGameSession(c *fiber.Ctx) error {
 		EndedAt:     time.Now(),
 	}
 
-	// USE THE SERVICE LAYER
+	if err := gameService.PrepareSession(&session); err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
+	}
+
 	err := gameService.LogSession(session)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to save game session"})

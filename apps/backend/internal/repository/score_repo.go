@@ -4,6 +4,7 @@ import (
 	"backend/internal/config"
 	"backend/internal/models"
 	"context"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -32,14 +33,15 @@ func GetTopUsers(limit int64) ([]models.User, error) {
 // Update or insert the score to the user collection
 func SaveScore(username string, newScore int, handsPlayed int) error {
 	collection := config.GetCollection("users")
+	now := time.Now()
 
-	filter := bson.D{{"username", username}} // Username Query
+	filter := bson.D{{Key: "username", Value: username}}
 
 	update := bson.D{ // Update Data in MongoDB
 		{Key: "$max", Value: bson.D{{Key: "highest_score", Value: newScore}}},
 		{Key: "$inc", Value: bson.D{{Key: "total_games_played", Value: 1}}},
-		{Key: "$set", Value: bson.D{{Key: "updated_at", Value: bson.D{{Key: "$currentDate", Value: true}}}}},
-		{Key: "$setOnInsert", Value: bson.D{{Key: "created_at", Value: bson.D{{Key: "$currentDate", Value: true}}}}},
+		{Key: "$set", Value: bson.D{{Key: "updated_at", Value: now}}},
+		{Key: "$setOnInsert", Value: bson.D{{Key: "created_at", Value: now}}},
 	}
 	opts := options.Update().SetUpsert(true)
 	_, err := collection.UpdateOne(context.Background(), filter, update, opts)
