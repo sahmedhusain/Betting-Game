@@ -1,7 +1,7 @@
 import { store } from '../state/State.js';
 import { Deck } from './Deck.js';
 import { TILE_TYPES, calculateHandValue, updateDynamicValue } from './TileConfig.js';
-import { GAME_CONFIG, PHASES } from '../utils/constants.js';
+import { GAME_CONFIG, PHASES, BET_TYPES, GAME_ACTIONS } from '../utils/constants.js';
 import { Api } from '../services/Api.js';
 import { sfx } from '../services/Sfx.js';
 import {
@@ -39,18 +39,18 @@ class GameEngine {
       ...this.deck.getStats()
     });
 
-    Api.logGameSession({ player_name: playerName, action: 'START_GAME' });
+    Api.logGameSession({ player_name: playerName, action: GAME_ACTIONS.START_GAME });
 
   }
 
   betHigher() {
     sfx.playBetClick();
-    this.processBet('HIGHER');
+    this.processBet(BET_TYPES.HIGHER);
   }
 
   betLower() {
     sfx.playBetClick();
-    this.processBet('LOWER');
+    this.processBet(BET_TYPES.LOWER);
   }
 
   processBet(betType) {

@@ -1,4 +1,5 @@
 import { createElement as h } from '../../picojs/framework/core.js';
+import { ROUTES } from '../../utils/constants.js';
 
 export function EndView({ state, engine }) {
   return h('div', { class: 'flex flex-col items-center justify-center animate-fade-in w-full px-2 sm:px-0' },
@@ -23,7 +24,7 @@ export function EndView({ state, engine }) {
         h('button', {
           class: 'w-full py-6 bg-white text-slate-900 rounded-3xl font-black hover:bg-emerald-400 transition-all uppercase tracking-[0.2em] text-xs shadow-2xl active:scale-95',
           onclick: () => {
-            window.location.hash = '#/landing';
+            window.location.hash = ROUTES.LANDING;
           }
         }, 'Return to Lobby')
       )

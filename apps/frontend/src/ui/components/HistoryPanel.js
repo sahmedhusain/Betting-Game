@@ -1,4 +1,5 @@
 import { createElement as h } from '../../picojs/framework/core.js';
+import { HAND_RESULTS } from '../../utils/constants.js';
 
 export function HistoryPanel({ history }) {
   if (!history || history.length === 0) {
@@ -21,7 +22,7 @@ export function HistoryPanel({ history }) {
       'div',
       { class: 'flex-1 min-h-0 space-y-3 overflow-y-auto pr-2 custom-scrollbar' },
       ...history.slice().reverse().map((entry, i) => {
-        const isWin = entry.result === 'WIN';
+        const isWin = entry.result === HAND_RESULTS.WIN;
         return h(
           'div',
           {

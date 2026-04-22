@@ -1,7 +1,9 @@
+import { BET_TYPES, HAND_RESULTS } from '../utils/constants.js';
+
 export function isWinningBet({ betType, currentVal, nextVal }) {
   if (nextVal === currentVal) return true;
-  if (betType === 'HIGHER' && nextVal > currentVal) return true;
-  if (betType === 'LOWER' && nextVal < currentVal) return true;
+  if (betType === BET_TYPES.HIGHER && nextVal > currentVal) return true;
+  if (betType === BET_TYPES.LOWER && nextVal < currentVal) return true;
   return false;
 }
 
@@ -18,7 +20,7 @@ export function createHistoryEntry({ hand, value, isWin }) {
   return {
     hand,
     value,
-    result: isWin ? 'WIN' : 'LOSS'
+    result: isWin ? HAND_RESULTS.WIN : HAND_RESULTS.LOSS
   };
 }
 

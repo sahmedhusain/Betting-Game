@@ -1,7 +1,7 @@
 import { createElement as h } from '../../picojs/framework/core.js';
 import { store } from '../../state/State.js';
 import { ROUTES } from '../../utils/constants.js';
-import { PLAYER_NAME_MAX_LEN, normalizePlayerName, validatePlayerName } from '../../utils/helpers.js';
+import { PLAYER_NAME_MAX_LEN, PLAYER_NAME_MIN_LEN, normalizePlayerName, validatePlayerName } from '../../utils/helpers.js';
 
 export function LandingNameForm({ state, engine }) {
   const normalizedName = normalizePlayerName(state.playerName);
@@ -39,7 +39,7 @@ export function LandingNameForm({ state, engine }) {
     showNameError
       ? h('p', { class: 'mt-3 text-xs font-bold text-rose-300 text-left' }, nameError)
       : h('p', { class: 'mt-3 text-[10px] text-slate-500 text-left uppercase tracking-[0.2em]' },
-        `Allowed: A - Z, 0 - 9, dot, underscore, hyphen. Min 3 / Max ${PLAYER_NAME_MAX_LEN}.`),
+        `Allowed: A - Z, 0 - 9, dot, underscore, hyphen. Min ${PLAYER_NAME_MIN_LEN} / Max ${PLAYER_NAME_MAX_LEN}.`),
     h('button', {
       class: `mt-6 w-full sm:w-auto px-10 sm:px-16 py-5 sm:py-6 rounded-3xl font-black text-white transition-all shadow-2xl uppercase tracking-[0.2em] text-xs ${canStart ? 'bg-emerald-500 hover:scale-105 active:scale-95 shadow-emerald-500/40' : 'bg-white/5 text-white/20 cursor-not-allowed border border-white/5'}`,
       disabled: !canStart,
