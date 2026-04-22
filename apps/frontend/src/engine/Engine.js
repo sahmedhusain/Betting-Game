@@ -39,8 +39,8 @@ class GameEngine {
       ...this.deck.getStats()
     });
 
-    Api.logGameSession({ player_name: playerName, action: GAME_ACTIONS.START_GAME });
-
+    Api.logGameSession({ player_name: playerName, action: GAME_ACTIONS.START_GAME })
+      .catch((err) => console.warn('Failed to log game session:', err));
   }
 
   betHigher() {

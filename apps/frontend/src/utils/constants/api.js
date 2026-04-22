@@ -8,3 +8,6 @@ export const API_ENDPOINTS = {
   GAMES: '/games'
 };
 
+export const API_QUERY = {
+  LIMIT: 'limit'
+};
