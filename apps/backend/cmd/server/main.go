@@ -2,39 +2,45 @@ package main
 
 import (
 	"backend/internal/config"
+	"backend/internal/middleware"
 	"backend/internal/routes"
 	"log"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
 func main() {
-
 	config.LoadEnv()
 	config.ConnectDB()
 
-	app := fiber.New() //Start fiber server
+	app := fiber.New(fiber.Config{
+		AppName: "Mahjong Betting API v1",
+	})
 
+	// MIDDLEWARE
 	app.Use(logger.New())
-	routes.SetupRoutes(app) //Routes setup
+	app.Use(recover.New())
+	app.Use(middleware.SetupCORS())
+
+	routes.SetupRoutes(app)
 
 	app.Get("/api/health", func(c *fiber.Ctx) error {
 		return c.Status(200).JSON(fiber.Map{
 			"status":  "ok",
-			"message": "Game API running", // localhost:8080/api/health
+			"message": "API running",
 		})
 	})
 
-	port := os.Getenv("PORT")
+	port := os.Getenv("BACKEND_PORT")
 	if port == "" {
-		port = "8080" // Fallback
+		port = "8080"
 	}
 
-	log.Println("Server started as localhost on port " + port)
-	err := app.Listen(":" + port) // listening port 8080
-	if err != nil {
-		log.Fatalf("Server failed to start: %v\n", err)
+	log.Printf("🚀 Server starting on port %s\n", port)
+	if err := app.Listen(":" + port); err != nil {
+		log.Fatalf("Critical server failure: %v\n", err)
 	}
 }

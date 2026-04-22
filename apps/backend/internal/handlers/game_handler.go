@@ -2,11 +2,13 @@ package handlers
 
 import (
 	"backend/internal/models"
-	"backend/internal/repository"
+	"backend/internal/services"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
+
+var gameService = service.NewGameService()
 
 func SaveGameSession(c *fiber.Ctx) error {
 	var input ScoreInput
@@ -19,7 +21,9 @@ func SaveGameSession(c *fiber.Ctx) error {
 		HandsPlayed: input.HandsPlayed,
 		EndedAt:     time.Now(),
 	}
-	err := repository.SaveGameSession(session)
+
+	// USE THE SERVICE LAYER
+	err := gameService.LogSession(session)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to save game session"})
 	}
