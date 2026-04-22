@@ -2,13 +2,21 @@ export const I18N = {
   en: {
     landing: {
       title: 'MAHJONG\nBETTING',
-      subtitle: 'High-fidelity strategy powered by dynamic tile scaling.',
-      identifyPlayer: 'Identify Player',
-      namePlaceholder: 'ENTER YOUR NAME',
-      allowedNameChars: 'Allowed: A-Z, 0-9, dot, underscore, hyphen.',
-      nameRules: (minLen, maxLen) => `Min ${minLen} / Max ${maxLen}.`,
-      startButton: 'Initialize Session',
-      hallOfFame: 'Hall of Fame'
+      subtitle: 'Premium betting experience powered by state-of-the-art tile mechanics.',
+      logoSubtitle: 'STRATEGIC TILE ENGINE',
+      playNow: 'Play Now',
+      rulesTitle: 'How to Play',
+      rules: [
+        'Place bets on tile sequence outcomes',
+        'Manage your bankroll through strategic rounds',
+        'Climb the leaderboard with high-performance play'
+      ],
+      identifyPlayer: 'Enter Player Name',
+      namePlaceholder: 'YOUR NAME',
+      allowedNameChars: 'Letters, numbers, dots, underscores, or hyphens.',
+      nameRules: (minLen, maxLen) => `Character limit: ${minLen}–${maxLen}`,
+      startButton: 'Start Game',
+      hallOfFame: 'Top 5 Hall of Fame'
     },
     game: {
       drawLane: 'Draw Lane',

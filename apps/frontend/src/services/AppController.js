@@ -44,6 +44,11 @@ export function handleKeyboard(e) {
   const phase = state.gamePhase;
   if (e.key === KEYS.ENTER) {
     if (phase === PHASES.LANDING) {
+      if (!state.showJoinForm) {
+        store.setState({ showJoinForm: true, hasAttemptedStart: false });
+        return;
+      }
+      
       const name = normalizePlayerName(state.playerName);
       if (!validatePlayerName(name)) {
         store.setState({ playerName: name, hasAttemptedStart: true });

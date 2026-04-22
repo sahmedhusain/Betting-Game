@@ -17,7 +17,8 @@ export const initialState = {
   drawQueue: [],
   animationNonce: 0,
 
-  hasAttemptedStart: false
+  hasAttemptedStart: false,
+  showJoinForm: false
 };
 
 export let store = null;

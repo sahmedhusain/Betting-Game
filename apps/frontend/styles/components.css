@@ -1,8 +1,8 @@
 @layer components {
   .glass-panel {
-    @apply backdrop-blur-[32px] border border-white/10 bg-white/[0.02] shadow-2xl;
+    @apply backdrop-blur-[32px] border border-white/10 bg-white/[0.015] shadow-2xl;
     box-shadow:
-      0 25px 50px -12px rgba(0, 0, 0, 0.5),
+      0 20px 40px -15px rgba(0, 0, 0, 0.6),
       inset 0 1px 1px var(--glass-highlight);
   }
 
@@ -43,5 +43,36 @@
   .blob-float-c {
     animation-duration: 18s;
     animation-delay: -2s;
+  }
+
+  /* Premium Rank Icons */
+  .icon-medal {
+    width: 28px;
+    height: 28px;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l2.4 4.9h5.3l-3.8 3.7.9 5.3-4.8-2.5-4.8 2.5.9-5.3-3.8-3.7h5.3z'/%3E%3Ccircle cx='12' cy='8' r='6' fill='none' stroke='black' stroke-width='1.5'/%3E%3Cpath d='M8.5 14L4 22h16l-4.5-8'/%3E%3C/svg%3E") no-repeat center;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l2.4 4.9h5.3l-3.8 3.7.9 5.3-4.8-2.5-4.8 2.5.9-5.3-3.8-3.7h5.3z'/%3E%3Ccircle cx='12' cy='8' r='6' fill='none' stroke='black' stroke-width='1.5'/%3E%3Cpath d='M8.5 14L4 22h16l-4.5-8'/%3E%3C/svg%3E") no-repeat center;
+  }
+
+  .icon-medal-gold {
+    background: linear-gradient(135deg, #fcd34d 0%, #d97706 100%);
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4);
+  }
+
+  .icon-medal-silver {
+    background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%);
+    box-shadow: 0 4px 12px rgba(148, 163, 184, 0.2);
+  }
+
+  .icon-medal-bronze {
+    background: linear-gradient(135deg, #fb923c 0%, #9a3412 100%);
+    box-shadow: 0 4px 12px rgba(154, 52, 18, 0.2);
+  }
+
+  .icon-star {
+    width: 18px;
+    height: 18px;
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E") no-repeat center;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E") no-repeat center;
   }
 }

@@ -3,10 +3,10 @@ import { TEXT } from '../../utils/constants.js';
 import { Leaderboard } from './Leaderboard.js';
 
 export function LandingHallPanel({ scores = [] }) {
-  return h('div', { class: 'w-full grid grid-cols-1 gap-4' },
-    h('div', { class: 'flex justify-between items-center px-8 mb-2' },
-      h('h2', { class: 'text-[10px] font-black uppercase tracking-[0.5em] text-slate-500' }, TEXT.landing.hallOfFame),
-      h('div', { class: 'h-[1px] flex-1 mx-6 bg-white/5' })
+  return h('div', { class: 'w-full animate-fade-in delay-200' },
+    h('div', { class: 'flex items-center gap-4 mb-8 px-2' },
+      h('h2', { class: 'text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 whitespace-nowrap' }, TEXT.landing.hallOfFame),
+      h('div', { class: 'h-[1px] w-full bg-gradient-to-r from-white/10 to-transparent' })
     ),
     Leaderboard({ scores })
   );
