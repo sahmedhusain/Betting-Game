@@ -3,6 +3,7 @@ import { Deck } from './Deck.js';
 import { TILE_TYPES, calculateHandValue, updateDynamicValue } from './TileConfig.js';
 import { GAME_CONFIG, PHASES } from '../utils/constants.js';
 import { Api } from '../services/Api.js';
+import { sfx } from '../services/Sfx.js';
 
 class GameEngine {
     constructor() {
@@ -35,8 +36,15 @@ class GameEngine {
         Api.logGameSession({ player_name: playerName, action: 'START_GAME' });
     }
 
-    betHigher() { this.processBet('HIGHER'); }
-    betLower() { this.processBet('LOWER'); }
+    betHigher() {
+        sfx.playBetClick();
+        this.processBet('HIGHER');
+    }
+
+    betLower() {
+        sfx.playBetClick();
+        this.processBet('LOWER');
+    }
 
     processBet(betType) {
         const state = store.getState();
@@ -53,6 +61,12 @@ class GameEngine {
         if (betType === 'HIGHER' && nextVal > currentVal) isWin = true;
         if (betType === 'LOWER' && nextVal < currentVal) isWin = true;
         if (nextVal === currentVal) isWin = true;
+
+        if (isWin) {
+            sfx.playWinChime();
+        } else {
+            sfx.playLoseThud();
+        }
 
         let boundaryHit = false;
         nextHand.forEach(tile => {
@@ -84,7 +98,12 @@ class GameEngine {
         store.setState({ gamePhase: PHASES.GAME_OVER });
 
         // Save score and then refresh the leaderboard
-        await Api.saveScore(state.playerName, state.score);
+        try {
+            await Api.saveScore(state.playerName, state.score);
+        } catch (err) {
+            console.error('Failed to save score:', err);
+        }
+
         await this.loadLeaderboard();
     }
 }
