@@ -1,14 +1,30 @@
 export const GAME_CONFIG = {
-    HAND_SIZE: 5,
-    INITIAL_SCORE: 0,
-    MAX_RESHUFFLES: 3,
-    DYNAMIC_MIN: 0,
-    DYNAMIC_MAX: 10,
-    WIN_SCORE_BASE: 10,
-    LOSS_PENALTY: -15
+  HAND_SIZE: 5,
+  INITIAL_SCORE: 0,
+  MAX_RESHUFFLES: 3,
+  DYNAMIC_MIN: 0,
+  DYNAMIC_MAX: 10,
+  WIN_SCORE_BASE: 10,
+  LOSS_PENALTY: -15
 };
+
+export const UI_CONFIG = {
+  PLAYER_NAME_MIN_LEN: 3,
+  PLAYER_NAME_MAX_LEN: 16,
+  DRAW_LANE_PREVIEW_MAX: 5,
+  DRAW_LANE_MIN_HEIGHT_CLASS: 'min-h-[180px]',
+  GAME_HISTORY_PANEL_HEIGHT_CLASS: 'h-[640px]',
+  GAME_HISTORY_PANEL_MAX_HEIGHT_CLASS: 'max-h-[calc(100vh-8rem)]'
+};
+
+export const ROUTES = {
+  LANDING: '#/landing',
+  PLAY: '#/play',
+  GAME_OVER: '#/gameover'
+};
+
 export const PHASES = {
-    LANDING: 'LANDING',
-    PLAYING: 'PLAYING',
-    GAME_OVER: 'GAME_OVER'
+  LANDING: 'LANDING',
+  PLAYING: 'PLAYING',
+  GAME_OVER: 'GAME_OVER'
 };

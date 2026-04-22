@@ -16,5 +16,7 @@ export const store = createStore({
   // Animation scaffold
   isDrawing: false,
   drawQueue: [],
-  animationNonce: 0
+  animationNonce: 0,
+
+  hasAttemptedStart: false
 });
