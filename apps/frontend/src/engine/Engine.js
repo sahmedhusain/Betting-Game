@@ -9,10 +9,19 @@ class GameEngine {
         this.deck = new Deck();
     }
 
+    async loadLeaderboard() {
+        try {
+            const scores = await Api.getLeaderboard();
+            store.setState({ leaderboard: scores });
+        } catch (err) {
+            console.error("Failed to load leaderboard:", err);
+        }
+    }
+
     startGame(playerName) {
         this.deck = new Deck();
         const initialHand = this.deck.draw(GAME_CONFIG.HAND_SIZE);
-        
+
         store.setState({
             playerName,
             gamePhase: PHASES.PLAYING,
@@ -23,7 +32,6 @@ class GameEngine {
             ...this.deck.getStats()
         });
 
-        // Backend Log
         Api.logGameSession({ player_name: playerName, action: 'START_GAME' });
     }
 
@@ -33,25 +41,19 @@ class GameEngine {
     processBet(betType) {
         const state = store.getState();
         const currentVal = state.currentHandValue;
-        
-        // Draw Next Hand
         const nextHand = this.deck.draw(GAME_CONFIG.HAND_SIZE);
-        
-        // Deck Exhaustion Check
+
         if (nextHand.length < GAME_CONFIG.HAND_SIZE) {
             this.endGame();
             return;
         }
 
         const nextVal = calculateHandValue(nextHand);
-        
-        // Determine Win/Loss
         let isWin = false;
         if (betType === 'HIGHER' && nextVal > currentVal) isWin = true;
         if (betType === 'LOWER' && nextVal < currentVal) isWin = true;
-        if (nextVal === currentVal) isWin = true; // Tie favor
+        if (nextVal === currentVal) isWin = true;
 
-        // Dynamic Scaling 
         let boundaryHit = false;
         nextHand.forEach(tile => {
             if (tile.type !== TILE_TYPES.NUMBER) {
@@ -62,11 +64,9 @@ class GameEngine {
             }
         });
 
-        // Scoring
         const scoreDelta = isWin ? Math.abs(nextVal - currentVal) + GAME_CONFIG.WIN_SCORE_BASE : GAME_CONFIG.LOSS_PENALTY;
         const newScore = Math.max(0, state.score + scoreDelta);
 
-        // State Update
         store.setState({
             score: newScore,
             currentHand: nextHand,
@@ -76,19 +76,16 @@ class GameEngine {
         });
 
         this.deck.discard(state.currentHand);
-
-        // Check Game Over
-        if (boundaryHit) {
-            this.endGame();
-        }
+        if (boundaryHit) this.endGame();
     }
 
     async endGame() {
         const state = store.getState();
         store.setState({ gamePhase: PHASES.GAME_OVER });
-        
-        // Save to database
+
+        // Save score and then refresh the leaderboard
         await Api.saveScore(state.playerName, state.score);
+        await this.loadLeaderboard();
     }
 }
 

@@ -4,8 +4,21 @@ import { render } from './picojs/framework/vdom.js';
 import { eventRegistry, attachDelegatedListener } from './picojs/framework/events.js';
 import { LandingView } from './ui/views/LandingView.js';
 import { GameView } from './ui/views/GameView.js';
-import { PHASES } from './utils/constants.js';
 import { EndView } from './ui/views/EndView.js';
+import { PHASES } from './utils/constants.js';
+
+// --- Routing Logic ---
+function handleRouting() {
+    const hash = window.location.hash || '#/landing';
+    let phase = PHASES.LANDING;
+
+    if (hash === '#/play') phase = PHASES.PLAYING;
+    if (hash === '#/gameover') phase = PHASES.GAME_OVER;
+
+    if (store.getState().gamePhase !== phase) {
+        store.setState({ gamePhase: phase });
+    }
+}
 
 function view(state) {
     switch (state.gamePhase) {
@@ -19,12 +32,29 @@ function view(state) {
             return LandingView({ state, engine });
     }
 }
-// Global setup
+
 const root = document.getElementById('root');
 eventRegistry.root = root;
 eventRegistry.events.forEach(ev => attachDelegatedListener(root, ev));
+
 function updateUI() {
-    render(view(store.getState()), root);
+    const state = store.getState();
+
+    // Sync Phase -> Hash
+    const hash = state.gamePhase === PHASES.PLAYING ? '#/play' :
+        state.gamePhase === PHASES.GAME_OVER ? '#/gameover' : '#/landing';
+
+    if (window.location.hash !== hash) {
+        window.location.hash = hash;
+    }
+
+    render(view(state), root);
 }
+
 store.subscribe(updateUI);
+window.addEventListener('hashchange', handleRouting);
+
+// Initialization
+handleRouting();
+engine.loadLeaderboard();
 updateUI();

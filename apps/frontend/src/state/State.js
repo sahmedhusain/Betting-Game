@@ -1,14 +1,15 @@
-import { createStore } from '../picojs/framework/core.js';
-const initialState = {
+import { createStore } from '../picojs/framework/store.js';
+import { PHASES, GAME_CONFIG } from '../utils/constants.js';
+
+export const store = createStore({
     playerName: '',
+    score: GAME_CONFIG.INITIAL_SCORE,
     currentHand: [],
     currentHandValue: 0,
-    history: [],
-    score: 0,
-    gamePhase: 'LANDING',
     drawPileCount: 0,
     discardPileCount: 0,
     reshuffleCount: 0,
-    errorMessage: ''
-};
-export const store = createStore(initialState);
+    history: [],
+    gamePhase: PHASES.LANDING,
+    leaderboard: []
+});
