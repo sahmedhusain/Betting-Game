@@ -1,0 +1,14 @@
+export const GAME_CONFIG = {
+    HAND_SIZE: 5,
+    INITIAL_SCORE: 0,
+    MAX_RESHUFFLES: 3,
+    DYNAMIC_MIN: 0,
+    DYNAMIC_MAX: 10,
+    WIN_SCORE_BASE: 10,
+    LOSS_PENALTY: -15
+};
+export const PHASES = {
+    LANDING: 'LANDING',
+    PLAYING: 'PLAYING',
+    GAME_OVER: 'GAME_OVER'
+};
