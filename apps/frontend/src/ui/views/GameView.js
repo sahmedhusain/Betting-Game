@@ -1,5 +1,5 @@
 import { createElement as h } from '../../picojs/framework/core.js';
-import { GAME_CONFIG, UI_CONFIG } from '../../utils/constants.js';
+import { GAME_CONFIG, TEXT, UI_CONFIG } from '../../utils/constants.js';
 import { ScoreBoard } from '../components/ScoreBoard.js';
 import { HistoryPanel } from '../components/HistoryPanel.js';
 import { HandDisplay } from '../components/HandDisplay.js';
@@ -29,9 +29,9 @@ export function GameView({ state, engine }) {
         {
           class: 'flex flex-wrap justify-center gap-4 md:gap-12 text-slate-500 text-[10px] font-black uppercase tracking-[0.3em]'
         },
-        h('span', {}, `Draw Pile: ${state.drawPileCount}`),
-        h('span', {}, `Discarded: ${state.discardPileCount}`),
-        h('span', {}, `Reshuffles: ${state.reshuffleCount}/${GAME_CONFIG.MAX_RESHUFFLES}`)
+        h('span', {}, `${TEXT.game.drawPile}: ${state.drawPileCount}`),
+        h('span', {}, `${TEXT.game.discarded}: ${state.discardPileCount}`),
+        h('span', {}, `${TEXT.game.reshuffles}: ${state.reshuffleCount}/${GAME_CONFIG.MAX_RESHUFFLES}`)
       )
     ),
 

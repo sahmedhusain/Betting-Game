@@ -1,4 +1,4 @@
-import { UI_CONFIG } from './constants.js';
+import { TEXT, UI_CONFIG } from './constants.js';
 
 export const PLAYER_NAME_MAX_LEN = UI_CONFIG.PLAYER_NAME_MAX_LEN;
 export const PLAYER_NAME_MIN_LEN = UI_CONFIG.PLAYER_NAME_MIN_LEN;
@@ -10,19 +10,19 @@ export function normalizePlayerName(name = '') {
 
 export function validatePlayerName(name = '') {
   if (!name) {
-    return 'Player name is required.';
+    return TEXT.validation.playerNameRequired;
   }
 
   if (name.length < PLAYER_NAME_MIN_LEN) {
-    return `Player name must be at least ${PLAYER_NAME_MIN_LEN} characters.`;
+    return TEXT.validation.playerNameMin(PLAYER_NAME_MIN_LEN);
   }
 
   if (name.length > PLAYER_NAME_MAX_LEN) {
-    return `Player name must be at most ${PLAYER_NAME_MAX_LEN} characters.`;
+    return TEXT.validation.playerNameMax(PLAYER_NAME_MAX_LEN);
   }
 
   if (!PLAYER_NAME_REGEX.test(name)) {
-    return 'Use only letters, numbers, dot (.), underscore (_), or hyphen (-).';
+    return TEXT.validation.playerNameCharset;
   }
 
   return null;

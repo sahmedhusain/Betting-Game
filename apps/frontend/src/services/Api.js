@@ -1,4 +1,4 @@
-import { API_CONFIG, API_ENDPOINTS, API_QUERY } from '../utils/constants.js';
+import { API_CONFIG, API_ENDPOINTS, API_QUERY, TEXT } from '../utils/constants.js';
 
 function isRecord(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -15,11 +15,11 @@ function asNumber(value, fallback = 0) {
 
 function normalizeScoreEntry(entry) {
   if (!isRecord(entry)) {
-    return { player_name: 'Unknown', score: 0 };
+    return { player_name: TEXT.leaderboard.unknownPlayer, score: 0 };
   }
 
   return {
-    player_name: asString(entry.player_name ?? entry.username, 'Unknown'),
+    player_name: asString(entry.player_name ?? entry.username, TEXT.leaderboard.unknownPlayer),
     score: asNumber(entry.score ?? entry.highest_score, 0)
   };
 }
@@ -38,7 +38,7 @@ async function parseJsonSafe(response) {
   try {
     return JSON.parse(text);
   } catch {
-    throw new Error('Invalid JSON response from server.');
+    throw new Error(TEXT.api.errors.invalidJsonResponse);
   }
 }
 
@@ -48,8 +48,8 @@ async function requestJson(url, init) {
 
   if (!response.ok) {
     const message = isRecord(payload)
-      ? asString(payload.error || payload.message, `Request failed with status ${response.status}`)
-      : `Request failed with status ${response.status}`;
+      ? asString(payload.error || payload.message, TEXT.api.errors.requestFailedWithStatus(response.status))
+      : TEXT.api.errors.requestFailedWithStatus(response.status);
     throw new Error(message);
   }
 

@@ -1,5 +1,5 @@
 import { createElement as h } from '../../picojs/framework/core.js';
-import { HAND_RESULTS } from '../../utils/constants.js';
+import { HAND_RESULTS, TEXT } from '../../utils/constants.js';
 
 export function HistoryPanel({ history }) {
   if (!history || history.length === 0) {
@@ -9,14 +9,14 @@ export function HistoryPanel({ history }) {
         class:
           'text-center p-12 border-2 border-dashed border-white/5 rounded-[2rem] text-slate-600 flex-1 flex items-center justify-center'
       },
-      h('p', { class: 'text-xs font-black uppercase tracking-widest' }, 'Waiting for first bet...')
+      h('p', { class: 'text-xs font-black uppercase tracking-widest' }, TEXT.game.waitingForFirstBet)
     );
   }
 
   return h(
     'div',
     { class: 'flex flex-col h-full min-h-0 animate-fade-in' },
-    h('h3', { class: 'text-[10px] font-black uppercase tracking-[0.4em] text-emerald-500 mb-8 px-2' }, 'Hand History'),
+    h('h3', { class: 'text-[10px] font-black uppercase tracking-[0.4em] text-emerald-500 mb-8 px-2' }, TEXT.game.handHistory),
 
     h(
       'div',
@@ -38,7 +38,7 @@ export function HistoryPanel({ history }) {
             h(
               'div',
               {},
-              h('p', { class: 'text-[9px] text-slate-500 font-black' }, `SESSION HAND #${history.length - i}`),
+              h('p', { class: 'text-[9px] text-slate-500 font-black' }, TEXT.game.sessionHand(history.length - i)),
               h('p', { class: 'font-black text-sm uppercase' }, entry.result)
             )
           ),
@@ -46,7 +46,7 @@ export function HistoryPanel({ history }) {
           h(
             'div',
             { class: 'text-right' },
-            h('p', { class: 'text-[9px] text-slate-500 font-black uppercase' }, 'Hand Value'),
+            h('p', { class: 'text-[9px] text-slate-500 font-black uppercase' }, TEXT.game.handValue),
             h('p', { class: `font-outfit font-black text-lg ${isWin ? 'text-emerald-400' : 'text-slate-200'}` }, `+${entry.value}`)
           )
         );

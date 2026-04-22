@@ -1,5 +1,5 @@
 import { createElement as h } from '../../picojs/framework/core.js';
-import { ROUTES } from '../../utils/constants.js';
+import { ROUTES, TEXT } from '../../utils/constants.js';
 
 export function EndView({ state, engine }) {
   return h('div', { class: 'flex flex-col items-center justify-center animate-fade-in w-full px-2 sm:px-0' },
@@ -7,11 +7,11 @@ export function EndView({ state, engine }) {
       //  Game Over
       h('div', { class: 'absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-rose-500/10 blur-[80px] -z-10' }),
 
-      h('p', { class: 'text-rose-500 font-black uppercase tracking-[0.4em] mb-4 text-[10px]' }, 'Session Terminated'),
-      h('h1', { class: 'text-5xl sm:text-7xl font-black mb-2 font-outfit tracking-tighter leading-none whitespace-pre-line' }, 'GAME\nOVER'),
+      h('p', { class: 'text-rose-500 font-black uppercase tracking-[0.4em] mb-4 text-[10px]' }, TEXT.end.sessionTerminated),
+      h('h1', { class: 'text-5xl sm:text-7xl font-black mb-2 font-outfit tracking-tighter leading-none whitespace-pre-line' }, TEXT.end.gameOver),
 
       h('div', { class: 'my-8 sm:my-12 py-6 sm:py-8 border-y border-white/5' },
-        h('p', { class: 'text-slate-500 uppercase text-[10px] font-black tracking-widest mb-2' }, 'Final Bankroll'),
+        h('p', { class: 'text-slate-500 uppercase text-[10px] font-black tracking-widest mb-2' }, TEXT.end.finalBankroll),
         h('h2', { class: 'text-4xl sm:text-6xl font-black text-white font-outfit tracking-tight' },
           state.score.toLocaleString()
         )
@@ -19,14 +19,14 @@ export function EndView({ state, engine }) {
 
       h('div', { class: 'space-y-4' },
         h('p', { class: 'text-slate-400 text-sm mb-6 leading-relaxed' },
-          'Your performance has been recorded in the Hall of Fame.'
+          TEXT.end.hallOfFameNotice
         ),
         h('button', {
           class: 'w-full py-6 bg-white text-slate-900 rounded-3xl font-black hover:bg-emerald-400 transition-all uppercase tracking-[0.2em] text-xs shadow-2xl active:scale-95',
           onclick: () => {
             window.location.hash = ROUTES.LANDING;
           }
-        }, 'Return to Lobby')
+        }, TEXT.end.returnToLobby)
       )
     )
   );

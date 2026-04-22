@@ -1,7 +1,7 @@
 import { store } from '../state/State.js';
 import { Deck } from './Deck.js';
 import { TILE_TYPES, calculateHandValue, updateDynamicValue } from './TileConfig.js';
-import { GAME_CONFIG, PHASES, BET_TYPES, GAME_ACTIONS } from '../utils/constants.js';
+import { GAME_CONFIG, PHASES, BET_TYPES, GAME_ACTIONS, TEXT } from '../utils/constants.js';
 import { Api } from '../services/Api.js';
 import { sfx } from '../services/Sfx.js';
 import {
@@ -22,7 +22,7 @@ class GameEngine {
       const scores = await Api.getLeaderboard();
       store.setState({ leaderboard: scores });
     } catch (err) {
-      console.error('Failed to load leaderboard:', err);
+      console.error(TEXT.engine.errors.loadLeaderboardFailed, err);
     }
   }
 
@@ -40,7 +40,7 @@ class GameEngine {
     });
 
     Api.logGameSession({ player_name: playerName, action: GAME_ACTIONS.START_GAME })
-      .catch((err) => console.warn('Failed to log game session:', err));
+      .catch((err) => console.warn(TEXT.engine.errors.logSessionFailed, err));
   }
 
   betHigher() {
@@ -110,7 +110,7 @@ class GameEngine {
     try {
       await Api.saveScore(state.playerName, state.score);
     } catch (err) {
-      console.error('Failed to save score:', err);
+      console.error(TEXT.engine.errors.saveScoreFailed, err);
     }
 
     await this.loadLeaderboard();
