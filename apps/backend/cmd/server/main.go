@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/internal/config"
+	"backend/internal/constants"
 	"backend/internal/middleware"
 	"backend/internal/routes"
 	"log"
@@ -17,7 +18,7 @@ func main() {
 	config.ConnectDB()
 
 	app := fiber.New(fiber.Config{
-		AppName: "Mahjong Betting API v1",
+		AppName: constants.AppName,
 	})
 
 	// MIDDLEWARE
@@ -28,19 +29,19 @@ func main() {
 
 	routes.SetupRoutes(app)
 
-	app.Get("/api/health", func(c *fiber.Ctx) error {
+	app.Get(constants.HealthPath, func(c *fiber.Ctx) error {
 		return c.Status(200).JSON(fiber.Map{
 			"status":  "ok",
-			"message": "API running",
+			"message": constants.MsgAPIRunning,
 		})
 	})
 
-	port := os.Getenv("BACKEND_PORT")
+	port := os.Getenv(constants.EnvBackendPort)
 	if port == "" {
-		port = "8080"
+		port = constants.DefaultBackendPort
 	}
 
-	log.Printf("🚀 Server starting on port %s\n", port)
+	log.Printf(constants.MsgServerStartingPortFmt, port)
 	if err := app.Listen(":" + port); err != nil {
 		log.Fatalf("Critical server failure: %v\n", err)
 	}

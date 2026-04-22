@@ -1,6 +1,7 @@
 package config
 
 import (
+	"backend/internal/constants"
 	"context"
 	"log"
 	"os"
@@ -16,7 +17,7 @@ var DB *mongo.Client
 
 // Load environment variables from .env file
 func LoadEnv() {
-	if os.Getenv("MONGODB_URI") != "" {
+	if os.Getenv(constants.EnvMongodbURI) != "" {
 		return
 	}
 
@@ -60,31 +61,31 @@ func findEnvFile(startDir string) (string, error) {
 
 func ConnectDB() {
 
-	mongoURI := os.Getenv("MONGODB_URI")
+	mongoURI := os.Getenv(constants.EnvMongodbURI)
 	if mongoURI == "" {
-		log.Fatal("MONGODB_URI is not set in .env file")
+		log.Fatal(constants.ErrInvalidMongoURI)
 	}
 
 	clientOptions := options.Client().ApplyURI(mongoURI)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) // 10 seconds timeout for MongoDB connection
+	ctx, cancel := context.WithTimeout(context.Background(), constants.MongoConnectionTimeout*time.Second)
 	defer cancel()
 
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		log.Fatalf("Failed to connect to MongoDB: %v", err)
+		log.Fatalf("%s: %v", constants.ErrFailedConnectMongo, err)
 	}
 
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		log.Fatalf("Failed to ping MongoDB: %v", err)
+		log.Fatalf("%s: %v", constants.ErrFailedPingMongo, err)
 	}
 
-	DB = client // Assign the connected client to the global DB variable
-	log.Println("Connected to MongoDB")
+	DB = client
+	log.Println(constants.MsgConnectedToMongo)
 
 }
 
 func GetCollection(collectionName string) *mongo.Collection {
-	return DB.Database("betting_game").Collection(collectionName)
+	return DB.Database(constants.DefaultDatabaseName).Collection(collectionName)
 }

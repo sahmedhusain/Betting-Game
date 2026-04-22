@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"backend/internal/constants"
 	"log"
 	"os"
 	"strconv"
@@ -12,8 +13,8 @@ import (
 
 // SetupRateLimiter protects API endpoints from burst abuse and accidental floods.
 func SetupRateLimiter() fiber.Handler {
-	maxRequests := getEnvInt("RATE_LIMIT_MAX", 120)
-	windowSeconds := getEnvInt("RATE_LIMIT_WINDOW_SECONDS", 60)
+	maxRequests := getEnvInt(constants.EnvRateLimitMax, constants.DefaultRateLimitMax)
+	windowSeconds := getEnvInt(constants.EnvRateLimitWindow, constants.DefaultRateLimitWindow)
 
 	return limiter.New(limiter.Config{
 		Max:        maxRequests,
@@ -22,11 +23,11 @@ func SetupRateLimiter() fiber.Handler {
 			return c.IP()
 		},
 		Next: func(c *fiber.Ctx) bool {
-			return c.Path() == "/api/health"
+			return c.Path() == constants.HealthPath
 		},
 		LimitReached: func(c *fiber.Ctx) error {
 			return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
-				"error": "Rate limit exceeded. Please try again shortly.",
+				"error": constants.ErrRateLimitExceeded,
 			})
 		},
 	})

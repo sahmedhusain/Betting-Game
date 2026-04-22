@@ -1,15 +1,11 @@
 package handlers
 
 import (
+	"backend/internal/constants"
 	"backend/internal/repository"
 	"backend/internal/services"
 
 	"github.com/gofiber/fiber/v2"
-)
-
-const (
-	defaultLeaderboardLimit = int64(5)
-	maxLeaderboardLimit     = int64(20)
 )
 
 var scoreService = services.NewScoreService()
@@ -26,17 +22,17 @@ type LeaderboardEntry struct {
 }
 
 func GetLeaderboard(c *fiber.Ctx) error {
-	limit := int64(c.QueryInt("limit", int(defaultLeaderboardLimit)))
+	limit := int64(c.QueryInt("limit", int(constants.DefaultLeaderboardLimit)))
 	if limit <= 0 {
-		limit = defaultLeaderboardLimit
+		limit = constants.DefaultLeaderboardLimit
 	}
-	if limit > maxLeaderboardLimit {
-		limit = maxLeaderboardLimit
+	if limit > constants.MaxLeaderboardLimit {
+		limit = constants.MaxLeaderboardLimit
 	}
 
 	users, err := repository.GetTopUsers(limit)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch leaderboard"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": constants.ErrFailedFetchLeaderboard})
 	}
 
 	entries := make([]LeaderboardEntry, 0, len(users))
@@ -53,12 +49,12 @@ func GetLeaderboard(c *fiber.Ctx) error {
 func SaveScore(c *fiber.Ctx) error {
 	var input ScoreInput
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": "Invalid request body"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": constants.ErrInvalidRequestBody})
 	}
 	err := scoreService.ProcessAndSave(input.Username, input.Score, input.HandsPlayed)
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.Status(201).JSON(fiber.Map{"message": "Legend recorded successfully"})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": constants.MsgLegendRecorded})
 }

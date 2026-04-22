@@ -2,6 +2,7 @@ package repository
 
 import (
 	"backend/internal/config"
+	"backend/internal/constants"
 	"backend/internal/models"
 	"context"
 	"time"
@@ -12,7 +13,7 @@ import (
 
 // Fetch the top users from the database
 func GetTopUsers(limit int64) ([]models.User, error) {
-	collection := config.GetCollection("users")
+	collection := config.GetCollection(constants.UsersCollection)
 
 	opts := options.Find().SetSort(bson.D{{Key: "highest_score", Value: -1}}).SetLimit(limit) // -1 is descending order
 
@@ -32,7 +33,7 @@ func GetTopUsers(limit int64) ([]models.User, error) {
 
 // Update or insert the score to the user collection
 func SaveScore(username string, newScore int, handsPlayed int) error {
-	collection := config.GetCollection("users")
+	collection := config.GetCollection(constants.UsersCollection)
 	now := time.Now()
 
 	filter := bson.D{{Key: "username", Value: username}}

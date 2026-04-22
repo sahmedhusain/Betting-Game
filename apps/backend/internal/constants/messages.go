@@ -1,0 +1,30 @@
+package constants
+
+const (
+	MsgAPIRunning            = "API running"
+	MsgConnectedToMongo      = "Connected to MongoDB"
+	MsgServerStartingPortFmt = "Server starting on port %s"
+
+	ErrInvalidRequestBody         = "Invalid request body"
+	ErrFailedFetchLeaderboard     = "Failed to fetch leaderboard"
+	ErrFailedSaveGameSession      = "Failed to save game session"
+	ErrFailedSaveScore            = "Failed to save score"
+	ErrFailedLoadLeaderboard      = "Failed to load leaderboard"
+	ErrFailedLogGameSession       = "Failed to log game session"
+	ErrRateLimitExceeded          = "Rate limit exceeded. Please try again shortly."
+	ErrInvalidMongoURI            = "MONGODB_URI is not set in .env file"
+	ErrFailedConnectMongo         = "Failed to connect to MongoDB"
+	ErrFailedPingMongo            = "Failed to ping MongoDB"
+	ErrPlayerNameRequired         = "player_name is required"
+	ErrPlayerNameCharset          = "player_name may contain only letters, numbers, dot (.), underscore (_), and hyphen (-)"
+	ErrScoreCannotBeNegative      = "score cannot be negative"
+	ErrHandsPlayedCannotBeNegative = "hands_played cannot be negative"
+	ErrAdminAuthRequired          = "admin credentials are required"
+	ErrAdminAuthInvalid           = "invalid admin credentials"
+	ErrJSONContentTypeRequired    = "application/json content type is required"
+
+	MsgLegendRecorded            = "Legend recorded successfully"
+	MsgGameSessionLogged         = "Game session logged successfully"
+	MsgDatabaseReset             = "Database reset completed successfully"
+	MsgResetDatabaseFailed       = "Failed to reset database"
+)
