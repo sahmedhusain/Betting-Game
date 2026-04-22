@@ -1,56 +1,17 @@
 import { createElement as h } from '../../picojs/framework/core.js';
+import { GAME_CONFIG, UI_CONFIG } from '../../utils/constants.js';
 import { ScoreBoard } from '../components/ScoreBoard.js';
 import { HistoryPanel } from '../components/HistoryPanel.js';
 import { HandDisplay } from '../components/HandDisplay.js';
-
-function DrawLane({ state }) {
-  const previewCount = Math.min(5, state.drawPileCount);
-
-  return h(
-    'div',
-    {
-      class:
-        'glass-panel p-4 rounded-2xl h-full min-h-[180px] flex flex-col items-center justify-between relative overflow-hidden'
-    },
-    h(
-      'p',
-      { class: 'text-[10px] font-black uppercase tracking-[0.3em] text-slate-500' },
-      'Draw Lane'
-    ),
-
-    h(
-      'div',
-      { class: 'relative w-full flex-1 flex items-center justify-center' },
-      previewCount > 0
-        ? Array.from({ length: previewCount }).map((_, i) =>
-          h('div', {
-            class: `absolute draw-preview-card draw-preview-card-${i + 1}`
-          })
-        )
-        : h(
-          'p',
-          { class: 'text-xs font-bold uppercase tracking-widest text-slate-600' },
-          'Deck Empty'
-        )
-    ),
-
-    h(
-      'p',
-      { class: 'text-[10px] font-black uppercase tracking-[0.2em] text-slate-500' },
-      `Cards: ${state.drawPileCount}`
-    )
-  );
-}
+import { DrawLane } from '../components/DrawLane.js';
 
 export function GameView({ state, engine }) {
   return h(
     'div',
     {
-      class:
-        'w-full max-w-6xl mx-auto grid grid-cols-1 xl:grid-cols-12 gap-6 md:gap-8 animate-fade-in px-2 sm:px-0'
+      class: 'w-full max-w-6xl mx-auto grid grid-cols-1 xl:grid-cols-12 gap-6 md:gap-8 animate-fade-in px-2 sm:px-0'
     },
 
-    // Main Game Area
     h(
       'div',
       { class: 'xl:col-span-8 space-y-6 md:space-y-8' },
@@ -66,27 +27,25 @@ export function GameView({ state, engine }) {
       h(
         'div',
         {
-          class:
-            'flex flex-wrap justify-center gap-4 md:gap-12 text-slate-500 text-[10px] font-black uppercase tracking-[0.3em]'
+          class: 'flex flex-wrap justify-center gap-4 md:gap-12 text-slate-500 text-[10px] font-black uppercase tracking-[0.3em]'
         },
         h('span', {}, `Draw Pile: ${state.drawPileCount}`),
         h('span', {}, `Discarded: ${state.discardPileCount}`),
-        h('span', {}, `Reshuffles: ${state.reshuffleCount}/3`)
+        h('span', {}, `Reshuffles: ${state.reshuffleCount}/${GAME_CONFIG.MAX_RESHUFFLES}`)
       )
     ),
 
-    // History Sidebar
     h(
       'div',
       { class: 'xl:col-span-4' },
       h(
         'div',
         {
-          class:
-            'glass-panel p-8 rounded-[2.5rem] h-[640px] max-h-[calc(100vh-8rem)] flex flex-col overflow-hidden'
+          class: `glass-panel p-8 rounded-[2.5rem] ${UI_CONFIG.GAME_HISTORY_PANEL_HEIGHT_CLASS} ${UI_CONFIG.GAME_HISTORY_PANEL_MAX_HEIGHT_CLASS} flex flex-col overflow-hidden`
         },
         HistoryPanel({ history: state.history })
       )
     )
+
   );
 }
