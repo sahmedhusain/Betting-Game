@@ -1,7 +1,6 @@
-import { createStore } from '../picojs/framework/store.js';
 import { PHASES, GAME_CONFIG } from '../utils/constants.js';
 
-export const store = createStore({
+export const initialState = {
   playerName: '',
   score: GAME_CONFIG.INITIAL_SCORE,
   currentHand: [],
@@ -19,4 +18,10 @@ export const store = createStore({
   animationNonce: 0,
 
   hasAttemptedStart: false
-});
+};
+
+export let store = null;
+
+export function initStore(s) {
+  store = s;
+}

@@ -1,29 +1,27 @@
-import { store } from './state/State.js';
+import { initialState, initStore } from './state/State.js';
 import { engine } from './engine/Engine.js';
-import { render } from './picojs/framework/vdom.js';
-import { eventRegistry, attachDelegatedListener } from './picojs/framework/events.js';
+import { createApp } from './picojs/framework/core.js';
 import { PHASES, ROUTES } from './utils/constants.js';
 import { resolveView } from './ui/UI.js';
 
-let lastPhase = null;
+
+function phaseFromHash() {
+  const hash = window.location.hash || ROUTES.LANDING;
+  if (hash === ROUTES.PLAY) return PHASES.PLAYING;
+  if (hash === ROUTES.GAME_OVER) return PHASES.GAME_OVER;
+  return PHASES.LANDING;
+}
 
 function handleRouting() {
-  const hash = window.location.hash || ROUTES.LANDING;
-  let phase = PHASES.LANDING;
-
-  if (hash === ROUTES.PLAY) phase = PHASES.PLAYING;
-  if (hash === ROUTES.GAME_OVER) phase = PHASES.GAME_OVER;
-
+  const phase = phaseFromHash();
   if (store.getState().gamePhase !== phase) {
     store.setState({ gamePhase: phase });
   }
 }
 
-const root = document.getElementById('root');
-eventRegistry.root = root;
-eventRegistry.events.forEach(ev => attachDelegatedListener(root, ev));
+let lastPhase = null;
 
-function updateUI() {
+function handleSideEffects() {
   const state = store.getState();
 
   const hash = state.gamePhase === PHASES.PLAYING
@@ -40,12 +38,18 @@ function updateUI() {
     engine.loadLeaderboard();
   }
 
-  render(resolveView(state, engine), root);
   lastPhase = state.gamePhase;
 }
 
-store.subscribe(updateUI);
+const store = createApp({
+  view: (state) => resolveView(state, engine),
+  initialState: { ...initialState, gamePhase: phaseFromHash() },
+  rootElement: document.getElementById('root')
+});
+
+initStore(store);
+
+store.subscribe(handleSideEffects);
 window.addEventListener('hashchange', handleRouting);
 
-handleRouting();
-updateUI();
+handleSideEffects();
