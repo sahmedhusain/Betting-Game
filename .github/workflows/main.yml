@@ -1,0 +1,12 @@
+name: Placeholder CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  noop:
+    name: No-op placeholder
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip CI for now
+        run: 'echo "Placeholder workflow: no checks are executed yet."'
