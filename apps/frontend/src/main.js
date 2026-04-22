@@ -2,10 +2,10 @@ import { store } from './state/State.js';
 import { engine } from './engine/Engine.js';
 import { render } from './picojs/framework/vdom.js';
 import { eventRegistry, attachDelegatedListener } from './picojs/framework/events.js';
-import { LandingView } from './ui/views/LandingView.js';
-import { GameView } from './ui/views/GameView.js';
-import { EndView } from './ui/views/EndView.js';
 import { PHASES } from './utils/constants.js';
+import { resolveView } from './ui/UI.js';
+
+let lastPhase = null;
 
 // --- Routing Logic ---
 function handleRouting() {
@@ -17,19 +17,6 @@ function handleRouting() {
 
     if (store.getState().gamePhase !== phase) {
         store.setState({ gamePhase: phase });
-    }
-}
-
-function view(state) {
-    switch (state.gamePhase) {
-        case PHASES.LANDING:
-            return LandingView({ state, engine });
-        case PHASES.PLAYING:
-            return GameView({ state, engine });
-        case PHASES.GAME_OVER:
-            return EndView({ state, engine });
-        default:
-            return LandingView({ state, engine });
     }
 }
 
@@ -48,7 +35,12 @@ function updateUI() {
         window.location.hash = hash;
     }
 
-    render(view(state), root);
+    if (state.gamePhase === PHASES.LANDING && lastPhase !== PHASES.LANDING) {
+        engine.loadLeaderboard();
+    }
+
+    render(resolveView(state, engine), root);
+    lastPhase = state.gamePhase;
 }
 
 store.subscribe(updateUI);
@@ -56,5 +48,4 @@ window.addEventListener('hashchange', handleRouting);
 
 // Initialization
 handleRouting();
-engine.loadLeaderboard();
 updateUI();
