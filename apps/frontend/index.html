@@ -6,14 +6,14 @@
     <title>Mahjong Betting</title>
     <link rel="stylesheet" href="./styles/main.css">
 </head>
-<body class="flex items-center justify-center p-4 md:p-8">
+<body class="bg-[#020617] text-white overflow-hidden">
     <div class="fixed inset-0 overflow-hidden -z-10 pointer-events-none">
         <div class="liquid-blob blob-float-a w-[500px] h-[500px] bg-emerald-500/20 top-[-10%] left-[-10%] animate-float"></div>
         <div class="liquid-blob blob-float-b w-[600px] h-[600px] bg-blue-500/10 bottom-[-20%] right-[-10%] animate-float"></div>
         <div class="liquid-blob blob-float-c w-[400px] h-[400px] bg-purple-500/10 top-[20%] right-[10%] animate-float"></div>
     </div>
 
-    <div id="root" class="w-full max-w-7xl mx-auto min-h-[85vh] md:min-h-[80vh] flex flex-col items-center justify-center">
+    <div id="root" class="w-full h-screen flex flex-col items-center justify-center relative">
     </div>
     <script type="module" src="./src/main.js"></script>
 </body>

@@ -31,12 +31,12 @@ export function EndView({ state, engine }) {
     engine.startGame(state.playerName);
   };
 
-  return h('div', { class: 'w-full max-w-7xl mx-auto px-6 py-8 md:py-12 lg:h-[90vh] lg:max-h-[900px] flex flex-col justify-center animate-fade-in' },
-    h('div', { class: 'grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-stretch h-full' },
+  return h('div', { class: 'w-full h-screen p-[8vh] flex flex-col items-center justify-center animate-fade-in overflow-hidden' },
+    h('div', { class: 'w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20 items-stretch flex-1 min-h-0' },
       
       // Left Column: Main Summary
-      h('div', { class: 'lg:col-span-7 flex flex-col h-full' },
-        h('div', { class: 'glass-panel p-10 sm:p-16 rounded-[3rem] border border-white/5 relative overflow-hidden h-full flex flex-col justify-center' },
+      h('div', { class: 'lg:col-span-7 flex flex-col h-full min-h-0 p-1' },
+        h('div', { class: 'glass-panel p-10 sm:p-16 rounded-[3rem] border border-white/5 relative overflow-hidden h-full flex flex-col justify-center min-h-0' },
           // Glow background
           h('div', { class: 'absolute -top-24 -left-24 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full' }),
           
@@ -71,8 +71,8 @@ export function EndView({ state, engine }) {
       ),
 
       // Right Column: History
-      h('div', { class: 'lg:col-span-5 flex flex-col h-full' },
-        h('div', { class: 'glass-panel p-8 rounded-[2.5rem] h-full flex flex-col border border-white/5' },
+      h('div', { class: 'lg:col-span-5 flex flex-col h-full min-h-0 p-1' },
+        h('div', { class: 'glass-panel p-8 rounded-[2.5rem] h-full flex flex-col border border-white/5 overflow-hidden min-h-0' },
           h('div', { class: 'flex items-center justify-between mb-8' },
             h('div', { class: 'flex flex-col' },
               h('h3', { class: 'text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-1' }, TEXT.end.activityHistory),
@@ -100,7 +100,7 @@ export function EndView({ state, engine }) {
             )
           ),
 
-          h('div', { class: 'flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-4' },
+          h('div', { class: 'flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-4 pb-12 min-h-0' },
             history.length > 0 ? history.map((entry, i) => {
               const isBest = entry.score === bestScore;
               const date = new Date(entry.timestamp);

@@ -22,11 +22,11 @@ export function Leaderboard({ scores = [] }) {
   return h('div', { class: 'flex flex-col gap-4' },
     topScores.length > 0
       ? topScores.map((player, i) => h('div', {
-        class: `glass-panel group flex items-center justify-between p-6 rounded-[2rem] transition-all hover:bg-white/5 border border-white/5 hover:border-white/10 hover:translate-x-1 ${i === 0 ? 'bg-white/5 border-emerald-500/20' : ''}`,
+        class: `glass-panel group w-full flex items-center justify-between p-6 rounded-[2rem] border border-white/5 transition-[background-color,border-color] duration-300 hover:bg-white/10 hover:border-white/20 ${i === 0 ? 'bg-white/5 border-emerald-500/20' : ''}`,
         key: `rank-${getPlayerName(player)}-${getPlayerScore(player)}-${i}`
       },
-        h('div', { class: 'flex items-center gap-6 min-w-0' },
-          h('div', { class: `w-12 h-12 flex items-center justify-center rounded-2xl ${i < 3 ? 'bg-white/5 shadow-xl transition-transform' : 'bg-white/5'}` },
+        h('div', { class: 'flex items-center gap-6 flex-1 min-w-0' },
+          h('div', { class: `w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-2xl ${i < 3 ? 'bg-white/5 shadow-xl transition-transform' : 'bg-white/5'}` },
             h('div', {
               class: i === 0 ? 'icon-medal icon-medal-gold scale-125' :
                 i === 1 ? 'icon-medal icon-medal-silver scale-110' :
@@ -42,7 +42,7 @@ export function Leaderboard({ scores = [] }) {
             )
           )
         ),
-        h('div', { class: 'text-right flex flex-col items-end' },
+        h('div', { class: 'text-right flex flex-col items-end shrink-0 ml-4' },
           h('p', { class: `font-black font-mono text-lg ${i === 0 ? 'text-emerald-400' : 'text-emerald-600'}` }, formatScore(getPlayerScore(player)))
         )
       ))
