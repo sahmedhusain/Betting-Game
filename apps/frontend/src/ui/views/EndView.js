@@ -1,8 +1,9 @@
 import { createElement as h } from '../../picojs/framework/core.js';
-import { TEXT, ROUTES } from '../../utils/constants.js';
+import { TEXT } from '../../utils/constants.js';
 import { HistoryService } from '../../services/HistoryService.js';
 import { EndSummaryPanel } from '../components/EndSummaryPanel.js';
 import { EndHistoryPanel } from '../components/EndHistoryPanel.js';
+import { allowPlayAgainTransition } from '../../services/AppController.js';
 
 export function EndView({ state, engine }) {
   const topScores = state.leaderboard || [];
@@ -26,7 +27,7 @@ export function EndView({ state, engine }) {
   };
 
   const handlePlayAgain = () => {
-    window.location.hash = ROUTES.PLAY;
+    allowPlayAgainTransition();
     engine.startGame(state.playerName);
   };
 

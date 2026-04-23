@@ -104,6 +104,11 @@ export function handleRouting() {
 }
 
 let lastPhase = null;
+let allowGameOverReplayTransition = false;
+
+export function allowPlayAgainTransition() {
+  allowGameOverReplayTransition = true;
+}
 
 export function handleSideEffects() {
   const state = store.getState();
@@ -119,10 +124,15 @@ export function handleSideEffects() {
   }
 
   // If user presses Back from game over send them to landing
+  // but allow explicit Play Again transitions
   if (previousPhase === PHASES.GAME_OVER && state.gamePhase === PHASES.PLAYING) {
-    navigateToHash(ROUTES.LANDING, { replace: true });
-    store.setState({ gamePhase: PHASES.LANDING, ...getPhaseResetPatch(PHASES.LANDING) });
-    return;
+    if (allowGameOverReplayTransition) {
+      allowGameOverReplayTransition = false;
+    } else {
+      navigateToHash(ROUTES.LANDING, { replace: true });
+      store.setState({ gamePhase: PHASES.LANDING, ...getPhaseResetPatch(PHASES.LANDING) });
+      return;
+    }
   }
 
   if (state.gamePhase === PHASES.LANDING && lastPhase !== PHASES.LANDING) {
