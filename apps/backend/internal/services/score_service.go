@@ -1,9 +1,11 @@
 package services
 
 import (
+	"backend/internal/models"
 	"backend/internal/repository"
 	"backend/internal/validation"
 	"errors"
+	"time"
 )
 
 type ScoreService struct{}
@@ -27,5 +29,18 @@ func (s *ScoreService) ProcessAndSave(username string, score int, handsPlayed in
 		return errors.New("hands_played cannot be negative")
 	}
 
-	return repository.SaveScore(username, score, handsPlayed)
+	// Save to user aggregate
+	if err := repository.SaveScore(username, score, handsPlayed); err != nil {
+		return err
+	}
+
+	// Log individual game session for history/scalability
+	session := models.GameSession{
+		Username:    username,
+		FinalScore:  score,
+		HandsPlayed: handsPlayed,
+		EndedAt:     time.Now(),
+	}
+
+	return repository.SaveGameSession(session)
 }

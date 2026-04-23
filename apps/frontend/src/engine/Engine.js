@@ -110,7 +110,7 @@ class GameEngine {
     HistoryService.saveGame(state.playerName, state.score);
 
     try {
-      await Api.saveScore(state.playerName, state.score);
+      await Api.saveScore(state.playerName, state.score, state.history.length);
     } catch (err) {
       console.error(TEXT.engine.errors.saveScoreFailed, err);
     }

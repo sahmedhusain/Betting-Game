@@ -17,8 +17,9 @@ type ScoreInput struct {
 }
 
 type LeaderboardEntry struct {
-	PlayerName string `json:"player_name"`
-	Score      int    `json:"score"`
+	PlayerName   string `json:"player_name"`
+	Score        int    `json:"score"`
+	HighestScore int    `json:"highest_score"`
 }
 
 func GetLeaderboard(c *fiber.Ctx) error {
@@ -38,8 +39,9 @@ func GetLeaderboard(c *fiber.Ctx) error {
 	entries := make([]LeaderboardEntry, 0, len(users))
 	for _, user := range users {
 		entries = append(entries, LeaderboardEntry{
-			PlayerName: user.Username,
-			Score:      user.HighestScore,
+			PlayerName:   user.Username,
+			Score:        user.HighestScore,
+			HighestScore: user.HighestScore,
 		})
 	}
 

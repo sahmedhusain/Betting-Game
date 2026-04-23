@@ -20,7 +20,8 @@ function normalizeScoreEntry(entry) {
 
   return {
     player_name: asString(entry.player_name ?? entry.username, TEXT.leaderboard.unknownPlayer),
-    score: asNumber(entry.score ?? entry.highest_score, 0)
+    score: asNumber(entry.score, 0),
+    highest_score: asNumber(entry.highest_score ?? entry.score, 0)
   };
 }
 
@@ -71,11 +72,15 @@ export const Api = {
       .slice(0, API_CONFIG.LEADERBOARD_LIMIT);
   },
 
-  async saveScore(playerName, score) {
+  async saveScore(playerName, score, handsPlayed = 0) {
     const payload = await requestJson(`${API_CONFIG.BASE_URL}${API_ENDPOINTS.SCORES}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ player_name: playerName, score })
+      body: JSON.stringify({ 
+        player_name: playerName, 
+        score,
+        hands_played: handsPlayed 
+      })
     });
 
     // Return a stable object

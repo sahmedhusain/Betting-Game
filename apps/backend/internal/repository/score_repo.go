@@ -40,7 +40,10 @@ func SaveScore(username string, newScore int, handsPlayed int) error {
 
 	update := bson.D{ // Update Data in MongoDB
 		{Key: "$max", Value: bson.D{{Key: "highest_score", Value: newScore}}},
-		{Key: "$inc", Value: bson.D{{Key: "total_games_played", Value: 1}}},
+		{Key: "$inc", Value: bson.D{
+			{Key: "total_score", Value: newScore},
+			{Key: "total_games_played", Value: 1},
+		}},
 		{Key: "$set", Value: bson.D{{Key: "updated_at", Value: now}}},
 		{Key: "$setOnInsert", Value: bson.D{{Key: "created_at", Value: now}}},
 	}

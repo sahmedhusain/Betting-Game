@@ -7,7 +7,7 @@ function getPlayerName(entry) {
 }
 
 function getPlayerScore(entry) {
-  return entry?.score ?? entry?.highest_score ?? 0;
+  return entry?.highest_score ?? entry?.score ?? 0;
 }
 
 function getOrdinal(n) {
@@ -27,10 +27,12 @@ export function Leaderboard({ scores = [] }) {
       },
         h('div', { class: 'flex items-center gap-6 min-w-0' },
           h('div', { class: `w-12 h-12 flex items-center justify-center rounded-2xl ${i < 3 ? 'bg-white/5 shadow-xl transition-transform' : 'bg-white/5'}` },
-            h('div', { class: i === 0 ? 'icon-medal icon-medal-gold scale-125' : 
-                            i === 1 ? 'icon-medal icon-medal-silver scale-110' : 
-                            i === 2 ? 'icon-medal icon-medal-bronze scale-105' : 
-                            'icon-star text-slate-500' })
+            h('div', {
+              class: i === 0 ? 'icon-medal icon-medal-gold scale-125' :
+                i === 1 ? 'icon-medal icon-medal-silver scale-110' :
+                  i === 2 ? 'icon-medal icon-medal-bronze scale-105' :
+                    'icon-star text-slate-500'
+            })
           ),
           h('div', { class: 'flex flex-col min-w-0' },
             h('p', { class: `font-black font-outfit text-base tracking-tight truncate ${i === 0 ? 'text-white' : 'text-slate-200'}` }, getPlayerName(player)),
@@ -40,12 +42,12 @@ export function Leaderboard({ scores = [] }) {
             )
           )
         ),
-        h('div', { class: 'text-right' },
+        h('div', { class: 'text-right flex flex-col items-end' },
           h('p', { class: `font-black font-mono text-lg ${i === 0 ? 'text-emerald-400' : 'text-emerald-600'}` }, formatScore(getPlayerScore(player)))
         )
       ))
       : h('div', { class: 'glass-panel p-12 rounded-[2.5rem] text-center border border-dashed border-white/10' },
-          h('p', { class: 'text-slate-600 text-[10px] font-black uppercase tracking-[0.2em] leading-relaxed max-w-[200px] mx-auto' }, TEXT.leaderboard.emptyState)
-        )
+        h('p', { class: 'text-slate-600 text-[10px] font-black uppercase tracking-[0.2em] leading-relaxed max-w-[200px] mx-auto' }, TEXT.leaderboard.emptyState)
+      )
   );
 }
