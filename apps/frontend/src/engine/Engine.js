@@ -1,7 +1,8 @@
 import { store } from '../state/State.js';
 import { Deck } from './Deck.js';
-import { TILE_TYPES, calculateHandValue, updateDynamicValue } from './TileConfig.js';
-import { GAME_CONFIG, PHASES, BET_TYPES, GAME_ACTIONS, TEXT, SOUND_PATHS } from '../utils/constants.js';
+import { calculateHandValue, updateDynamicValue } from './TileConfig.js';
+import { TILE_TYPES } from '../utils/constants.js';
+import { GAME_CONFIG, PHASES, BET_TYPES, GAME_ACTIONS, TEXT } from '../utils/constants.js';
 import { Api } from '../services/Api.js';
 import { soundService } from '../services/SoundService.js';
 import {
@@ -30,8 +31,8 @@ class GameEngine {
   startGame(playerName) {
     this.deck = new Deck();
     const initialHand = this.deck.draw(GAME_CONFIG.HAND_SIZE);
-    
-    soundService.playAmbient(SOUND_PATHS.AMBIENT.GAMEPLAY);
+
+    soundService.playAmbient();
     soundService.playClick();
 
     store.setState({

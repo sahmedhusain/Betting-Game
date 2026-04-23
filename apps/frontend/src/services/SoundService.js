@@ -1,65 +1,54 @@
-import { SOUND_PATHS } from '../utils/constants.js';
-
 class SoundService {
   constructor() {
-    this.sfxVolume = 0.5;
-    this.ambientVolume = 0.3;
-    this.ambientAudio = null;
     this.isMuted = false;
   }
 
   setMute(muted) {
     this.isMuted = muted;
-    if (this.ambientAudio) {
-      this.ambientAudio.muted = muted;
-    }
+    if (muted) this.stopAmbient();
+    else this.playAmbient();
   }
 
-  /**
-   * Plays a one-shot sound effect.
-   * @param {string} path - Path to the sound file.
-   */
-  playSFX(path) {
+  async playClick() { 
     if (this.isMuted) return;
-    
-    const audio = new Audio(path);
-    audio.volume = this.sfxVolume;
-    audio.play().catch(err => console.warn('SFX playback failed:', err));
+    const { playClick } = await import('../audio/sfx/click.js');
+    playClick();
   }
 
-  /**
-   * Plays background music on a loop.
-   * @param {string} path - Path to the ambient file.
-   */
-  playAmbient(path) {
-    if (this.ambientAudio) {
-      this.ambientAudio.pause();
-    }
-
-    this.ambientAudio = new Audio(path);
-    this.ambientAudio.loop = true;
-    this.ambientAudio.volume = this.ambientVolume;
-    this.ambientAudio.muted = this.isMuted;
-    
-    this.ambientAudio.play().catch(err => {
-      console.warn('Ambient playback failed. User interaction might be required.', err);
-    });
+  async playBet() { 
+    if (this.isMuted) return;
+    const { playBet } = await import('../audio/sfx/bet.js');
+    playBet();
   }
 
-  stopAmbient() {
-    if (this.ambientAudio) {
-      this.ambientAudio.pause();
-      this.ambientAudio = null;
-    }
+  async playWin() { 
+    if (this.isMuted) return;
+    const { playWin } = await import('../audio/sfx/win.js');
+    playWin();
   }
 
-  // Quick helper methods
-  playClick() { this.playSFX(SOUND_PATHS.SFX.CLICK); }
-  playBet() { this.playSFX(SOUND_PATHS.SFX.BET); }
-  playWin() { this.playSFX(SOUND_PATHS.SFX.WIN); }
-  playLoss() { this.playSFX(SOUND_PATHS.SFX.LOSS); }
-  playGameOver() { this.playSFX(SOUND_PATHS.SFX.GAME_OVER); }
+  async playLoss() { 
+    if (this.isMuted) return;
+    const { playLoss } = await import('../audio/sfx/loss.js');
+    playLoss();
+  }
+
+  async playGameOver() { 
+    if (this.isMuted) return;
+    const { playGameOver } = await import('../audio/sfx/gameOver.js');
+    playGameOver();
+  }
+
+  async playAmbient() { 
+    if (this.isMuted) return;
+    const { playAmbient } = await import('../audio/ambient/ambient.js');
+    playAmbient();
+  }
+
+  async stopAmbient() { 
+    const { stopAmbient } = await import('../audio/ambient/ambient.js');
+    stopAmbient();
+  }
 }
 
 export const soundService = new SoundService();
-export { SOUND_PATHS };
