@@ -7,7 +7,10 @@ export function phaseFromHash() {
   const hash = window.location.hash || ROUTES.LANDING;
   if (hash === ROUTES.PLAY) return PHASES.PLAYING;
   if (hash === ROUTES.GAME_OVER) return PHASES.GAME_OVER;
-  return PHASES.LANDING;
+  if (hash === ROUTES.LANDING) return PHASES.LANDING;
+  if (hash === ROUTES.NOT_FOUND) return PHASES.NOT_FOUND;
+  
+  return PHASES.NOT_FOUND;
 }
 
 export function handleRouting() {
@@ -22,13 +25,12 @@ let lastPhase = null;
 export function handleSideEffects() {
   const state = store.getState();
 
-  const hash = state.gamePhase === PHASES.PLAYING
-    ? ROUTES.PLAY
-    : state.gamePhase === PHASES.GAME_OVER
-      ? ROUTES.GAME_OVER
-      : ROUTES.LANDING;
+  let hash = ROUTES.LANDING;
+  if (state.gamePhase === PHASES.PLAYING) hash = ROUTES.PLAY;
+  else if (state.gamePhase === PHASES.GAME_OVER) hash = ROUTES.GAME_OVER;
+  else if (state.gamePhase === PHASES.NOT_FOUND) hash = window.location.hash || ROUTES.NOT_FOUND;
 
-  if (window.location.hash !== hash) {
+  if (window.location.hash !== hash && state.gamePhase !== PHASES.NOT_FOUND) {
     window.location.hash = hash;
   }
 

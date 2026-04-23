@@ -86,6 +86,11 @@ export const I18N = {
         logSessionFailed: 'Failed to log game session:'
       }
     },
+    notFound: {
+      title: '404',
+      subtitle: 'The tile you are looking for has been discarded.',
+      goHome: 'Back to Safety'
+    },
     tiles: {
       WIND_EAST: 'East Wind',
       WIND_SOUTH: 'South Wind',
