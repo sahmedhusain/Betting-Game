@@ -1,6 +1,6 @@
 import { createElement as h } from '../../picojs/framework/core.js';
 import { store } from '../../state/State.js';
-import { ROUTES, TEXT, KEYS } from '../../utils/constants.js';
+import { ROUTES, TEXT, KEYS, UI_CONFIG } from '../../utils/constants.js';
 import { PLAYER_NAME_MAX_LEN, PLAYER_NAME_MIN_LEN, normalizePlayerName, validatePlayerName } from '../../utils/helpers.js';
 
 export function LandingNameForm({ state, engine }) {
@@ -42,15 +42,15 @@ export function LandingNameForm({ state, engine }) {
         }
       })
     ),
-    
+
     h('div', { class: 'min-h-[40px] mb-8' },
       showNameError
-        ? h('p', { class: 'text-xs font-bold text-rose-400 flex items-center gap-2' }, 
-            h('span', { class: 'w-1 h-1 rounded-full bg-rose-500' }),
-            nameError
-          )
+        ? h('p', { class: 'text-xs font-bold text-rose-400 flex items-center gap-2' },
+          h('span', { class: 'w-1 h-1 rounded-full bg-rose-500' }),
+          nameError
+        )
         : h('p', { class: 'text-[10px] text-slate-500 uppercase tracking-[0.2em] leading-relaxed' },
-            `${TEXT.landing.allowedNameChars} ${TEXT.landing.nameRules(PLAYER_NAME_MIN_LEN, PLAYER_NAME_MAX_LEN)}`)
+          `${TEXT.landing.allowedNameChars} ${TEXT.landing.nameRules(PLAYER_NAME_MIN_LEN, PLAYER_NAME_MAX_LEN)}`)
     ),
 
     h('button', {
@@ -60,7 +60,7 @@ export function LandingNameForm({ state, engine }) {
     },
       h('div', { class: 'relative z-10 flex items-center justify-center gap-3' },
         h('span', {}, TEXT.landing.startButton),
-        canStart && h('span', { class: 'opacity-50 group-hover:translate-x-1 transition-transform' }, '→')
+        canStart && h('span', { class: 'opacity-50 group-hover:translate-x-1 transition-transform' }, UI_CONFIG.SYMBOLS.ARROW_RIGHT)
       )
     )
   );

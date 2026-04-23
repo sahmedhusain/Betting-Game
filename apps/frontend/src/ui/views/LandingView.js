@@ -1,6 +1,6 @@
 import { createElement as h } from '../../picojs/framework/core.js';
 import { store } from '../../state/State.js';
-import { TEXT } from '../../utils/constants.js';
+import { TEXT, UI_CONFIG } from '../../utils/constants.js';
 import { LandingNameForm } from '../components/LandingNameForm.js';
 import { LandingHallPanel } from '../components/LandingHallPanel.js';
 
@@ -68,7 +68,7 @@ export function LandingView({ state, engine }) {
                   class: 'flex items-center gap-2 text-slate-500 hover:text-white transition-colors group',
                   onclick: () => store.setState({ showJoinForm: false })
                 },
-                  h('div', { class: 'w-6 h-6 flex items-center justify-center rounded-full border border-slate-700 group-hover:border-white transition-colors text-xs' }, '←'),
+                  h('div', { class: 'w-6 h-6 flex items-center justify-center rounded-full border border-slate-700 group-hover:border-white transition-colors text-xs' }, UI_CONFIG.SYMBOLS.ARROW_LEFT),
                   h('span', { class: 'text-[9px] font-black uppercase tracking-[0.2em]' }, TEXT.landing.goBack)
                 ),
                 h('div', { class: 'h-[1px] w-12 bg-white/10' }),

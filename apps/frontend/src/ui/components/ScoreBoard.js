@@ -1,12 +1,12 @@
 import { createElement as h } from '../../picojs/framework/core.js';
-import { TEXT } from '../../utils/constants.js';
+import { TEXT, UI_CONFIG } from '../../utils/constants.js';
 
 export function ScoreBoard({ state, engine }) {
   return h('div', { class: 'glass-panel p-5 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] flex flex-col lg:flex-row gap-5 lg:gap-0 justify-between lg:items-center animate-fade-in' },
     // Left Side: Total Score
     h('div', { class: 'flex items-center gap-4 sm:gap-6 w-full lg:w-auto' },
       h('div', { class: 'w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10' },
-        h('span', { class: 'text-3xl' }, '🧧')
+        h('span', { class: 'text-3xl' }, UI_CONFIG.SYMBOLS.BANKROLL)
       ),
       h('div', {},
         h('p', { class: 'text-slate-500 uppercase tracking-[0.2em] text-[10px] font-black mb-1' }, TEXT.game.bankroll),

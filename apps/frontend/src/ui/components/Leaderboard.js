@@ -11,7 +11,7 @@ function getPlayerScore(entry) {
 }
 
 function getOrdinal(n) {
-  const s = ['th', 'st', 'nd', 'rd'];
+  const s = TEXT.leaderboard.ordinals;
   const v = n % 100;
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }

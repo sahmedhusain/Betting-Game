@@ -4,5 +4,11 @@ export const UI_CONFIG = {
   DRAW_LANE_PREVIEW_MAX: 5,
   DRAW_LANE_MIN_HEIGHT_CLASS: 'min-h-[180px]',
   GAME_HISTORY_PANEL_HEIGHT_CLASS: 'h-[640px]',
-  GAME_HISTORY_PANEL_MAX_HEIGHT_CLASS: 'max-h-[calc(100vh-8rem)]'
+  GAME_HISTORY_PANEL_MAX_HEIGHT_CLASS: 'max-h-[calc(100vh-8rem)]',
+  SYMBOLS: {
+    ARROW_LEFT: '←',
+    ARROW_RIGHT: '→',
+    SEPARATOR: '|',
+    BANKROLL: '🧧'
+  }
 };

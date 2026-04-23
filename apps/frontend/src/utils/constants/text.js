@@ -41,7 +41,8 @@ export const I18N = {
       unknownPlayer: 'Unknown',
       legend: 'Legend',
       rank: (rank) => `RANK 0${rank}`,
-      emptyState: 'No legends recorded yet. Will you be the first?'
+      emptyState: 'No legends recorded yet. Will you be the first?',
+      ordinals: ['th', 'st', 'nd', 'rd']
     },
     end: {
       sessionTerminated: 'BET GAME\nTERMINATED',
