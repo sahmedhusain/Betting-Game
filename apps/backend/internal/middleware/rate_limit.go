@@ -23,7 +23,12 @@ func SetupRateLimiter() fiber.Handler {
 			return c.IP()
 		},
 		Next: func(c *fiber.Ctx) bool {
-			return c.Path() == constants.HealthPath
+			path := c.Path()
+			return path == constants.HealthPath ||
+				path == constants.APIBasePath+constants.SessionStart ||
+				path == constants.APIBasePath+constants.SessionValidate ||
+				path == constants.APIBasePath+constants.SessionLogout ||
+				path == constants.APIBasePath+constants.SessionState
 		},
 		LimitReached: func(c *fiber.Ctx) error {
 			return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
