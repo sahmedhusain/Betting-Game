@@ -1,4 +1,5 @@
 import { API_CONFIG, API_ENDPOINTS, API_QUERY, TEXT } from '../utils/constants.js';
+import { store } from '../state/State.js';
 
 function isRecord(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -43,9 +44,18 @@ async function parseJsonSafe(response) {
   }
 }
 
-async function requestJson(url, init) {
-  const response = await fetch(url, init);
+async function requestJson(url, init = {}) {
+  const response = await fetch(url, {
+    ...init,
+    credentials: 'include'
+  });
   const payload = await parseJsonSafe(response);
+
+  if (response.status === 401) {
+    if (store) {
+      store.setState({ sessionValid: false, playerName: '' });
+    }
+  }
 
   if (!response.ok) {
     const message = isRecord(payload)
@@ -58,6 +68,34 @@ async function requestJson(url, init) {
 }
 
 export const Api = {
+  async startSession(username) {
+    return await requestJson(`${API_CONFIG.BASE_URL}${API_ENDPOINTS.SESSION_START}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username })
+    });
+  },
+
+  async validateSession() {
+    return await requestJson(`${API_CONFIG.BASE_URL}${API_ENDPOINTS.SESSION_VALIDATE}`, {
+      method: 'GET'
+    });
+  },
+
+  async logoutSession() {
+    return await requestJson(`${API_CONFIG.BASE_URL}${API_ENDPOINTS.SESSION_LOGOUT}`, {
+      method: 'POST'
+    });
+  },
+
+  async saveGameState(state) {
+    return await requestJson(`${API_CONFIG.BASE_URL}${API_ENDPOINTS.SESSION_STATE}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(state)
+    });
+  },
+
   async getLeaderboard() {
     const params = new URLSearchParams({
       [API_QUERY.LIMIT]: String(API_CONFIG.LEADERBOARD_LIMIT)

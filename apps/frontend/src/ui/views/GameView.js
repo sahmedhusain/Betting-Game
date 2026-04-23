@@ -46,9 +46,17 @@ export function GameView({ state, engine }) {
             h('p', { class: 'text-[10px] uppercase tracking-[0.26em] font-black text-emerald-400' }, UI_CONFIG.GAME_BRANDING.SUBTITLE)
           )
         ),
-        h('div', { class: 'flex items-center gap-3 text-right' },
-          h('span', { class: 'text-[10px] uppercase tracking-[0.2em] font-black text-slate-500' }, TEXT.game.playerLabel),
-          h('span', { class: 'px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm md:text-base font-black text-white tracking-wide' }, state.playerName || TEXT.game.anonymousPlayer)
+        h('div', { class: 'flex items-center gap-4 text-right' },
+          h('div', { class: 'flex flex-col items-end' },
+            h('span', { class: 'text-[10px] uppercase tracking-[0.2em] font-black text-slate-500 mb-1' }, TEXT.game.playerLabel),
+            h('span', { class: 'px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm md:text-base font-black text-white tracking-wide' }, state.playerName || TEXT.game.anonymousPlayer)
+          ),
+          h('button', {
+            class: 'w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-500 hover:text-white hover:bg-rose-500/20 hover:border-rose-500/30 transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed',
+            title: 'Logout',
+            disabled: state.isResolvingBet,
+            onclick: () => engine.logout()
+          }, UI_CONFIG.SYMBOLS.CLOSE || '×')
         )
       ),
 

@@ -1,6 +1,7 @@
 package constants
 
 const (
-	UsersCollection       = "users"
+	UsersCollection        = "users"
 	GameSessionsCollection = "game_sessions"
+	AuthSessionsCollection = "auth_sessions"
 )

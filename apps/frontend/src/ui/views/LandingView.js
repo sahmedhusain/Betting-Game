@@ -34,7 +34,10 @@ export function LandingView({ state, engine }) {
           ),
           // Persistent Title
           h('h1', { class: 'text-5xl sm:text-7xl lg:text-8xl font-black font-outfit tracking-tighter leading-none whitespace-pre-line text-white mb-6' }, TEXT.landing.title),
-          h('p', { class: 'text-slate-400 text-lg lg:text-xl max-w-xl leading-relaxed' }, TEXT.landing.subtitle)
+          h('div', { class: 'flex items-center gap-4 mb-6' },
+            h('p', { class: 'text-slate-400 text-lg lg:text-xl max-w-xl leading-relaxed' }, TEXT.landing.subtitle),
+            state.backendDown && h('div', { class: 'px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-widest animate-pulse' }, 'Server Offline')
+          )
         ),
 
         // Interactive Section - Stable Height

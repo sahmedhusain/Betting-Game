@@ -53,7 +53,13 @@ func SaveScore(c *fiber.Ctx) error {
 	if err := c.BodyParser(&input); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": constants.ErrInvalidRequestBody})
 	}
-	err := scoreService.ProcessAndSave(input.Username, input.Score, input.HandsPlayed)
+
+	username, ok := c.Locals("username").(string)
+	if !ok || username == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized: Identity missing"})
+	}
+
+	err := scoreService.ProcessAndSave(username, input.Score, input.HandsPlayed)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}

@@ -70,4 +70,19 @@ export class Deck {
             reshuffleCount: this.reshuffleCount
         };
     }
+
+    exportState() {
+        return {
+            drawPile: this.drawPile,
+            discardPile: this.discardPile,
+            reshuffleCount: this.reshuffleCount
+        };
+    }
+
+    importState(state) {
+        if (!state) return;
+        this.drawPile = state.drawPile || [];
+        this.discardPile = state.discardPile || [];
+        this.reshuffleCount = state.reshuffleCount || 0;
+    }
 }

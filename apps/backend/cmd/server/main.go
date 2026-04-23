@@ -4,6 +4,7 @@ import (
 	"backend/internal/config"
 	"backend/internal/constants"
 	"backend/internal/middleware"
+	"backend/internal/repository"
 	"backend/internal/routes"
 	"log"
 	"os"
@@ -16,6 +17,7 @@ import (
 func main() {
 	config.LoadEnv()
 	config.ConnectDB()
+	repository.InitSessionIndices()
 
 	app := fiber.New(fiber.Config{
 		AppName: constants.AppName,

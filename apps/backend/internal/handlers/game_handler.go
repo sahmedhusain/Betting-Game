@@ -16,8 +16,14 @@ func SaveGameSession(c *fiber.Ctx) error {
 	if err := c.BodyParser(&input); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": constants.ErrInvalidRequestBody})
 	}
+
+	username, ok := c.Locals("username").(string)
+	if !ok || username == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized: Identity missing"})
+	}
+
 	session := models.GameSession{
-		Username:    input.Username,
+		Username:    username,
 		FinalScore:  input.Score,
 		HandsPlayed: input.HandsPlayed,
 		EndedAt:     time.Now(),
