@@ -144,7 +144,10 @@ export function allowPlayAgainTransition() {
 }
 
 export async function handleBootstrap() {
-  await engine.validateSession();
+  await Promise.all([
+    engine.validateSession(),
+    engine.loadLeaderboard()
+  ]);
   handleRouting();
 }
 

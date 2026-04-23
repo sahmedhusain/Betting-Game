@@ -3,7 +3,7 @@ export const I18N = {
     landing: {
       branding: 'BETTING GAME',
       goBack: 'Go Back',
-      registration: 'Registration',
+      registration: 'Identify yourself',
       title: 'MAHJONG\nBETTING',
       subtitle: 'Premium betting experience powered by state-of-the-art tile mechanics.',
       logoSubtitle: 'STRATEGIC TILE ENGINE',
@@ -14,9 +14,9 @@ export const I18N = {
         'Manage your bankroll through strategic rounds',
         'Climb the leaderboard with high-performance play'
       ],
-      identifyPlayer: 'Enter Player Name',
+      identifyPlayer: 'Player Name',
       namePlaceholder: 'YOUR NAME',
-      allowedNameChars: 'Letters, numbers, dots, underscores, or hyphens.',
+      allowedNameChars: 'Only alphanumeric, dot (.), underscore (_), or hyphen (-) characters are allowed.',
       nameRules: (minLen, maxLen) => `Character limit: ${minLen}–${maxLen}`,
       startButton: 'Start Game',
       hallOfFame: 'Leaderboard',
