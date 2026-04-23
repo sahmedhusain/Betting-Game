@@ -20,12 +20,13 @@ export function LandingView({ state, engine }) {
         h('div', { class: 'flex flex-col items-start mb-10 shrink-0' },
           // Branding
           h('div', { class: 'flex items-center gap-4 mb-8 group cursor-default' },
-            h('div', { class: 'w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:rotate-12 transition-transform' },
-              h('div', { class: 'w-5 h-7 border-2 border-white rounded-sm relative' },
-                h('div', { class: 'absolute top-1 left-1 w-1 h-1 bg-white rounded-full' }),
-                h('div', { class: 'absolute bottom-1 right-1 w-1 h-1 bg-white rounded-full' })
-              )
-            ),
+          h('div', { class: 'w-10 h-10 flex items-center justify-center group-hover:rotate-12 transition-transform' },
+            h('img', { 
+              src: '/logo.svg', 
+              alt: 'Logo', 
+              class: 'w-full h-full drop-shadow-lg' 
+            })
+          ),
             h('div', { class: 'flex flex-col' },
               h('span', { class: 'text-base font-black tracking-tighter text-white leading-none' }, TEXT.landing.branding),
               h('span', { class: 'text-[9px] font-bold tracking-[0.3em] text-emerald-500 uppercase' }, TEXT.landing.logoSubtitle)

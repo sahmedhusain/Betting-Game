@@ -34,11 +34,12 @@ export function GameView({ state, engine }) {
 
       h('div', { class: 'glass-panel border border-white/10 rounded-[1.6rem] px-5 py-4 md:px-7 md:py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4' },
         h('div', { class: 'flex items-center gap-4' },
-          h('div', { class: 'w-11 h-11 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30' },
-            h('div', { class: 'w-5 h-7 border-2 border-white rounded-sm relative' },
-              h('div', { class: 'absolute top-1 left-1 w-1 h-1 bg-white rounded-full' }),
-              h('div', { class: 'absolute bottom-1 right-1 w-1 h-1 bg-white rounded-full' })
-            )
+          h('div', { class: 'w-11 h-11 flex items-center justify-center' },
+            h('img', { 
+              src: '/logo.svg', 
+              alt: 'Logo', 
+              class: 'w-full h-full drop-shadow-xl' 
+            })
           ),
           h('div', {},
             h('h1', { class: 'text-xl md:text-2xl font-black text-white tracking-tight font-outfit' }, UI_CONFIG.GAME_BRANDING.TITLE),
