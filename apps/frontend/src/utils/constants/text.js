@@ -19,7 +19,8 @@ export const I18N = {
       allowedNameChars: 'Letters, numbers, dots, underscores, or hyphens.',
       nameRules: (minLen, maxLen) => `Character limit: ${minLen}–${maxLen}`,
       startButton: 'Start Game',
-      hallOfFame: 'Top 5 Hall of Fame'
+      hallOfFame: 'Leaderboard',
+      serverUnavailable: 'Server unavailable. Please try again later.'
     },
     game: {
       drawLane: 'Draw Lane',
@@ -90,10 +91,31 @@ export const I18N = {
         logSessionFailed: 'Failed to log game session:'
       }
     },
-    notFound: {
-      title: '404',
-      subtitle: 'The tile you are looking for has been discarded.',
-      goHome: 'Back to Safety'
+    error: {
+      unauthorized: {
+        code: '401',
+        title: 'UNAUTHORIZED',
+        message: 'The page you are trying to access requires a valid session. Please identify yourself to continue.',
+        buttonText: 'BACK TO HOME'
+      },
+      notFound: {
+        code: '404',
+        title: 'PAGE NOT FOUND',
+        message: 'The requested page is invalid or has been discarded from the active session.',
+        buttonText: 'BACK TO HOME'
+      },
+      internalServerError: {
+        code: '500',
+        title: 'INTERNAL SERVER ERROR',
+        message: 'An internal server error occurred. Please try again or contact support.',
+        buttonText: 'BACK TO HOME'
+      },
+      general: {
+        code: 'ERROR',
+        title: 'Unexpected Error',
+        message: 'An unexpected state occurred. Please try again or contact support.',
+        buttonText: 'BACK TO HOME'
+      }
     },
     tiles: {
       WIND_EAST: 'East Wind',

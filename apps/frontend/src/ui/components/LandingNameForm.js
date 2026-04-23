@@ -13,16 +13,20 @@ export function LandingNameForm({ state, engine }) {
     store.setState({ playerName: e.target.value.slice(0, PLAYER_NAME_MAX_LEN) });
   };
 
-  const handleStart = () => {
-    store.setState({ hasAttemptedStart: true });
+  const handleStart = async () => {
+    store.setState({ hasAttemptedStart: true, sessionError: '' });
 
     if (!canStart) return;
 
-    store.setState({ playerName: normalizedName });
-    window.location.hash = ROUTES.PLAY;
-    engine.startGame(normalizedName);
-
+    const success = await engine.startSession(normalizedName);
+    if (success) {
+      window.location.hash = ROUTES.PLAY;
+      engine.startGame(normalizedName);
+    }
   };
+
+  const errorToShow = showNameError ? nameError : state.sessionError;
+  const isBackendDown = state.backendDown;
 
   return h('div', { class: 'w-full max-w-md animate-fade-in', key: 'landing-form' },
     h('div', { class: 'relative mb-6' },
@@ -48,13 +52,18 @@ export function LandingNameForm({ state, engine }) {
     ),
 
     h('div', { class: 'min-h-[40px] mb-8' },
-      showNameError
-        ? h('p', { class: 'text-xs font-bold text-rose-400 flex items-center gap-2' },
-          h('span', { class: 'w-1 h-1 rounded-full bg-rose-500' }),
-          nameError
+      isBackendDown
+        ? h('p', { class: 'text-xs font-bold text-amber-400 flex items-center gap-2' },
+          h('span', { class: 'w-1.5 h-1.5 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50' }),
+          TEXT.landing.serverUnavailable
         )
-        : h('p', { class: 'text-[10px] text-slate-500 uppercase tracking-[0.2em] leading-relaxed' },
-          `${TEXT.landing.allowedNameChars} ${TEXT.landing.nameRules(PLAYER_NAME_MIN_LEN, PLAYER_NAME_MAX_LEN)}`)
+        : errorToShow
+          ? h('p', { class: 'text-xs font-bold text-rose-400 flex items-center gap-2' },
+            h('span', { class: 'w-1 h-1 rounded-full bg-rose-500' }),
+            errorToShow
+          )
+          : h('p', { class: 'text-[10px] text-slate-500 uppercase tracking-[0.2em] leading-relaxed' },
+            `${TEXT.landing.allowedNameChars} ${TEXT.landing.nameRules(PLAYER_NAME_MIN_LEN, PLAYER_NAME_MAX_LEN)}`)
     ),
 
     h('button', {

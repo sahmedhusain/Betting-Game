@@ -1,5 +1,5 @@
 import { createElement as h } from '../../picojs/framework/core.js';
-import { TEXT } from '../../utils/constants.js';
+import { TEXT, ROUTES } from '../../utils/constants.js';
 import { HistoryService } from '../../services/HistoryService.js';
 import { EndSummaryPanel } from '../components/EndSummaryPanel.js';
 import { EndHistoryPanel } from '../components/EndHistoryPanel.js';
@@ -26,9 +26,13 @@ export function EndView({ state, engine }) {
     return comments.keepUp;
   };
 
-  const handlePlayAgain = () => {
+  const handlePlayAgain = async () => {
     allowPlayAgainTransition();
-    engine.startGame(state.playerName);
+    const success = await engine.startSession(state.playerName);
+    if (success) {
+      engine.startGame(state.playerName);
+      window.location.hash = ROUTES.PLAY;
+    }
   };
 
   return h('div', { class: 'w-full h-screen p-[8vh] flex flex-col items-center justify-center animate-fade-in overflow-hidden' },

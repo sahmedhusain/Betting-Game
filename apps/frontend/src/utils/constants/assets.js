@@ -11,6 +11,8 @@ export const ASSETS = {
     MEDAL: '/assets/icons/medal.svg',
     STAR: '/assets/icons/star.svg',
     WALLET: '/assets/icons/wallet.svg',
-    BANKROLL: '/assets/icons/bankroll.svg'
+    BANKROLL: '/assets/icons/bankroll.svg',
+    ERROR_401: '/assets/icons/error-401.svg',
+    ERROR_404: '/assets/icons/error-404.svg'
   }
 };

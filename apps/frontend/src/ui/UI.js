@@ -3,10 +3,16 @@ import { LandingView } from './views/LandingView.js';
 import { GameView } from './views/GameView.js';
 import { EndView } from './views/EndView.js';
 import { PHASES } from '../utils/constants.js';
-import { NotFound } from './pages/NotFound.js';
+import { ErrorView } from './views/ErrorView.js';
+import { LoadingView } from './views/LoadingView.js';
 
 export function resolveView(state, engine) {
   const shell = (phaseKey, content) => h('div', { key: `page-${phaseKey}` }, content);
+
+  // Guard protected routes during initial bootstrap
+  if (!state.sessionChecked && (state.gamePhase === PHASES.PLAYING || state.gamePhase === PHASES.GAME_OVER)) {
+    return shell('loading', LoadingView());
+  }
 
   switch (state.gamePhase) {
     case PHASES.LANDING:
@@ -15,8 +21,8 @@ export function resolveView(state, engine) {
       return shell(PHASES.PLAYING, GameView({ state, engine }));
     case PHASES.GAME_OVER:
       return shell(PHASES.GAME_OVER, EndView({ state, engine }));
-    case PHASES.NOT_FOUND:
-      return shell(PHASES.NOT_FOUND, NotFound());
+    case PHASES.ERROR:
+      return shell(PHASES.ERROR, ErrorView({ state, engine }));
     default:
       return shell(PHASES.LANDING, LandingView({ state, engine }));
   }
