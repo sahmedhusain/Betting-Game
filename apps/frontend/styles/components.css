@@ -49,8 +49,8 @@
   .icon-medal {
     width: 28px;
     height: 28px;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l2.4 4.9h5.3l-3.8 3.7.9 5.3-4.8-2.5-4.8 2.5.9-5.3-3.8-3.7h5.3z'/%3E%3Ccircle cx='12' cy='8' r='6' fill='none' stroke='black' stroke-width='1.5'/%3E%3Cpath d='M8.5 14L4 22h16l-4.5-8'/%3E%3C/svg%3E") no-repeat center;
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l2.4 4.9h5.3l-3.8 3.7.9 5.3-4.8-2.5-4.8 2.5.9-5.3-3.8-3.7h5.3z'/%3E%3Ccircle cx='12' cy='8' r='6' fill='none' stroke='black' stroke-width='1.5'/%3E%3Cpath d='M8.5 14L4 22h16l-4.5-8'/%3E%3C/svg%3E") no-repeat center;
+    mask: url("/assets/icons/medal.svg") no-repeat center;
+    -webkit-mask: url("/assets/icons/medal.svg") no-repeat center;
   }
 
   .icon-medal-gold {
@@ -72,15 +72,23 @@
     width: 18px;
     height: 18px;
     background-color: currentColor;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E") no-repeat center;
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E") no-repeat center;
+    mask: url("/assets/icons/star.svg") no-repeat center;
+    -webkit-mask: url("/assets/icons/star.svg") no-repeat center;
   }
 
   .icon-wallet {
     width: 18px;
     height: 18px;
     background-color: currentColor;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/%3E%3C/svg%3E") no-repeat center;
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/%3E%3C/svg%3E") no-repeat center;
+    mask: url("/assets/icons/wallet.svg") no-repeat center;
+    -webkit-mask: url("/assets/icons/wallet.svg") no-repeat center;
+  }
+
+  .icon-bankroll {
+    width: 24px;
+    height: 24px;
+    background-color: currentColor;
+    mask: url("/assets/icons/bankroll.svg") no-repeat center;
+    -webkit-mask: url("/assets/icons/bankroll.svg") no-repeat center;
   }
 }

@@ -1,9 +1,9 @@
 import { store } from '../state/State.js';
 import { Deck } from './Deck.js';
 import { TILE_TYPES, calculateHandValue, updateDynamicValue } from './TileConfig.js';
-import { GAME_CONFIG, PHASES, BET_TYPES, GAME_ACTIONS, TEXT } from '../utils/constants.js';
+import { GAME_CONFIG, PHASES, BET_TYPES, GAME_ACTIONS, TEXT, SOUND_PATHS } from '../utils/constants.js';
 import { Api } from '../services/Api.js';
-import { sfx } from '../services/Sfx.js';
+import { soundService } from '../services/SoundService.js';
 import {
   applyDynamicAdjustments,
   calculateScoreDelta,
@@ -30,6 +30,10 @@ class GameEngine {
   startGame(playerName) {
     this.deck = new Deck();
     const initialHand = this.deck.draw(GAME_CONFIG.HAND_SIZE);
+    
+    soundService.playAmbient(SOUND_PATHS.AMBIENT.GAMEPLAY);
+    soundService.playClick();
+
     store.setState({
       playerName,
       gamePhase: PHASES.PLAYING,
@@ -45,12 +49,12 @@ class GameEngine {
   }
 
   betHigher() {
-    sfx.playBetClick();
+    soundService.playBet();
     this.processBet(BET_TYPES.HIGHER);
   }
 
   betLower() {
-    sfx.playBetClick();
+    soundService.playBet();
     this.processBet(BET_TYPES.LOWER);
   }
 
@@ -68,9 +72,9 @@ class GameEngine {
     const isWin = isWinningBet({ betType, currentVal, nextVal });
 
     if (isWin) {
-      sfx.playWinChime();
+      soundService.playWin();
     } else {
-      sfx.playLoseThud();
+      soundService.playLoss();
     }
 
     const boundaryHit = applyDynamicAdjustments({
@@ -106,6 +110,9 @@ class GameEngine {
 
   async endGame() {
     const state = store.getState();
+    soundService.stopAmbient();
+    soundService.playGameOver();
+
     store.setState({ gamePhase: PHASES.GAME_OVER });
     HistoryService.saveGame(state.playerName, state.score);
 

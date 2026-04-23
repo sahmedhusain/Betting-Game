@@ -8,7 +8,6 @@ export const UI_CONFIG = {
   SYMBOLS: {
     ARROW_LEFT: '←',
     ARROW_RIGHT: '→',
-    SEPARATOR: '|',
-    BANKROLL: '🧧'
+    SEPARATOR: '|'
   }
 };
