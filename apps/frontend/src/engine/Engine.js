@@ -97,11 +97,19 @@ class GameEngine {
 
     const newScore = clampScore(state.score + scoreDelta);
 
+    const centerX = typeof window !== 'undefined' ? window.innerWidth / 2 : 0;
+    const centerY = typeof window !== 'undefined' ? window.innerHeight / 2 : 0;
+
     store.setState({
       score: newScore,
       currentHand: nextHand,
       currentHandValue: nextVal,
       history: [...state.history, createHistoryEntry({ hand: state.currentHand, value: currentVal, isWin })],
+      floatingFeedback: {
+        isVisible: true,
+        isWin,
+        position: { x: centerX, y: centerY },
+      },
       ...this.deck.getStats()
     });
 

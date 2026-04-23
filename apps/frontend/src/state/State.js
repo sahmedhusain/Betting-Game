@@ -17,6 +17,12 @@ export const initialState = {
   drawQueue: [],
   animationNonce: 0,
 
+  floatingFeedback: {
+    isVisible: false,
+    isWin: false,
+    position: { x: 0, y: 0 },
+  },
+
   hasAttemptedStart: false,
   showJoinForm: false
 };

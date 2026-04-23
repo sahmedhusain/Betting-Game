@@ -25,8 +25,19 @@ initStore(store);
 
 store.subscribe(handleSideEffects);
 
-// Global browser events
-window.addEventListener(EVENTS.HASHCHANGE, (e) => eventRegistry.handlers[routingHandlerId](e));
-document.addEventListener(EVENTS.KEYDOWN, (e) => eventRegistry.handlers[keyboardHandlerId](e));
+// Global browser events - guarded to avoid duplicate listeners in dev reloads.
+if (window.__bettingGameHashHandler) {
+  window.removeEventListener(EVENTS.HASHCHANGE, window.__bettingGameHashHandler);
+}
+
+if (window.__bettingGameKeydownHandler) {
+  document.removeEventListener(EVENTS.KEYDOWN, window.__bettingGameKeydownHandler);
+}
+
+window.__bettingGameHashHandler = (e) => eventRegistry.handlers[routingHandlerId](e);
+window.__bettingGameKeydownHandler = (e) => eventRegistry.handlers[keyboardHandlerId](e);
+
+window.addEventListener(EVENTS.HASHCHANGE, window.__bettingGameHashHandler);
+document.addEventListener(EVENTS.KEYDOWN, window.__bettingGameKeydownHandler);
 
 handleSideEffects();

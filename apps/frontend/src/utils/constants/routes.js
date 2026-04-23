@@ -1,8 +1,8 @@
 export const ROUTES = {
-  LANDING: '#/landing',
-  PLAY: '#/play',
-  GAME_OVER: '#/gameover',
-  NOT_FOUND: '#/404'
+  LANDING: '#landing',
+  PLAY: '#play',
+  GAME_OVER: '#gameover',
+  NOT_FOUND: '#404'
 };
 
 export const PHASES = {

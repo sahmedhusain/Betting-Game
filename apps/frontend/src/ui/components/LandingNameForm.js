@@ -38,7 +38,11 @@ export function LandingNameForm({ state, engine }) {
         value: state.playerName,
         oninput: handleNameInput,
         onkeydown: (e) => {
-          if (e.key === KEYS.ENTER) handleStart();
+          if (e.key === KEYS.ENTER) {
+            e.preventDefault();
+            e.stopPropagation();
+            handleStart();
+          }
         }
       })
     ),

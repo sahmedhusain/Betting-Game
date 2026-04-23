@@ -3,20 +3,103 @@ import { engine } from '../engine/Engine.js';
 import { PHASES, ROUTES, KEYS } from '../utils/constants.js';
 import { normalizePlayerName, validatePlayerName } from '../utils/helpers.js';
 
+function normalizeHash(rawHash = '') {
+  const hash = rawHash || '';
+  if (!hash) return ROUTES.LANDING;
+
+  if (hash.startsWith('#/')) {
+    return `#${hash.slice(2)}`;
+  }
+
+  return hash;
+}
+
+function routeFromPhase(phase) {
+  if (phase === PHASES.PLAYING) return ROUTES.PLAY;
+  if (phase === PHASES.GAME_OVER) return ROUTES.GAME_OVER;
+  if (phase === PHASES.NOT_FOUND) return ROUTES.NOT_FOUND;
+  return ROUTES.LANDING;
+}
+
+function navigateToHash(targetHash, { replace = false } = {}) {
+  if (window.location.hash === targetHash) return;
+
+  if (replace) {
+    history.replaceState(null, '', targetHash);
+    window.dispatchEvent(new HashChangeEvent('hashchange'));
+    return;
+  }
+
+  window.location.hash = targetHash;
+}
+
+function isValidPhaseState(phase, state) {
+  if (phase === PHASES.PLAYING) {
+    return Boolean(state.playerName) && Array.isArray(state.currentHand) && state.currentHand.length > 0;
+  }
+
+  if (phase === PHASES.GAME_OVER) {
+    return Boolean(state.playerName);
+  }
+
+  return true;
+}
+
+function getPhaseResetPatch(phase) {
+  if (phase === PHASES.LANDING) {
+    return {
+      showJoinForm: false,
+      hasAttemptedStart: false,
+      floatingFeedback: { isVisible: false, isWin: false, position: { x: 0, y: 0 } }
+    };
+  }
+
+  if (phase === PHASES.PLAYING) {
+    return {
+      showJoinForm: false,
+      hasAttemptedStart: false,
+      floatingFeedback: { isVisible: false, isWin: false, position: { x: 0, y: 0 } }
+    };
+  }
+
+  if (phase === PHASES.GAME_OVER) {
+    return {
+      showJoinForm: false,
+      hasAttemptedStart: false,
+      floatingFeedback: { isVisible: false, isWin: false, position: { x: 0, y: 0 } }
+    };
+  }
+
+  return {};
+}
+
 export function phaseFromHash() {
-  const hash = window.location.hash || ROUTES.LANDING;
+  const hash = normalizeHash(window.location.hash || ROUTES.LANDING);
   if (hash === ROUTES.PLAY) return PHASES.PLAYING;
   if (hash === ROUTES.GAME_OVER) return PHASES.GAME_OVER;
   if (hash === ROUTES.LANDING) return PHASES.LANDING;
   if (hash === ROUTES.NOT_FOUND) return PHASES.NOT_FOUND;
-  
+
   return PHASES.NOT_FOUND;
 }
 
 export function handleRouting() {
+  const normalizedHash = normalizeHash(window.location.hash || ROUTES.LANDING);
+  if (window.location.hash !== normalizedHash) {
+    navigateToHash(normalizedHash, { replace: true });
+    return;
+  }
+
+  const state = store.getState();
   const phase = phaseFromHash();
-  if (store.getState().gamePhase !== phase) {
-    store.setState({ gamePhase: phase });
+
+  if (!isValidPhaseState(phase, state)) {
+    navigateToHash(ROUTES.LANDING, { replace: true });
+    return;
+  }
+
+  if (state.gamePhase !== phase) {
+    store.setState({ gamePhase: phase, ...getPhaseResetPatch(phase) });
   }
 }
 
@@ -24,14 +107,22 @@ let lastPhase = null;
 
 export function handleSideEffects() {
   const state = store.getState();
+  const previousPhase = lastPhase;
 
-  let hash = ROUTES.LANDING;
-  if (state.gamePhase === PHASES.PLAYING) hash = ROUTES.PLAY;
-  else if (state.gamePhase === PHASES.GAME_OVER) hash = ROUTES.GAME_OVER;
-  else if (state.gamePhase === PHASES.NOT_FOUND) hash = window.location.hash || ROUTES.NOT_FOUND;
+  // Keep URL and state in sync with normalized route format
+  const targetHash = routeFromPhase(state.gamePhase);
+  const currentHash = normalizeHash(window.location.hash || ROUTES.LANDING);
 
-  if (window.location.hash !== hash && state.gamePhase !== PHASES.NOT_FOUND) {
-    window.location.hash = hash;
+  if (currentHash !== targetHash && state.gamePhase !== PHASES.NOT_FOUND) {
+
+    navigateToHash(targetHash, { replace: state.gamePhase === PHASES.GAME_OVER });
+  }
+
+  // If user presses Back from game over send them to landing
+  if (previousPhase === PHASES.GAME_OVER && state.gamePhase === PHASES.PLAYING) {
+    navigateToHash(ROUTES.LANDING, { replace: true });
+    store.setState({ gamePhase: PHASES.LANDING, ...getPhaseResetPatch(PHASES.LANDING) });
+    return;
   }
 
   if (state.gamePhase === PHASES.LANDING && lastPhase !== PHASES.LANDING) {
@@ -50,17 +141,17 @@ export function handleKeyboard(e) {
         store.setState({ showJoinForm: true, hasAttemptedStart: false });
         return;
       }
-      
+
       const name = normalizePlayerName(state.playerName);
       if (!validatePlayerName(name)) {
         store.setState({ playerName: name, hasAttemptedStart: true });
-        window.location.hash = ROUTES.PLAY;
+        navigateToHash(ROUTES.PLAY);
         engine.startGame(name);
       } else {
         store.setState({ hasAttemptedStart: true });
       }
     } else if (phase === PHASES.GAME_OVER) {
-      window.location.hash = ROUTES.LANDING;
+      navigateToHash(ROUTES.LANDING, { replace: true });
     }
   }
 
