@@ -1,5 +1,5 @@
 import { createElement as h } from '../../picojs/framework/core.js';
-import { TEXT } from '../../utils/constants.js';
+import { TEXT, ASSETS } from '../../utils/constants.js';
 
 export function TileRenderer({ tile, compact = false, key }) {
   const isSpecial = tile.type !== 'NUMBER';
@@ -8,7 +8,7 @@ export function TileRenderer({ tile, compact = false, key }) {
   const filename = tile.type === 'NUMBER' 
     ? `${tile.faceValue}_${tile.suit}.svg`
     : `${tile.name}.svg`;
-  const imagePath = `/assets/tiles/${filename}`;
+  const imagePath = `${ASSETS.TILES.BASE}${filename}`;
 
   // Get label for special tiles
   const getSpecialLabel = () => {

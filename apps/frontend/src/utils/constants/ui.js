@@ -9,9 +9,7 @@ export const UI_CONFIG = {
     TITLE: 'Mahjong Betting',
     SUBTITLE: 'Strategic Tile Engine'
   },
-  ASSETS: {
-    CARD_BACK_TILE_PATH: '/assets/tiles/card_back.svg'
-  },
+
   SYMBOLS: {
     ARROW_LEFT: '←',
     ARROW_RIGHT: '→',

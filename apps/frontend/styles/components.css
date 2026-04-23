@@ -49,8 +49,8 @@
   .icon-medal {
     width: 28px;
     height: 28px;
-    mask: url("/assets/icons/medal.svg") no-repeat center;
-    -webkit-mask: url("/assets/icons/medal.svg") no-repeat center;
+    mask: var(--url-icon-medal) no-repeat center;
+    -webkit-mask: var(--url-icon-medal) no-repeat center;
   }
 
   .icon-medal-gold {
@@ -72,23 +72,23 @@
     width: 18px;
     height: 18px;
     background-color: currentColor;
-    mask: url("/assets/icons/star.svg") no-repeat center;
-    -webkit-mask: url("/assets/icons/star.svg") no-repeat center;
+    mask: var(--url-icon-star) no-repeat center;
+    -webkit-mask: var(--url-icon-star) no-repeat center;
   }
 
   .icon-wallet {
     width: 18px;
     height: 18px;
     background-color: currentColor;
-    mask: url("/assets/icons/wallet.svg") no-repeat center;
-    -webkit-mask: url("/assets/icons/wallet.svg") no-repeat center;
+    mask: var(--url-icon-wallet) no-repeat center;
+    -webkit-mask: var(--url-icon-wallet) no-repeat center;
   }
 
   .icon-bankroll {
     width: 24px;
     height: 24px;
     background-color: currentColor;
-    mask: url("/assets/icons/bankroll.svg") no-repeat center;
-    -webkit-mask: url("/assets/icons/bankroll.svg") no-repeat center;
+    mask: var(--url-icon-bankroll) no-repeat center;
+    -webkit-mask: var(--url-icon-bankroll) no-repeat center;
   }
 }

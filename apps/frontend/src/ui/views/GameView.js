@@ -1,5 +1,5 @@
 import { createElement as h } from '../../picojs/framework/core.js';
-import { GAME_CONFIG, TEXT, UI_CONFIG } from '../../utils/constants.js';
+import { GAME_CONFIG, TEXT, UI_CONFIG, ASSETS } from '../../utils/constants.js';
 import { ScoreBoard } from '../components/ScoreBoard.js';
 import { HistoryPanel } from '../components/HistoryPanel.js';
 import { HandDisplay } from '../components/HandDisplay.js';
@@ -36,7 +36,7 @@ export function GameView({ state, engine }) {
         h('div', { class: 'flex items-center gap-4' },
           h('div', { class: 'w-11 h-11 flex items-center justify-center' },
             h('img', { 
-              src: '/logo.svg', 
+              src: ASSETS.BRANDING.LOGO, 
               alt: 'Logo', 
               class: 'w-full h-full drop-shadow-xl' 
             })

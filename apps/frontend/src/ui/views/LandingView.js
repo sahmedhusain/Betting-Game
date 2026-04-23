@@ -1,6 +1,6 @@
 import { createElement as h } from '../../picojs/framework/core.js';
 import { store } from '../../state/State.js';
-import { TEXT, UI_CONFIG } from '../../utils/constants.js';
+import { TEXT, UI_CONFIG, ASSETS } from '../../utils/constants.js';
 import { LandingNameForm } from '../components/LandingNameForm.js';
 import { LandingHallPanel } from '../components/LandingHallPanel.js';
 
@@ -22,7 +22,7 @@ export function LandingView({ state, engine }) {
           h('div', { class: 'flex items-center gap-4 mb-8 group cursor-default' },
           h('div', { class: 'w-10 h-10 flex items-center justify-center group-hover:rotate-12 transition-transform' },
             h('img', { 
-              src: '/logo.svg', 
+              src: ASSETS.BRANDING.LOGO, 
               alt: 'Logo', 
               class: 'w-full h-full drop-shadow-lg' 
             })

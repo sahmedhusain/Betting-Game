@@ -5,6 +5,13 @@
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-highlight: rgba(255, 255, 255, 0.12);
   --accent-emerald: #10b981;
+  
+  /* Assets */
+  --url-icon-medal: url("/assets/icons/medal.svg");
+  --url-icon-star: url("/assets/icons/star.svg");
+  --url-icon-wallet: url("/assets/icons/wallet.svg");
+  --url-icon-bankroll: url("/assets/icons/bankroll.svg");
+  --url-tile-back: url("/assets/tiles/card_back.svg");
 }
 
 @layer base {

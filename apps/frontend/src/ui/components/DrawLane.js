@@ -1,5 +1,5 @@
 import { createElement as h } from '../../picojs/framework/core.js';
-import { TEXT, UI_CONFIG } from '../../utils/constants.js';
+import { TEXT, ASSETS, UI_CONFIG } from '../../utils/constants.js';
 
 /**
  * @param {Object} props
@@ -39,8 +39,8 @@ export function DrawLane({ state, isDistributing = false }) {
                 animationFillMode: 'forwards',
               }
             },
-            h('img', {
-              src: UI_CONFIG.ASSETS.CARD_BACK_TILE_PATH,
+            h('img', { 
+              src: ASSETS.TILES.BACK,
               alt: 'Card Back',
               class: 'w-full h-full object-cover rounded-[0.95rem]'
             })
