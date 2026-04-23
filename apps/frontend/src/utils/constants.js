@@ -6,3 +6,4 @@ export { API_CONFIG, API_ENDPOINTS, API_QUERY } from './constants/api.js';
 export { TEXT } from './constants/text.js';
 export { EVENTS, KEYS } from './constants/events.js';
 export { SOUND_PATHS } from './constants/audio.js';
+export { TILE_TYPES, SUITS, TILE_VALUES, WINDS, DRAGONS, FLOWERS, SEASONS } from './constants/tiles.js';
