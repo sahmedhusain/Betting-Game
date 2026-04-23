@@ -1,0 +1,25 @@
+<svg width="240" height="336" viewBox="0 0 240 336" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="240" y2="336" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111827"/>
+      <stop offset="1" stop-color="#0B1220"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="240" y2="336" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#34D399" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#10B981" stop-opacity="0.95"/>
+    </linearGradient>
+    <pattern id="pattern" width="28" height="28" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="28" height="28" fill="#0F172A"/>
+      <path d="M14 0L28 14L14 28L0 14L14 0Z" fill="#1F2937"/>
+      <circle cx="14" cy="14" r="3.2" fill="#34D399" fill-opacity="0.6"/>
+    </pattern>
+  </defs>
+
+  <rect x="4" y="4" width="232" height="328" rx="26" fill="url(#bg)" stroke="url(#edge)" stroke-width="8"/>
+  <rect x="18" y="18" width="204" height="300" rx="18" fill="url(#pattern)" stroke="#34D399" stroke-opacity="0.5" stroke-width="2"/>
+
+  <rect x="60" y="108" width="120" height="120" rx="20" fill="#0B1220" stroke="#34D399" stroke-opacity="0.7" stroke-width="4"/>
+  <path d="M120 132L138 156L168 160L146 180L152 208L120 194L88 208L94 180L72 160L102 156L120 132Z" fill="#34D399" fill-opacity="0.85"/>
+  <circle cx="120" cy="264" r="8" fill="#34D399" fill-opacity="0.75"/>
+  <circle cx="120" cy="72" r="8" fill="#34D399" fill-opacity="0.75"/>
+</svg>

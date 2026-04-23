@@ -16,6 +16,10 @@ export const initialState = {
   isDrawing: false,
   drawQueue: [],
   animationNonce: 0,
+  isResolvingBet: false,
+  isHandExiting: false,
+  handExitAnimationNonce: 0,
+  handDistributionNonce: 0,
 
   floatingFeedback: {
     isVisible: false,

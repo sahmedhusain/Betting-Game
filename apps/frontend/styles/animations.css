@@ -96,18 +96,27 @@
   height: 92px;
   border-radius: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.08),
-      rgba(255, 255, 255, 0.02)
-    ),
-    radial-gradient(circle at top, rgba(16, 185, 129, 0.15), transparent 65%);
+  background: rgba(2, 6, 23, 0.75);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   animation:
     drawCardSlide 1.15s ease-in-out infinite,
     drawCardPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes handExitSweep {
+  0% {
+    opacity: 1;
+    transform: translateX(0) translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(52px) translateY(-28px) scale(0.86);
+  }
+}
+
+.animate-hand-exit > *:not(:first-child) {
+  animation: handExitSweep 0.32s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .draw-preview-card-1 {

@@ -30,12 +30,16 @@ export const I18N = {
       reshuffles: 'Reshuffles',
       bankroll: 'Bankroll',
       currentValue: 'Current Value',
+      playerLabel: 'Player',
+      anonymousPlayer: 'Anonymous',
+      resolvingHand: 'Resolving hand...',
       betLower: 'Bet Lower',
       betHigher: 'Bet Higher',
       waitingForFirstBet: 'Waiting for first bet...',
       handHistory: 'Hand History',
       sessionHand: (number) => `GAME HAND #${number}`,
-      handValue: 'Hand Value'
+      handValue: 'Hand Value',
+      drawLaneWithCount: (count) => `Draw Lane · ${count}`
     },
     leaderboard: {
       unknownPlayer: 'Unknown',

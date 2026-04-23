@@ -24,12 +24,9 @@ export function FloatingFeedback({ isVisible, isWin, position = { x: 0, y: 0 }, 
   return h(
     'div',
     {
-      class: `fixed pointer-events-none`,
+      class: 'fixed inset-0 pointer-events-none flex items-center justify-center',
       style: {
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-        transform: 'translate(-50%, -50%)',
-        zIndex: 50,
+        zIndex: 70,
       },
       onanimationend: onAnimationEnd,
     },
@@ -37,20 +34,20 @@ export function FloatingFeedback({ isVisible, isWin, position = { x: 0, y: 0 }, 
     h(
       'div',
       {
-        class: `flex flex-col items-center gap-2 ${animationClass}`,
+        class: `flex flex-col items-center gap-4 ${animationClass}`,
       },
 
       // Icon Container
       h(
         'div',
         {
-          class: `w-12 h-12 rounded-full ${iconBgClass} border flex items-center justify-center backdrop-blur-sm`,
+          class: `w-24 h-24 md:w-28 md:h-28 rounded-full ${iconBgClass} border-2 flex items-center justify-center backdrop-blur-sm shadow-2xl`,
         },
-        h('span', { class: `text-2xl font-black ${colorClass}` }, icon)
+        h('span', { class: `text-5xl md:text-6xl font-black ${colorClass}` }, icon)
       ),
 
       // Text
-      h('span', { class: `text-lg font-black ${colorClass} tracking-wider uppercase` }, text)
+      h('span', { class: `text-4xl md:text-6xl font-black ${colorClass} tracking-wider uppercase drop-shadow-[0_0_28px_rgba(16,185,129,0.45)]` }, text)
     )
   );
 }

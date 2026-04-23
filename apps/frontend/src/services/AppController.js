@@ -167,6 +167,10 @@ export function handleKeyboard(e) {
 
   // Shortcuts
   if (phase === PHASES.PLAYING) {
+    if (state.isResolvingBet) {
+      return;
+    }
+
     const key = e.key.toLowerCase();
     if (key === KEYS.ARROW_UP || key === KEYS.H) {
       e.preventDefault();

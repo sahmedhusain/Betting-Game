@@ -42,6 +42,10 @@ class GameEngine {
       currentHandValue: calculateHandValue(initialHand),
       score: GAME_CONFIG.INITIAL_SCORE,
       history: [],
+      isResolvingBet: false,
+      handExitAnimationNonce: 0,
+      isHandExiting: false,
+      handDistributionNonce: (store.getState().handDistributionNonce || 0) + 1,
       ...this.deck.getStats()
     });
 
@@ -50,17 +54,21 @@ class GameEngine {
   }
 
   betHigher() {
+    if (store.getState().isResolvingBet) return;
     soundService.playBet();
     this.processBet(BET_TYPES.HIGHER);
   }
 
   betLower() {
+    if (store.getState().isResolvingBet) return;
     soundService.playBet();
     this.processBet(BET_TYPES.LOWER);
   }
 
-  processBet(betType) {
+  async processBet(betType) {
     const state = store.getState();
+    if (state.isResolvingBet) return;
+
     const currentVal = state.currentHandValue;
     const nextHand = this.deck.draw(GAME_CONFIG.HAND_SIZE);
 
@@ -97,24 +105,53 @@ class GameEngine {
 
     const newScore = clampScore(state.score + scoreDelta);
 
-    const centerX = typeof window !== 'undefined' ? window.innerWidth / 2 : 0;
-    const centerY = typeof window !== 'undefined' ? window.innerHeight / 2 : 0;
+    // 1) Lock interactions, show feedback, and animate current hand out.
+    store.setState({
+      isResolvingBet: true,
+      floatingFeedback: {
+        isVisible: true,
+        isWin,
+        position: GAME_CONFIG.DEFAULT_FEEDBACK_POSITION
+      }
+    });
 
+    // 2) After feedback is visible, animate current hand out.
+    await this.sleep(GAME_CONFIG.BET_ANIMATION_TIMELINE_MS.FEEDBACK);
+
+    store.setState({
+      handExitAnimationNonce: (store.getState().handExitAnimationNonce || 0) + 1,
+      isHandExiting: true,
+    });
+
+    await this.sleep(GAME_CONFIG.BET_ANIMATION_TIMELINE_MS.EXIT);
+
+    // 3) Swap to next hand and run distribution animation.
     store.setState({
       score: newScore,
       currentHand: nextHand,
       currentHandValue: nextVal,
       history: [...state.history, createHistoryEntry({ hand: state.currentHand, value: currentVal, isWin })],
+      handDistributionNonce: (state.handDistributionNonce || 0) + 1,
       floatingFeedback: {
-        isVisible: true,
+        isVisible: false,
         isWin,
-        position: { x: centerX, y: centerY },
+        position: GAME_CONFIG.DEFAULT_FEEDBACK_POSITION
       },
-      ...this.deck.getStats()
+      ...this.deck.getStats(),
+      isHandExiting: false,
     });
+
+    await this.sleep(GAME_CONFIG.BET_ANIMATION_TIMELINE_MS.DISTRIBUTION);
+
+    // 4) Unlock interactions once new hand has settled.
+    store.setState({ isResolvingBet: false });
 
     this.deck.discard(state.currentHand);
     if (boundaryHit) this.endGame();
+  }
+
+  sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   async endGame() {

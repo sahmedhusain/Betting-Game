@@ -6,5 +6,14 @@ export const GAME_CONFIG = {
   DYNAMIC_MAX: 10,
   WIN_SCORE_BASE: 10,
   LOSS_PENALTY: -15,
+  BET_ANIMATION_TIMELINE_MS: {
+    FEEDBACK: 700,
+    EXIT: 320,
+    DISTRIBUTION: 650
+  },
+  DEFAULT_FEEDBACK_POSITION: {
+    x: 0,
+    y: 0
+  },
   SOUND_DISABLED: import.meta.env.VITE_SOUND_DISABLED === 'true'
 };
