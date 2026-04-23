@@ -1,6 +1,8 @@
+import { GAME_CONFIG } from '../utils/constants.js';
+
 class SoundService {
   constructor() {
-    this.isMuted = false;
+    this.isMuted = GAME_CONFIG.SOUND_DISABLED;
   }
 
   setMute(muted) {

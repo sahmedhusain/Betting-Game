@@ -1,11 +1,20 @@
 import { playTone, getAudioContext } from '../utils.js';
+import { SFX_PROFILES } from '../../utils/constants.js';
 
 export function playGameOver() {
   const ctx = getAudioContext();
   if (!ctx) return;
 
-  const volume = 0.15;
-  playTone(ctx, { frequency: 440, duration: 0.2, volume, type: 'square' });
-  playTone(ctx, { frequency: 330, duration: 0.2, volume, type: 'square', startOffset: 0.2 });
-  playTone(ctx, { frequency: 220, duration: 0.6, volume, type: 'square', startOffset: 0.4, slideTo: 55 });
+  const profile = SFX_PROFILES.GAME_OVER;
+  profile.notes.forEach(note => {
+    playTone(ctx, { 
+      frequency: note.frequency, 
+      duration: note.duration, 
+      volume: profile.volume, 
+      type: profile.type, 
+      startOffset: note.offset,
+      slideTo: note.slideTo
+    });
+  });
 }
+
