@@ -85,6 +85,23 @@ export const I18N = {
         saveScoreFailed: 'Failed to save score:',
         logSessionFailed: 'Failed to log game session:'
       }
+    },
+    tiles: {
+      WIND_EAST: 'East Wind',
+      WIND_SOUTH: 'South Wind',
+      WIND_WEST: 'West Wind',
+      WIND_NORTH: 'North Wind',
+      DRAGON_RED: 'Red Dragon',
+      DRAGON_GREEN: 'Green Dragon',
+      DRAGON_WHITE: 'White Dragon',
+      FLOWER_PLUM: 'Plum Flower',
+      FLOWER_ORCHID: 'Orchid Flower',
+      FLOWER_BAMBOO_FLOWER: 'Bamboo Flower',
+      FLOWER_CHRYSANTHEMUM: 'Chrysanthemum',
+      SEASON_SPRING: 'Spring Season',
+      SEASON_SUMMER: 'Summer Season',
+      SEASON_AUTUMN: 'Autumn Season',
+      SEASON_WINTER: 'Winter Season'
     }
   }
 };
