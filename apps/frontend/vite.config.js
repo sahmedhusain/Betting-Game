@@ -3,6 +3,7 @@ export default defineConfig(({ mode }) => {
     // .env
     const env = loadEnv(mode, '../../', '');
     return {
+        envDir: '../../',
         server: {
             port: parseInt(env.FRONTEND_PORT) || 5173,
             proxy: {
