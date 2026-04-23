@@ -19,12 +19,99 @@ class GameEngine {
     this.deck = new Deck();
   }
 
+  async validateSession() {
+    try {
+      const response = await Api.validateSession();
+      store.setState({ 
+        sessionChecked: true, 
+        sessionValid: true, 
+        playerName: response.username,
+        backendDown: false,
+        isGameFinished: response.is_game_finished
+      });
+
+      if (response.game_state) {
+        this.restoreSession(response.game_state);
+      }
+
+      return true;
+    } catch (err) {
+      const isNetworkError = err.message === 'Failed to fetch' || err.message.includes('network');
+      store.setState({ 
+        sessionChecked: true, 
+        sessionValid: false,
+        backendDown: isNetworkError
+      });
+      return false;
+    }
+  }
+
+  async startSession(username) {
+    try {
+      const session = await Api.startSession(username);
+      store.setState({ 
+        sessionValid: true, 
+        playerName: session.username,
+        sessionError: '',
+        backendDown: false,
+        isGameFinished: false
+      });
+      localStorage.setItem('mahjong_player_name', session.username);
+      return true;
+    } catch (err) {
+      const isNetworkError = err.message === 'Failed to fetch' || err.message.includes('network');
+      store.setState({ 
+        sessionError: err.message,
+        backendDown: isNetworkError
+      });
+      return false;
+    }
+  }
+
+  async logout() {
+    try {
+      await Api.logoutSession();
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+    store.setState({ 
+      sessionValid: false, 
+      playerName: '', 
+      gamePhase: PHASES.LANDING,
+      currentHand: [],
+      history: [],
+      score: GAME_CONFIG.INITIAL_SCORE,
+      isGameFinished: false
+    });
+    localStorage.clear(); // Clear all local storage as requested
+    soundService.stopAmbient();
+  }
+
+  syncState() {
+    const state = store.getState();
+    if (!state.sessionValid || state.gamePhase === PHASES.LANDING) return;
+
+    Api.saveGameState({
+      state: {
+        score: state.score,
+        current_hand: state.currentHand,
+        history: state.history,
+        deck_state: state.deckState,
+        reshuffle_count: state.reshuffleCount,
+        game_phase: state.gamePhase
+      },
+      is_game_finished: state.isGameFinished
+    }).catch(err => console.warn('Failed to sync state:', err));
+  }
+
   async loadLeaderboard() {
     try {
       const scores = await Api.getLeaderboard();
-      store.setState({ leaderboard: scores });
+      store.setState({ leaderboard: scores, backendDown: false });
     } catch (err) {
       console.error(TEXT.engine.errors.loadLeaderboardFailed, err);
+      const isNetworkError = err.message === 'Failed to fetch' || err.message.includes('network');
+      if (isNetworkError) store.setState({ backendDown: true });
     }
   }
 
@@ -45,12 +132,35 @@ class GameEngine {
       isResolvingBet: false,
       handExitAnimationNonce: 0,
       isHandExiting: false,
+      isGameFinished: false,
       handDistributionNonce: (store.getState().handDistributionNonce || 0) + 1,
+      deckState: this.deck.exportState(),
       ...this.deck.getStats()
     });
 
-    Api.logGameSession({ player_name: playerName, action: GAME_ACTIONS.START_GAME })
-      .catch((err) => console.warn(TEXT.engine.errors.logSessionFailed, err));
+    this.syncState();
+  }
+
+  restoreSession(gameState) {
+    if (gameState && gameState.deck_state) {
+      this.deck.importState(gameState.deck_state);
+      
+      store.setState({
+        score: gameState.score,
+        currentHand: gameState.current_hand,
+        currentHandValue: calculateHandValue(gameState.current_hand),
+        history: gameState.history,
+        reshuffleCount: gameState.reshuffle_count,
+        gamePhase: gameState.game_phase,
+        deckState: gameState.deck_state,
+        isGameFinished: gameState.game_phase === PHASES.GAME_OVER,
+        ...this.deck.getStats()
+      });
+
+      if (gameState.game_phase === PHASES.PLAYING) {
+        soundService.playAmbient();
+      }
+    }
   }
 
   betHigher() {
@@ -137,9 +247,12 @@ class GameEngine {
         isWin,
         position: GAME_CONFIG.DEFAULT_FEEDBACK_POSITION
       },
+      deckState: this.deck.exportState(),
       ...this.deck.getStats(),
       isHandExiting: false,
     });
+
+    this.syncState();
 
     await this.sleep(GAME_CONFIG.BET_ANIMATION_TIMELINE_MS.DISTRIBUTION);
 
@@ -159,8 +272,9 @@ class GameEngine {
     soundService.stopAmbient();
     soundService.playGameOver();
 
-    store.setState({ gamePhase: PHASES.GAME_OVER });
     HistoryService.saveGame(state.playerName, state.score);
+    store.setState({ gamePhase: PHASES.GAME_OVER, isGameFinished: true });
+    this.syncState();
 
     try {
       await Api.saveScore(state.playerName, state.score, state.history.length);

@@ -12,6 +12,20 @@ export const initialState = {
   gamePhase: PHASES.LANDING,
   leaderboard: [],
 
+  // Session state
+  sessionChecked: false,
+  sessionValid: false,
+  backendDown: false,
+  sessionError: '',
+  isGameFinished: false,
+  errorData: {
+    code: '',
+    title: '',
+    message: '',
+    buttonText: '',
+    targetRoute: ''
+  },
+
   // Animation scaffold
   isDrawing: false,
   drawQueue: [],
@@ -28,7 +42,8 @@ export const initialState = {
   },
 
   hasAttemptedStart: false,
-  showJoinForm: false
+  showJoinForm: false,
+  deckState: null
 };
 
 export let store = null;

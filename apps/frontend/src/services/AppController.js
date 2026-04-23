@@ -1,6 +1,6 @@
 import { store } from '../state/State.js';
 import { engine } from '../engine/Engine.js';
-import { PHASES, ROUTES, KEYS } from '../utils/constants.js';
+import { PHASES, ROUTES, KEYS, TEXT } from '../utils/constants.js';
 import { normalizePlayerName, validatePlayerName } from '../utils/helpers.js';
 
 function normalizeHash(rawHash = '') {
@@ -17,7 +17,7 @@ function normalizeHash(rawHash = '') {
 function routeFromPhase(phase) {
   if (phase === PHASES.PLAYING) return ROUTES.PLAY;
   if (phase === PHASES.GAME_OVER) return ROUTES.GAME_OVER;
-  if (phase === PHASES.NOT_FOUND) return ROUTES.NOT_FOUND;
+  if (phase === PHASES.ERROR) return ROUTES.ERROR;
   return ROUTES.LANDING;
 }
 
@@ -32,14 +32,19 @@ function navigateToHash(targetHash, { replace = false } = {}) {
 
   window.location.hash = targetHash;
 }
-
 function isValidPhaseState(phase, state) {
+  if (!state.sessionChecked) return true;
+
   if (phase === PHASES.PLAYING) {
-    return Boolean(state.playerName) && Array.isArray(state.currentHand) && state.currentHand.length > 0;
+    return state.sessionValid && !state.isGameFinished;
   }
 
   if (phase === PHASES.GAME_OVER) {
-    return Boolean(state.playerName);
+    return state.sessionValid;
+  }
+
+  if (phase === PHASES.LANDING || phase === PHASES.ERROR) {
+    return !state.sessionValid || state.gamePhase === PHASES.GAME_OVER || state.gamePhase === PHASES.ERROR;
   }
 
   return true;
@@ -48,7 +53,6 @@ function isValidPhaseState(phase, state) {
 function getPhaseResetPatch(phase) {
   if (phase === PHASES.LANDING) {
     return {
-      showJoinForm: false,
       hasAttemptedStart: false,
       floatingFeedback: { isVisible: false, isWin: false, position: { x: 0, y: 0 } }
     };
@@ -78,9 +82,9 @@ export function phaseFromHash() {
   if (hash === ROUTES.PLAY) return PHASES.PLAYING;
   if (hash === ROUTES.GAME_OVER) return PHASES.GAME_OVER;
   if (hash === ROUTES.LANDING) return PHASES.LANDING;
-  if (hash === ROUTES.NOT_FOUND) return PHASES.NOT_FOUND;
+  if (hash === ROUTES.ERROR) return PHASES.ERROR;
 
-  return PHASES.NOT_FOUND;
+  return PHASES.ERROR;
 }
 
 export function handleRouting() {
@@ -91,15 +95,43 @@ export function handleRouting() {
   }
 
   const state = store.getState();
+  if (!state.sessionChecked) return; // Wait for bootstrap
+
   const phase = phaseFromHash();
 
   if (!isValidPhaseState(phase, state)) {
-    navigateToHash(ROUTES.LANDING, { replace: true });
+    if (state.sessionValid) {
+      if (state.isGameFinished) {
+        navigateToHash(ROUTES.GAME_OVER, { replace: true });
+      } else {
+        navigateToHash(ROUTES.PLAY, { replace: true });
+      }
+    } else {
+      if (phase === PHASES.PLAYING || phase === PHASES.GAME_OVER) {
+        store.setState({ 
+          gamePhase: PHASES.ERROR,
+          errorData: { ...TEXT.error.unauthorized, targetRoute: ROUTES.LANDING }
+        });
+        navigateToHash(ROUTES.ERROR, { replace: true });
+      } else {
+        store.setState({ 
+          gamePhase: PHASES.ERROR,
+          errorData: { ...TEXT.error.notFound, targetRoute: ROUTES.LANDING }
+        });
+        navigateToHash(ROUTES.ERROR, { replace: true });
+      }
+    }
     return;
   }
 
   if (state.gamePhase !== phase) {
-    store.setState({ gamePhase: phase, ...getPhaseResetPatch(phase) });
+    const patch = getPhaseResetPatch(phase);
+    
+    if (phase === PHASES.ERROR && !state.errorData.code) {
+      patch.errorData = { ...TEXT.error.notFound, targetRoute: ROUTES.LANDING };
+    }
+    
+    store.setState({ gamePhase: phase, ...patch });
   }
 }
 
@@ -108,23 +140,26 @@ let allowGameOverReplayTransition = false;
 
 export function allowPlayAgainTransition() {
   allowGameOverReplayTransition = true;
+  store.setState({ isGameFinished: false });
+}
+
+export async function handleBootstrap() {
+  await engine.validateSession();
+  handleRouting();
 }
 
 export function handleSideEffects() {
   const state = store.getState();
   const previousPhase = lastPhase;
 
-  // Keep URL and state in sync with normalized route format
   const targetHash = routeFromPhase(state.gamePhase);
   const currentHash = normalizeHash(window.location.hash || ROUTES.LANDING);
 
-  if (currentHash !== targetHash && state.gamePhase !== PHASES.NOT_FOUND) {
+  if (currentHash !== targetHash && state.gamePhase !== PHASES.ERROR) {
 
     navigateToHash(targetHash, { replace: state.gamePhase === PHASES.GAME_OVER });
   }
 
-  // If user presses Back from game over send them to landing
-  // but allow explicit Play Again transitions
   if (previousPhase === PHASES.GAME_OVER && state.gamePhase === PHASES.PLAYING) {
     if (allowGameOverReplayTransition) {
       allowGameOverReplayTransition = false;
@@ -137,6 +172,15 @@ export function handleSideEffects() {
 
   if (state.gamePhase === PHASES.LANDING && lastPhase !== PHASES.LANDING) {
     engine.loadLeaderboard();
+  }
+
+  // Handle unauthorized errors from API (session expired)
+  if (state.sessionChecked && state.sessionValid === false && state.gamePhase !== PHASES.LANDING && state.gamePhase !== PHASES.ERROR) {
+    store.setState({ 
+      gamePhase: PHASES.ERROR,
+      errorData: { ...TEXT.error.unauthorized, targetRoute: ROUTES.LANDING }
+    });
+    navigateToHash(ROUTES.ERROR, { replace: true });
   }
 
   lastPhase = state.gamePhase;
@@ -154,9 +198,13 @@ export function handleKeyboard(e) {
 
       const name = normalizePlayerName(state.playerName);
       if (!validatePlayerName(name)) {
-        store.setState({ playerName: name, hasAttemptedStart: true });
-        navigateToHash(ROUTES.PLAY);
-        engine.startGame(name);
+        store.setState({ hasAttemptedStart: true });
+        engine.startSession(name).then(success => {
+          if (success) {
+            navigateToHash(ROUTES.PLAY);
+            engine.startGame(name);
+          }
+        });
       } else {
         store.setState({ hasAttemptedStart: true });
       }
