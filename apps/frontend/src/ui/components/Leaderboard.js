@@ -28,10 +28,10 @@ export function Leaderboard({ scores = [] }) {
         h('div', { class: 'flex items-center gap-6 flex-1 min-w-0' },
           h('div', { class: `w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-2xl ${i < 3 ? 'bg-white/5 shadow-xl transition-transform' : 'bg-white/5'}` },
             h('div', {
-              class: i === 0 ? 'icon-medal icon-medal-gold scale-125' :
-                i === 1 ? 'icon-medal icon-medal-silver scale-110' :
-                  i === 2 ? 'icon-medal icon-medal-bronze scale-105' :
-                    'icon-star text-slate-500'
+              class: i === 0 ? 'icon-medal icon-medal-gold w-7 h-7 scale-125' :
+                i === 1 ? 'icon-medal icon-medal-silver w-7 h-7 scale-110' :
+                  i === 2 ? 'icon-medal icon-medal-bronze w-7 h-7 scale-105' :
+                    'icon-star text-slate-500 w-5 h-5'
             })
           ),
           h('div', { class: 'flex flex-col min-w-0' },

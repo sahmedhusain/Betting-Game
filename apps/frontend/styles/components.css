@@ -48,8 +48,7 @@
 
   /* Premium Rank Icons */
   .icon-medal {
-    width: 28px;
-    height: 28px;
+    background-color: currentColor;
     -webkit-mask: var(--url-icon-medal) no-repeat center;
     mask: var(--url-icon-medal) no-repeat center;
   }
@@ -70,8 +69,6 @@
   }
 
   .icon-star {
-    width: 18px;
-    height: 18px;
     background-color: currentColor;
     -webkit-mask: var(--url-icon-star) no-repeat center;
     mask: var(--url-icon-star) no-repeat center;
@@ -91,5 +88,37 @@
     background-color: currentColor;
     -webkit-mask: var(--url-icon-bankroll) no-repeat center;
     mask: var(--url-icon-bankroll) no-repeat center;
+  }
+
+  .icon-discarded {
+    width: 22px;
+    height: 22px;
+    background-color: currentColor;
+    -webkit-mask: var(--url-icon-discarded) no-repeat center;
+    mask: var(--url-icon-discarded) no-repeat center;
+  }
+
+  .icon-refresh {
+    width: 20px;
+    height: 20px;
+    background-color: currentColor;
+    -webkit-mask: var(--url-icon-refresh) no-repeat center;
+    mask: var(--url-icon-refresh) no-repeat center;
+  }
+
+  .icon-higher {
+    width: 20px;
+    height: 20px;
+    background-color: currentColor;
+    -webkit-mask: var(--url-icon-higher) no-repeat center;
+    mask: var(--url-icon-higher) no-repeat center;
+  }
+
+  .icon-lower {
+    width: 20px;
+    height: 20px;
+    background-color: currentColor;
+    -webkit-mask: var(--url-icon-lower) no-repeat center;
+    mask: var(--url-icon-lower) no-repeat center;
   }
 }

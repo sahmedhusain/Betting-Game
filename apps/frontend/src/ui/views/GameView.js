@@ -7,16 +7,51 @@ import { DrawLane } from '../components/DrawLane.js';
 import { FloatingFeedback } from '../components/FloatingFeedback.js';
 
 export function GameView({ state, engine }) {
+  const isLocked = !!state.isResolvingBet;
   const floatingFeedback = state.floatingFeedback || {
     isVisible: false,
     isWin: false,
     position: { x: 0, y: 0 },
   };
 
+  const leaderboard = state.leaderboard || [];
+  const sessionName = (state.playerName || '').trim();
+  
+  const playerEntry = sessionName ? leaderboard.find(entry => {
+    const entryName = (entry.player_name || entry.username || '').trim();
+    return entryName.toLowerCase() === sessionName.toLowerCase();
+  }) : null;
+
+  const playerRank = playerEntry ? leaderboard.indexOf(playerEntry) + 1 : 0;
+  const highestScore = playerEntry ? (playerEntry.highest_score || playerEntry.score) : 0;
+  
+  // Rank specific formatting
+  const getRankBadge = (rank) => {
+    if (rank <= 0 || rank > 5) return null;
+    
+    const configs = {
+      1: { label: TEXT.leaderboard.legend, icon: 'icon-medal', color: 'text-amber-500', bg: 'bg-amber-500/20', border: 'border-amber-500/30' },
+      2: { label: TEXT.leaderboard.rank(2), icon: 'icon-medal', color: 'text-slate-200', bg: 'bg-slate-300/20', border: 'border-slate-300/40' },
+      3: { label: TEXT.leaderboard.rank(3), icon: 'icon-medal', color: 'text-orange-400', bg: 'bg-orange-500/20', border: 'border-orange-500/40' },
+      4: { label: TEXT.leaderboard.rank(4), icon: 'icon-star', color: 'text-emerald-400', bg: 'bg-emerald-500/15', border: 'border-emerald-500/30' },
+      5: { label: TEXT.leaderboard.rank(5), icon: 'icon-star', color: 'text-emerald-400', bg: 'bg-emerald-500/15', border: 'border-emerald-500/30' }
+    };
+    
+    const config = configs[rank];
+    if (!config) return null;
+
+    return h('div', { 
+      class: `flex items-center gap-1.5 px-3 py-1 rounded-lg border shadow-xl backdrop-blur-md transition-all ${config.bg} ${config.border} ${config.color}` 
+    },
+      h('div', { class: `${config.icon} w-3.5 h-3.5` }),
+      h('span', { class: 'text-[9px] font-black uppercase tracking-widest' }, config.label)
+    );
+  };
+
   return h(
     'div',
     {
-      class: 'play-shell relative w-full min-h-screen overflow-hidden px-[var(--play-shell-x)] py-[var(--play-shell-y)]'
+      class: 'play-shell relative w-full h-screen overflow-hidden px-[var(--play-shell-x)] py-[var(--play-shell-y)] flex flex-col'
     },
 
     FloatingFeedback({
@@ -29,19 +64,17 @@ export function GameView({ state, engine }) {
     h(
       'div',
       {
-        class: 'relative z-10 w-full max-w-[1480px] mx-auto flex flex-col gap-[var(--play-gap)] animate-fade-in'
+        class: 'relative z-10 w-full max-w-[1480px] mx-auto flex flex-col gap-[var(--play-gap)] h-full animate-fade-in'
       },
 
-      // Redesigned Top Bar with Player Name on Left and Leave Button on Right
-      h('div', { class: 'flex items-center justify-between gap-6 px-2 md:px-4 mb-4' },
-        
-        // Left Section: Logo + Branding + Player Name
-        h('div', { class: 'flex items-center gap-6' },
+      // Top Bar
+      h('div', { class: 'flex items-center justify-between gap-6 px-2 md:px-4 shrink-0' },
+        h('div', { class: 'flex items-center gap-8' },
           h('div', { class: 'flex items-center gap-4' },
             h('div', { class: 'w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/5 rounded-xl border border-white/10 shadow-2xl overflow-hidden' },
               h('img', { 
                 src: ASSETS.BRANDING.LOGO, 
-                alt: 'Logo', 
+                alt: TEXT.landing.logoAlt, 
                 class: 'w-full h-full object-cover drop-shadow-xl' 
               })
             ),
@@ -51,22 +84,33 @@ export function GameView({ state, engine }) {
             )
           ),
           
-          // Separator
-          h('div', { class: 'hidden md:block w-[1px] h-8 bg-white/10 mx-2' }),
+          h('div', { class: 'hidden md:block w-[1px] h-10 bg-white/10' }),
+          
+          h('div', { class: 'flex items-center gap-6' },
+            h('div', { class: 'flex items-center gap-4' },
+              h('span', { class: 'text-xl md:text-2xl font-black text-white tracking-tight font-outfit leading-none' }, state.playerName || TEXT.game.anonymousPlayer),
+              
+              // Group stats badges together
+              h('div', { class: 'flex items-center gap-2' },
+                // Personal Best Badge
+                highestScore > 0 && h('div', { 
+                  class: 'flex items-center gap-1.5 px-3 py-1 rounded-lg border border-white/10 bg-white/5 text-slate-300 shadow-xl backdrop-blur-md transition-all' 
+                },
+                  h('div', { class: 'icon-star w-3.5 h-3.5' }),
+                  h('span', { class: 'text-[9px] font-black tracking-widest leading-none' }, highestScore.toLocaleString())
+                ),
 
-          // Player Name Section
-          h('div', { class: 'flex items-center gap-3' },
-            h('span', { class: 'text-[9px] font-black tracking-[0.3em] text-slate-500 uppercase' }, `${TEXT.game.playerLabel}:`),
-            h('span', { class: 'text-lg font-black text-white tracking-tight font-outfit' }, state.playerName || TEXT.game.anonymousPlayer)
+                // Rank Badge
+                getRankBadge(playerRank)
+              )
+            )
           )
         ),
-        
-        // Right Section: Leave Button
         h('div', { class: 'flex items-center' },
           h('button', {
             class: 'group flex items-center gap-3 px-6 py-3 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500 hover:text-white transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed',
             title: TEXT.game.leaveGameTitle,
-            disabled: state.isResolvingBet,
+            disabled: isLocked,
             onclick: () => engine.logout()
           }, 
             h('span', { class: 'text-[10px] font-black uppercase tracking-[0.2em] hidden md:block' }, TEXT.game.leaveGame),
@@ -74,7 +118,7 @@ export function GameView({ state, engine }) {
               h('img', { 
                 src: ASSETS.ICONS.LEAVE, 
                 alt: TEXT.game.leaveGameTitle, 
-                class: 'w-full h-full opacity-80 group-hover:opacity-100 transition-opacity' 
+                class: 'w-full h-full opacity-80 group-hover:opacity-100 group-hover:brightness-0 group-hover:invert transition-all' 
               })
             )
           )
@@ -83,24 +127,29 @@ export function GameView({ state, engine }) {
 
       h(
         'div',
-        { class: 'grid grid-cols-1 xl:grid-cols-12 gap-[var(--play-gap)] items-start' },
+        { class: 'grid grid-cols-1 xl:grid-cols-12 gap-[var(--play-gap)] items-stretch flex-1 min-h-0 mb-4' },
 
+        // Game Engine
         h(
           'div',
-          { class: 'xl:col-span-8 space-y-[var(--play-gap)]' },
+          { class: 'xl:col-span-8 h-full min-h-0' },
 
           h(
             'div',
             {
-              class: 'glass-panel p-[var(--play-panel-pad)] rounded-[var(--play-panel-radius)] border border-white/10 overflow-hidden'
+              class: 'glass-panel p-[var(--play-panel-pad)] rounded-[var(--play-panel-radius)] border border-white/10 overflow-hidden flex flex-col gap-[var(--play-gap)] h-full'
             },
 
-            ScoreBoard({ state, engine }),
+            h('div', { class: 'px-2' },
+              h('h3', { class: 'text-[10px] font-black uppercase tracking-[0.34em] text-emerald-400' }, TEXT.game.bettingArena)
+            ),
+
+            ScoreBoard({ state }),
 
             h(
               'div',
-              { class: 'grid grid-cols-1 lg:grid-cols-[minmax(160px,200px)_1fr] gap-[var(--play-gap)] items-stretch mt-[var(--play-gap)]' },
-              DrawLane({ state, isDistributing: state.isResolvingBet }),
+              { class: 'grid grid-cols-1 lg:grid-cols-[minmax(160px,200px)_1fr] gap-[var(--play-gap)] items-stretch flex-1 min-h-0' },
+              DrawLane({ state, isDistributing: isLocked }),
               HandDisplay({
                 tiles: state.currentHand,
                 showDistributionAnimation: true,
@@ -109,38 +158,40 @@ export function GameView({ state, engine }) {
               })
             ),
 
-            h(
-              'div',
-              {
-                class: 'grid grid-cols-2 gap-4 mt-[var(--play-gap)] pt-6 border-t border-white/5'
-              },
-
-              h(
-                'div',
-                { class: 'text-center' },
-                h('div', { class: 'text-[9px] font-black uppercase tracking-[0.4em] text-slate-500 mb-2' }, TEXT.game.discarded),
-                h('div', { class: 'text-3xl md:text-4xl font-black text-slate-300 font-outfit tracking-tighter' }, state.discardPileCount)
-              ),
-
-              h(
-                'div',
-                { class: 'text-center' },
-                h('div', { class: 'text-[9px] font-black uppercase tracking-[0.4em] text-slate-500 mb-2' }, TEXT.game.reshuffles),
-                h('div', { class: 'text-3xl md:text-4xl font-black text-emerald-400 font-outfit tracking-tighter' }, `${state.reshuffleCount}/${GAME_CONFIG.MAX_RESHUFFLES}`)
+            // Betting Actions
+            h('div', { class: 'pt-6 border-t border-white/5 shrink-0 mt-auto' },
+              h('div', { class: 'flex flex-col sm:flex-row gap-4 w-full' },
+                h('button', {
+                  class: `group flex-1 flex items-center justify-center gap-4 px-10 py-6 rounded-3xl font-black text-[10px] uppercase tracking-[0.2em] transition-all ${isLocked ? 'bg-white/5 text-slate-600 cursor-not-allowed border border-white/10' : 'bg-slate-800/40 border border-white/10 text-slate-300 hover:bg-slate-700 hover:text-white hover:border-white/20 shadow-2xl active:scale-95'}`,
+                  disabled: isLocked,
+                  onclick: () => engine.betLower()
+                }, 
+                  h('div', { class: 'icon-lower transition-transform group-hover:translate-y-0.5' }),
+                  h('span', {}, TEXT.game.betLower)
+                ),
+                h('button', {
+                  class: `group flex-1 flex items-center justify-center gap-4 px-10 py-6 rounded-3xl font-black text-[10px] uppercase tracking-[0.2em] transition-all ${isLocked ? 'bg-emerald-900/30 text-emerald-700 cursor-not-allowed border border-emerald-700/30' : 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-2xl shadow-emerald-500/20 active:scale-95'}`,
+                  disabled: isLocked,
+                  onclick: () => engine.betHigher()
+                }, 
+                  h('div', { class: 'icon-higher transition-transform group-hover:-translate-y-0.5' }),
+                  h('span', {}, TEXT.game.betHigher)
+                )
               )
             )
           )
         ),
 
+        // History Panel
         h(
           'div',
           {
-            class: 'xl:col-span-4'
+            class: 'xl:col-span-4 h-full min-h-0'
           },
           h(
             'div',
             {
-              class: `glass-panel p-[var(--play-panel-pad)] rounded-[var(--play-panel-radius)] border border-white/10 ${UI_CONFIG.GAME_HISTORY_PANEL_HEIGHT_CLASS} ${UI_CONFIG.GAME_HISTORY_PANEL_MAX_HEIGHT_CLASS} flex flex-col overflow-hidden`
+              class: 'glass-panel p-[var(--play-panel-pad)] rounded-[var(--play-panel-radius)] border border-white/10 flex flex-col overflow-hidden h-full'
             },
             HistoryPanel({ history: state.history })
           )

@@ -44,6 +44,9 @@ export const I18N = {
       leaveGameTitle: 'Leave Game',
       sessionHand: (number) => `GAME HAND #${number}`,
       handValue: 'Hand Value',
+      bettingArena: 'BETTING ARENA',
+      totalWins: 'Total Wins',
+      totalLosses: 'Total Losses',
       drawLaneWithCount: (count) => `Draw Lane · ${count}`
     },
     leaderboard: {

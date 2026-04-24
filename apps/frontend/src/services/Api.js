@@ -16,20 +16,30 @@ function asNumber(value, fallback = 0) {
 
 function normalizeScoreEntry(entry) {
   if (!isRecord(entry)) {
-    return { player_name: TEXT.leaderboard.unknownPlayer, score: 0 };
+    return { player_name: TEXT.leaderboard.unknownPlayer, score: 0, highest_score: 0 };
   }
 
+  const name = entry.player_name || entry.username || entry.name || TEXT.leaderboard.unknownPlayer;
+  const score = entry.highest_score ?? entry.score ?? 0;
+
   return {
-    player_name: asString(entry.player_name ?? entry.username, TEXT.leaderboard.unknownPlayer),
-    score: asNumber(entry.score, 0),
-    highest_score: asNumber(entry.highest_score ?? entry.score, 0)
+    player_name: asString(name, TEXT.leaderboard.unknownPlayer),
+    score: asNumber(score, 0),
+    highest_score: asNumber(score, 0)
   };
 }
 
 function extractLeaderboardArray(payload) {
+  if (!payload) return [];
   if (Array.isArray(payload)) return payload;
-  if (isRecord(payload) && Array.isArray(payload.scores)) return payload.scores;
-  if (isRecord(payload) && Array.isArray(payload.data)) return payload.data;
+  
+  const wrappers = ['scores', 'data', 'leaderboard', 'entries'];
+  for (const key of wrappers) {
+    if (isRecord(payload) && Array.isArray(payload[key])) {
+      return payload[key];
+    }
+  }
+  
   return [];
 }
 
@@ -39,32 +49,38 @@ async function parseJsonSafe(response) {
 
   try {
     return JSON.parse(text);
-  } catch {
+  } catch (err) {
+    console.error('JSON Parse Error:', err, 'Raw text:', text);
     throw new Error(TEXT.api.errors.invalidJsonResponse);
   }
 }
 
 async function requestJson(url, init = {}) {
-  const response = await fetch(url, {
-    ...init,
-    credentials: 'include'
-  });
-  const payload = await parseJsonSafe(response);
+  try {
+    const response = await fetch(url, {
+      ...init,
+      credentials: 'include'
+    });
+    
+    const payload = await parseJsonSafe(response);
 
-  if (response.status === 401) {
-    if (store) {
-      store.setState({ sessionValid: false, playerName: '' });
+    if (response.status === 401) {
+      if (store) {
+        store.setState({ sessionValid: false, playerName: '' });
+      }
     }
-  }
 
-  if (!response.ok) {
-    const message = isRecord(payload)
-      ? asString(payload.error || payload.message, TEXT.api.errors.requestFailedWithStatus(response.status))
-      : TEXT.api.errors.requestFailedWithStatus(response.status);
-    throw new Error(message);
-  }
+    if (!response.ok) {
+      const message = isRecord(payload)
+        ? asString(payload.error || payload.message, TEXT.api.errors.requestFailedWithStatus(response.status))
+        : TEXT.api.errors.requestFailedWithStatus(response.status);
+      throw new Error(message);
+    }
 
-  return payload;
+    return payload;
+  } catch (err) {
+    throw err;
+  }
 }
 
 export const Api = {
@@ -97,17 +113,24 @@ export const Api = {
   },
 
   async getLeaderboard() {
-    const params = new URLSearchParams({
-      [API_QUERY.LIMIT]: String(API_CONFIG.LEADERBOARD_LIMIT)
-    });
+    try {
+      const params = new URLSearchParams({
+        [API_QUERY.LIMIT]: String(API_CONFIG.LEADERBOARD_LIMIT)
+      });
 
-    const payload = await requestJson(
-      `${API_CONFIG.BASE_URL}${API_ENDPOINTS.SCORES}?${params.toString()}`
-    );
+      const payload = await requestJson(
+        `${API_CONFIG.BASE_URL}${API_ENDPOINTS.SCORES}?${params.toString()}`
+      );
 
-    return extractLeaderboardArray(payload)
-      .map(normalizeScoreEntry)
-      .slice(0, API_CONFIG.LEADERBOARD_LIMIT);
+      const normalized = extractLeaderboardArray(payload)
+        .map(normalizeScoreEntry)
+        .slice(0, API_CONFIG.LEADERBOARD_LIMIT);
+        
+      return normalized;
+    } catch (err) {
+      console.error('Api.getLeaderboard failed:', err);
+      throw err;
+    }
   },
 
   async saveScore(playerName, score, handsPlayed = 0) {
@@ -121,7 +144,6 @@ export const Api = {
       })
     });
 
-    // Return a stable object
     return normalizeScoreEntry(
       isRecord(payload) ? payload : { player_name: playerName, score }
     );

@@ -23,6 +23,10 @@
   --url-icon-wallet: url("/assets/icons/wallet.svg");
   --url-icon-bankroll: url("/assets/icons/bankroll.svg");
   --url-tile-back: url("/assets/tiles/card_back.svg");
+  --url-icon-discarded: url("/assets/icons/discarded.svg");
+  --url-icon-refresh: url("/assets/icons/refresh.svg");
+  --url-icon-higher: url("/assets/icons/higher.svg");
+  --url-icon-lower: url("/assets/icons/lower.svg");
 }
 
 @layer base {

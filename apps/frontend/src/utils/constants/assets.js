@@ -14,6 +14,10 @@ export const ASSETS = {
     BANKROLL: '/assets/icons/bankroll.svg',
     ERROR_401: '/assets/icons/error-401.svg',
     ERROR_404: '/assets/icons/error-404.svg',
-    LEAVE: '/assets/icons/leave.svg'
+    LEAVE: '/assets/icons/leave.svg',
+    DISCARDED: '/assets/icons/discarded.svg',
+    REFRESH: '/assets/icons/refresh.svg',
+    HIGHER: '/assets/icons/higher.svg',
+    LOWER: '/assets/icons/lower.svg'
   }
 };

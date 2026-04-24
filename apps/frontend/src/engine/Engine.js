@@ -57,6 +57,9 @@ class GameEngine {
         isGameFinished: false
       });
       localStorage.setItem('mahjong_player_name', session.username);
+      
+      this.loadLeaderboard();
+      
       return true;
     } catch (err) {
       const isNetworkError = err.message === 'Failed to fetch' || err.message.includes('network');
@@ -83,8 +86,10 @@ class GameEngine {
       score: GAME_CONFIG.INITIAL_SCORE,
       isGameFinished: false
     });
-    localStorage.clear(); // Clear all local storage as requested
+    localStorage.clear();
     soundService.stopAmbient();
+    
+    this.loadLeaderboard();
   }
 
   syncState() {
@@ -107,11 +112,15 @@ class GameEngine {
   async loadLeaderboard() {
     try {
       const scores = await Api.getLeaderboard();
-      store.setState({ leaderboard: scores, backendDown: false });
+      if (Array.isArray(scores)) {
+        store.setState({ leaderboard: scores, backendDown: false });
+      }
     } catch (err) {
       console.error(TEXT.engine.errors.loadLeaderboardFailed, err);
       const isNetworkError = err.message === 'Failed to fetch' || err.message.includes('network');
-      if (isNetworkError) store.setState({ backendDown: true });
+      if (isNetworkError) {
+        store.setState({ backendDown: true });
+      }
     }
   }
 
@@ -139,6 +148,8 @@ class GameEngine {
     });
 
     this.syncState();
+    
+    this.loadLeaderboard();
   }
 
   restoreSession(gameState) {
@@ -160,6 +171,8 @@ class GameEngine {
       if (gameState.game_phase === PHASES.PLAYING) {
         soundService.playAmbient();
       }
+      
+      this.loadLeaderboard();
     }
   }
 
@@ -215,7 +228,6 @@ class GameEngine {
 
     const newScore = clampScore(state.score + scoreDelta);
 
-    // 1) Lock interactions, show feedback, and animate current hand out.
     store.setState({
       isResolvingBet: true,
       floatingFeedback: {
@@ -225,7 +237,6 @@ class GameEngine {
       }
     });
 
-    // 2) After feedback is visible, animate current hand out.
     await this.sleep(GAME_CONFIG.BET_ANIMATION_TIMELINE_MS.FEEDBACK);
 
     store.setState({
@@ -235,7 +246,6 @@ class GameEngine {
 
     await this.sleep(GAME_CONFIG.BET_ANIMATION_TIMELINE_MS.EXIT);
 
-    // 3) Swap to next hand and run distribution animation.
     store.setState({
       score: newScore,
       currentHand: nextHand,
@@ -256,7 +266,6 @@ class GameEngine {
 
     await this.sleep(GAME_CONFIG.BET_ANIMATION_TIMELINE_MS.DISTRIBUTION);
 
-    // 4) Unlock interactions once new hand has settled.
     store.setState({ isResolvingBet: false });
 
     this.deck.discard(state.currentHand);
@@ -283,7 +292,6 @@ class GameEngine {
     }
 
     await this.loadLeaderboard();
-
   }
 }
 

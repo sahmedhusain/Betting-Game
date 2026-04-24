@@ -54,6 +54,11 @@ export function DrawLane({ state, isDistributing = false }) {
             TEXT.game.reshuffles ? '↻ Reshuffling...' : ''
           )
         )
+    ),
+
+    isDistributing && h('div', { class: 'w-full flex items-center justify-center gap-2 py-2 border-t border-white/5 animate-fade-in' },
+      h('div', { class: 'w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse' }),
+      h('p', { class: 'text-[9px] font-black uppercase tracking-[0.2em] text-amber-500/80' }, TEXT.game.resolvingHand)
     )
   );
 }

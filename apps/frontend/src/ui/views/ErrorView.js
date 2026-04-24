@@ -1,18 +1,16 @@
 import { createElement as h } from '../../picojs/framework/core.js';
-import { ROUTES, ASSETS, TEXT } from '../../utils/constants.js';
+import { ROUTES, ASSETS, TEXT, UI_CONFIG } from '../../utils/constants.js';
 
 export function ErrorView({ state, engine }) {
   const { error } = TEXT;
   const { code, title, message, buttonText, targetRoute } = state.errorData;
   
-  // Resolve fallback data from constants
   const displayCode = code || error.general.code;
   const displayTitle = title || error.general.title;
   const displayMessage = message || error.general.message;
   const displayButtonText = buttonText || error.general.buttonText;
   const displayTarget = targetRoute || ROUTES.LANDING;
   
-  // Resolve icon from assets constant based on code
   const errorIcon = displayCode === '401' ? ASSETS.ICONS.ERROR_401 : ASSETS.ICONS.ERROR_404;
 
   return h('div', { 
@@ -20,7 +18,6 @@ export function ErrorView({ state, engine }) {
   },
     h('div', { class: 'relative z-10 w-full max-w-xl flex flex-col items-center' },
       
-      // Icon at the top
       h('div', { class: 'mb-8 flex justify-center animate-bounce-slow' },
         h('img', { 
           src: errorIcon, 
@@ -29,7 +26,6 @@ export function ErrorView({ state, engine }) {
         })
       ),
 
-      // Error Code Container
       h('div', { class: 'relative mb-12 inline-block' },
         h('div', { class: 'absolute inset-0 bg-rose-500/20 blur-[80px] rounded-full animate-pulse' }),
         h('h1', { 
@@ -40,7 +36,6 @@ export function ErrorView({ state, engine }) {
         }, displayCode)
       ),
       
-      // Glass Content Card
       h('div', { class: 'glass-panel p-10 md:p-14 rounded-[3rem] border border-white/5 shadow-2xl relative overflow-hidden w-full' },
         h('div', { class: 'absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-rose-500/50 to-transparent' }),
         
@@ -63,7 +58,6 @@ export function ErrorView({ state, engine }) {
         )
       ),
 
-      // Meta Info
       h('p', { class: 'mt-12 text-[8px] font-black uppercase tracking-[0.6em] text-slate-700 animate-pulse' }, 
         TEXT.error.integrityCompromised(displayCode)
       )
