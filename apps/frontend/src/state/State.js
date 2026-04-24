@@ -44,7 +44,8 @@ export const initialState = {
   showJoinForm: false,
   isRulesOpen: false,
   isMobileMenuOpen: false,
-  deckState: null
+  deckState: null,
+  wasRefreshed: false
 };
 
 export let store = null;

@@ -13,6 +13,7 @@ type GameState struct {
 	DeckState      interface{}   `json:"deck_state" bson:"deck_state"`
 	ReshuffleCount int           `json:"reshuffle_count" bson:"reshuffle_count"`
 	GamePhase      string        `json:"game_phase" bson:"game_phase"`
+	WasRefreshed   bool          `json:"was_refreshed" bson:"was_refreshed"`
 }
 
 type AuthSession struct {

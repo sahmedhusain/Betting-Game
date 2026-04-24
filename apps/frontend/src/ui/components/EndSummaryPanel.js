@@ -1,8 +1,20 @@
 import { createElement as h } from '../../picojs/framework/core.js';
 import { TEXT, ROUTES } from '../../utils/constants.js';
 import { formatScore } from '../../utils/helpers.js';
+import { store } from '../../state/State.js';
 
 export function EndSummaryPanel({ score, bestScore, comment, onPlayAgain }) {
+  const state = store.getState();
+  const isRefreshFailure = !!state.wasRefreshed;
+
+  const titlePart1 = isRefreshFailure ? 'OPS!' : 'CAUGHT';
+  const titlePart2 = isRefreshFailure ? 'CHEATING DETECTED' : 'UP!';
+  const displayScore = isRefreshFailure ? 0 : score;
+  const displayComment = isRefreshFailure ? 'Try again!' : comment;
+  const scoreColorClass = isRefreshFailure ? 'text-rose-500' : 'text-white';
+  const commentColorClass = isRefreshFailure ? 'text-rose-500' : 'text-emerald-400';
+  const accentColorClass = isRefreshFailure ? 'bg-rose-500' : 'bg-emerald-500';
+
   return h('div', { class: 'lg:col-span-7 flex flex-col h-full min-h-0 p-1 shrink-0' },
     h('div', { class: 'glass-panel p-8 sm:p-10 rounded-[3rem] border border-white/5 relative overflow-hidden h-full flex flex-col justify-center min-h-[500px] lg:min-h-0' },
       h('div', { class: 'absolute -top-24 -left-24 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full' }),
@@ -11,20 +23,20 @@ export function EndSummaryPanel({ score, bestScore, comment, onPlayAgain }) {
         h('div', { class: 'mb-4 sm:mb-8' },
           h('p', { class: 'text-emerald-500 font-black uppercase tracking-[0.4em] mb-2 text-[10px]' }, TEXT.end.sessionTerminated),
           h('div', { class: 'flex flex-col' },
-            h('span', { class: 'text-5xl sm:text-6xl lg:text-[70px] font-black font-outfit tracking-tighter leading-[0.8] text-white opacity-40' }, 'CAUGHT'),
-            h('span', { class: 'text-5xl sm:text-6xl lg:text-[70px] font-black font-outfit tracking-tighter leading-[0.8] text-white' }, 'UP!')
+            h('span', { class: 'text-5xl sm:text-6xl lg:text-[70px] font-black font-outfit tracking-tighter leading-[0.8] text-white opacity-40 uppercase' }, titlePart1),
+            h('span', { class: `text-2xl sm:text-3xl lg:text-[40px] font-black font-outfit tracking-tighter leading-[1.1] ${isRefreshFailure ? 'text-rose-500' : 'text-white'} mt-2 uppercase` }, titlePart2)
           )
         ),
 
         h('div', { class: 'w-full py-6 sm:py-8 border-y border-white/5 mb-6 sm:mb-8 flex flex-col items-center lg:items-start' },
           h('p', { class: 'text-slate-500 uppercase text-[10px] font-black tracking-widest mb-2' }, TEXT.end.finalBankroll),
           h('div', { class: 'flex items-center gap-4 mb-2' },
-            h('div', { class: 'hidden lg:block w-1.5 h-10 bg-emerald-500 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.4)]' }),
-            h('h2', { class: 'text-6xl sm:text-7xl lg:text-8xl font-black text-white font-outfit tracking-tighter' },
-              formatScore(score)
+            h('div', { class: `hidden lg:block w-1.5 h-10 ${accentColorClass} rounded-full shadow-[0_0_15px_rgba(16,185,129,0.4)]` }),
+            h('h2', { class: `text-6xl sm:text-7xl lg:text-8xl font-black ${scoreColorClass} font-outfit tracking-tighter` },
+              formatScore(displayScore)
             )
           ),
-          h('p', { class: 'text-emerald-400 text-[10px] lg:text-[11px] font-black uppercase tracking-[0.3em]' }, comment)
+          h('p', { class: `${commentColorClass} text-[10px] lg:text-[11px] font-black uppercase tracking-[0.3em]` }, displayComment)
         ),
 
         h('div', { class: 'flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto' },

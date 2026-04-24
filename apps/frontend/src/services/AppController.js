@@ -36,9 +36,14 @@ function navigateToHash(targetHash, { replace = false } = {}) {
 function isValidPhaseState(phase, state) {
   if (!state.sessionChecked) return true;
 
-  if (phase === PHASES.PLAYING || phase === PHASES.GAME_OVER) {
-    return state.sessionValid;
+  if (phase === PHASES.PLAYING) {
+    return state.sessionValid && !state.isGameFinished && !!state.playerName;
   }
+
+  if (phase === PHASES.GAME_OVER) {
+    return state.sessionValid && state.isGameFinished;
+  }
+
   return true;
 }
 
@@ -83,6 +88,14 @@ export function handleRouting() {
 
   let phase = phaseFromHash();
 
+  if (state.gamePhase === PHASES.PLAYING && phase !== PHASES.PLAYING) {
+    store.setState({ wasRefreshed: true, score: 0, isGameFinished: true });
+    engine.endGame();
+
+    navigateToHash(ROUTES.GAME_OVER, { replace: true });
+    return;
+  }
+
   if (phase === null) {
     store.setState({
       gamePhase: PHASES.ERROR,
@@ -100,6 +113,15 @@ export function handleRouting() {
       });
       navigateToHash(ROUTES.ERROR, { replace: true });
     } else {
+      if (phase === PHASES.PLAYING && state.isGameFinished) {
+        navigateToHash(ROUTES.LANDING, { replace: true });
+        return;
+      }
+      if (!state.playerName) {
+        navigateToHash(ROUTES.LANDING, { replace: true });
+        return;
+      }
+
       const target = state.isGameFinished ? ROUTES.GAME_OVER : ROUTES.PLAY;
       navigateToHash(target, { replace: true });
     }
@@ -108,6 +130,13 @@ export function handleRouting() {
 
   if (state.gamePhase !== phase) {
     const patch = getPhaseResetPatch(phase);
+
+    if (phase === PHASES.LANDING) {
+      sessionStorage.removeItem('game_active');
+      patch.isGameFinished = false;
+      patch.wasRefreshed = false;
+      patch.score = 0;
+    }
 
     if (phase === PHASES.ERROR && !state.errorData.code) {
       patch.errorData = { ...TEXT.error.notFound, targetRoute: ROUTES.LANDING };
@@ -126,10 +155,54 @@ export function allowPlayAgainTransition() {
 }
 
 export async function handleBootstrap() {
+  const currentHash = normalizeHash(window.location.hash || ROUTES.LANDING);
+  const wasActive = sessionStorage.getItem('game_active') === 'true';
+
+  const isLobbyOrOver = currentHash === ROUTES.LANDING || currentHash === ROUTES.GAME_OVER;
+
+  if (isLobbyOrOver) {
+    sessionStorage.clear();
+    const { Api } = await import('../services/Api.js');
+    await Promise.all([
+      Api.logoutSession().catch(() => { }),
+      engine.loadLeaderboard()
+    ]);
+
+    store.setState({
+      isGameFinished: false,
+      wasRefreshed: false,
+      gamePhase: PHASES.LANDING,
+      sessionChecked: true,
+      playerName: ''
+    });
+
+    if (currentHash !== ROUTES.LANDING) {
+      navigateToHash(ROUTES.LANDING, { replace: true });
+    }
+    return;
+  }
+
   await Promise.all([
     engine.validateSession(),
     engine.loadLeaderboard()
   ]);
+
+  if (wasActive) {
+    sessionStorage.removeItem('game_active');
+
+    store.setState({
+      wasRefreshed: true,
+      score: 0,
+      isGameFinished: true,
+      gamePhase: PHASES.GAME_OVER
+    });
+
+    await engine.endGame();
+
+    navigateToHash(ROUTES.GAME_OVER, { replace: true });
+    return;
+  }
+
   handleRouting();
 }
 

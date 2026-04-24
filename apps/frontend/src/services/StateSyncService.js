@@ -14,7 +14,8 @@ export const StateSyncService = {
         history: state.history,
         deck_state: state.deckState,
         reshuffle_count: state.reshuffleCount,
-        game_phase: state.gamePhase
+        game_phase: state.gamePhase,
+        was_refreshed: state.wasRefreshed
       },
       is_game_finished: state.isGameFinished
     }).catch(err => console.warn('Failed to sync state:', err));

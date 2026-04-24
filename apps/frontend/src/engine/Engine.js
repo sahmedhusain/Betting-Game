@@ -58,9 +58,11 @@ class GameEngine {
 
     soundService.playAmbient();
     soundService.playClick();
+    sessionStorage.setItem('game_active', 'true');
 
     store.setState({
       playerName,
+      wasRefreshed: false,
       gamePhase: PHASES.PLAYING,
       currentHand: initialHand,
       currentHandValue: calculateHandValue(initialHand),
@@ -92,11 +94,13 @@ class GameEngine {
         gamePhase: gameState.game_phase,
         deckState: gameState.deck_state,
         isGameFinished: gameState.game_phase === PHASES.GAME_OVER,
+        wasRefreshed: !!gameState.was_refreshed,
         ...this.deck.getStats()
       });
 
       if (gameState.game_phase === PHASES.PLAYING) {
         soundService.playAmbient();
+        sessionStorage.setItem('game_active', 'true');
       }
       
       this.loadLeaderboard();
@@ -211,11 +215,10 @@ class GameEngine {
   }
 
   async endGame() {
+    sessionStorage.removeItem('game_active');
     const state = store.getState();
     soundService.stopAmbient();
     soundService.playGameOver();
-
-    this.syncState();
 
     try {
       await Api.saveScore(state.playerName, state.score, state.history.length);
@@ -232,6 +235,7 @@ class GameEngine {
     }
 
     store.setState({ gamePhase: PHASES.GAME_OVER, isGameFinished: true });
+    this.syncState();
     await this.loadLeaderboard(true);
   }
 }
