@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -13,7 +14,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var DB *mongo.Client
+var (
+	DB         *mongo.Client
+	DBName     string
+	SessionTTL time.Duration
+)
 
 // Load environment variables from .env file
 func LoadEnv() {
@@ -84,8 +89,31 @@ func ConnectDB() {
 	DB = client
 	log.Println(constants.MsgConnectedToMongo)
 
+	// Load DB Name and Session TTL
+	DBName = os.Getenv(constants.EnvMongodbName)
+	if DBName == "" {
+		DBName = constants.FallbackDatabaseName
+	}
+
+	ttlHours := GetEnvInt(constants.EnvSessionTTL, 24)
+	SessionTTL = time.Duration(ttlHours) * time.Hour
+}
+
+func GetEnvInt(key string, fallback int) int {
+	raw := os.Getenv(key)
+	if raw == "" {
+		return fallback
+	}
+
+	value, err := strconv.Atoi(raw)
+	if err != nil || value <= 0 {
+		log.Printf(constants.MsgInvalidEnvValueFmt, key, raw, fallback)
+		return fallback
+	}
+
+	return value
 }
 
 func GetCollection(collectionName string) *mongo.Collection {
-	return DB.Database(constants.DefaultDatabaseName).Collection(collectionName)
+	return DB.Database(DBName).Collection(collectionName)
 }

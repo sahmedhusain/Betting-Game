@@ -4,5 +4,5 @@ import "time"
 
 const (
 	SessionCookieName = "betting_session"
-	SessionTTL        = 1 * time.Hour
+	DefaultSessionTTL = 24 * time.Hour // Default to 24 hours
 )

@@ -1,10 +1,8 @@
 package middleware
 
 import (
+	"backend/internal/config"
 	"backend/internal/constants"
-	"log"
-	"os"
-	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,8 +11,8 @@ import (
 
 // SetupRateLimiter protects API endpoints from burst abuse and accidental floods.
 func SetupRateLimiter() fiber.Handler {
-	maxRequests := getEnvInt(constants.EnvRateLimitMax, constants.DefaultRateLimitMax)
-	windowSeconds := getEnvInt(constants.EnvRateLimitWindow, constants.DefaultRateLimitWindow)
+	maxRequests := config.GetEnvInt(constants.EnvRateLimitMax, constants.DefaultRateLimitMax)
+	windowSeconds := config.GetEnvInt(constants.EnvRateLimitWindow, constants.DefaultRateLimitWindow)
 
 	return limiter.New(limiter.Config{
 		Max:        maxRequests,
@@ -38,17 +36,4 @@ func SetupRateLimiter() fiber.Handler {
 	})
 }
 
-func getEnvInt(key string, fallback int) int {
-	raw := os.Getenv(key)
-	if raw == "" {
-		return fallback
-	}
 
-	value, err := strconv.Atoi(raw)
-	if err != nil || value <= 0 {
-		log.Printf(constants.MsgInvalidEnvValueFmt, key, raw, fallback)
-		return fallback
-	}
-
-	return value
-}

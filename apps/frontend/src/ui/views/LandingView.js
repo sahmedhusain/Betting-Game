@@ -46,7 +46,7 @@ export function LandingView({ state, engine }) {
                 })
               ),
               h('div', { class: 'flex flex-col' },
-                h('span', { class: 'text-2xl font-black tracking-tighter text-white leading-none' }, TEXT.branding),
+                h('span', { class: 'text-2xl font-black tracking-tighter text-white leading-none' }, TEXT.landing.branding),
                 h('span', { class: 'text-[9px] font-bold tracking-[0.3em] text-emerald-500 uppercase mt-1' },
                   h('span', { class: 'hidden lg:inline' }, TEXT.landing.logoSubtitle),
                   h('span', { class: 'lg:hidden inline' }, TEXT.landing.logoSubtitleShort)

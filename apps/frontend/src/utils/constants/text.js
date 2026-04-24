@@ -1,7 +1,7 @@
 export const I18N = {
   en: {
     landing: {
-      branding: 'BETTING GAME',
+      branding: (import.meta.env.VITE_APP_NAME && import.meta.env.VITE_APP_NAME !== '') ? import.meta.env.VITE_APP_NAME : 'BETTING GAME',
       goBack: 'Go Back',
       registration: 'Identify yourself',
       title: 'MAHJONG\nBETTING',

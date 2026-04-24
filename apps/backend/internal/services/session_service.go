@@ -1,7 +1,7 @@
 package services
 
 import (
-	"backend/internal/constants"
+	"backend/internal/config"
 	"backend/internal/models"
 	"backend/internal/repository"
 	"backend/internal/validation"
@@ -33,7 +33,7 @@ func (s *SessionService) StartSession(username string) (*models.AuthSession, err
 		SessionID:  sessionID,
 		Username:   username,
 		CreatedAt:  now,
-		ExpiresAt:  now.Add(constants.SessionTTL),
+		ExpiresAt:  now.Add(config.SessionTTL),
 		LastSeenAt: now,
 	}
 

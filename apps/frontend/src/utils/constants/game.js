@@ -19,7 +19,7 @@ export const GAME_CONFIG = {
     LEGEND: 500,
     EXPERT: 200
   },
-  LEADERBOARD_FETCH_INTERVAL: 5000,
+  LEADERBOARD_FETCH_INTERVAL: Number(import.meta.env.VITE_LEADERBOARD_INTERVAL) || 5000,
   STORAGE_KEYS: {
     PLAYER_NAME: 'mahjong_player_name',
     HISTORY: 'mahjong_betting_history'

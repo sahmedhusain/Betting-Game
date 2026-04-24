@@ -8,4 +8,6 @@ const (
 	EnvAdminResetUsername  = "ADMIN_RESET_USERNAME"
 	EnvAdminResetToken     = "ADMIN_RESET_TOKEN"
 	EnvAllowedOrigins      = "ALLOWED_ORIGINS"
+	EnvSessionTTL          = "SESSION_TTL_HOURS"
+	EnvMongodbName         = "MONGODB_NAME"
 )
