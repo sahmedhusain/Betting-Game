@@ -1,4 +1,4 @@
-import { BET_TYPES, HAND_RESULTS } from '../utils/constants.js';
+import { BET_TYPES, HAND_RESULTS, GAME_CONFIG, TEXT } from '../utils/constants.js';
 
 export function isWinningBet({ betType, currentVal, nextVal }) {
   if (nextVal === currentVal) return true;
@@ -47,7 +47,7 @@ export function applyDynamicAdjustments({
 }
 
 export function calculatePlayerRank(score) {
-  if (score >= 500) return 'LEGEND';
-  if (score >= 200) return 'EXPERT';
-  return 'PLAYER';
+  if (score >= GAME_CONFIG.RANK_THRESHOLDS.LEGEND) return TEXT.leaderboard.legendary;
+  if (score >= GAME_CONFIG.RANK_THRESHOLDS.EXPERT) return TEXT.leaderboard.challenger;
+  return TEXT.game.playerLabel;
 }

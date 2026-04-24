@@ -7,8 +7,10 @@ export const I18N = {
       title: 'MAHJONG\nBETTING',
       subtitle: 'Premium betting experience powered by state-of-the-art tile mechanics.',
       logoSubtitle: 'STRATEGIC TILE ENGINE',
+      logoSubtitleShort: 'TILE ENGINE',
       playNow: 'Play Now',
       rulesTitle: 'How to Play?',
+      rulesTitleShort: 'HOW TO PLAY',
       identifyPlayer: 'Player Name',
       namePlaceholder: 'YOUR NAME',
       allowedNameChars: 'Only alphanumeric, dot (.), underscore (_), or hyphen (-) characters are allowed.',
@@ -19,6 +21,9 @@ export const I18N = {
       serverOffline: 'Server Offline',
       logoAlt: 'Logo'
     },
+    loading: {
+      authenticating: 'Authenticating'
+    },
     game: {
       drawLane: 'Draw Lane',
       deckEmpty: 'Deck Empty',
@@ -28,7 +33,7 @@ export const I18N = {
       reshuffles: 'Reshuffles',
       bankroll: 'Bankroll',
       currentValue: 'Current Value',
-      playerLabel: 'Player',
+      playerLabel: 'PLAYER',
       anonymousPlayer: 'Anonymous',
       resolvingHand: 'Resolving hand...',
       betLower: 'Bet Lower',
@@ -36,20 +41,39 @@ export const I18N = {
       waitingForFirstBet: 'Waiting for first bet...',
       handHistory: 'Hand History',
       leaveGame: 'LEAVE GAME',
+      leaveGameShort: 'LEAVE',
       leaveGameTitle: 'Leave Game',
       sessionHand: (number) => `GAME HAND #${number}`,
       handValue: 'Hand Value',
       bettingArena: 'BETTING ARENA',
+      arena: 'ARENA',
       totalWins: 'Total Wins',
       totalLosses: 'Total Losses',
-      drawLaneWithCount: (count) => `Draw Lane · ${count}`
+      drawLaneWithCount: (count) => `Draw Lane · ${count}`,
+      reshuffling: 'RESHUFFLING...',
+      reloading: 'RELOADING...',
+      resolvingDeck: 'Reshuffling Deck',
+      cardBackAlt: 'Card Back',
+      tileValue: 'Value',
+      feedbackWin: 'Bim!',
+      feedbackLoss: 'Oh Snap!',
+      betHigherAction: 'Bet Higher',
+      betLowerAction: 'Bet Lower',
+      confirmAction: 'Confirm',
+      keyboardH: 'KEYBOARD: H',
+      keyboardL: 'KEYBOARD: L',
+      keyboardEnter: 'KEYBOARD: ENTER',
+      notAvailable: '--'
     },
     leaderboard: {
       unknownPlayer: 'Unknown',
       legend: 'Legend',
       rank: (rank) => `RANK 0${rank}`,
       emptyState: 'No legends recorded yet. Will you be the first?',
-      ordinals: ['th', 'st', 'nd', 'rd']
+      ordinals: ['th', 'st', 'nd', 'rd'],
+      legendary: 'LEGENDARY',
+      challenger: 'CHALLENGER',
+      earnings: 'Earnings'
     },
     end: {
       sessionTerminated: 'BET GAME\nTERMINATED',
@@ -137,6 +161,37 @@ export const I18N = {
       SEASON_SUMMER: 'Summer Season',
       SEASON_AUTUMN: 'Autumn Season',
       SEASON_WINTER: 'Winter Season'
+    },
+    menu: {
+      systemNavigation: 'SYSTEM NAVIGATION',
+      currentStanding: 'Current Standing',
+      controls: 'Controls',
+      howToPlay: 'HOW TO PLAY'
+    },
+    rules: {
+      guideTitle: 'Strategic Guide',
+      protocolLabel: 'Protocol & Operations',
+      pointsLabel: 'Points',
+      honorTiles: 'Honor Tiles',
+      suitSeries: 'Suit Series',
+      systemReady: 'System ready for strategic engagement',
+      gotIt: 'Got It',
+      winds: 'Winds',
+      dragons: 'Dragons',
+      flowers: 'Flowers / Seasons',
+      bamboo: 'Bamboo',
+      characters: 'Characters',
+      dots: 'Dots',
+      sections: {
+        core: 'SYSTEM_CORE // 01',
+        registry: 'TILE_REGISTRY // 02',
+        inputs: 'INPUT_MATRIX // 03'
+      },
+      mechanics: [
+        { t: 'Analysis', d: 'The sum of all 5 tiles in your hand determines your Current Score.' },
+        { t: 'Prediction', d: 'Forecast if the next hand value will exceed or fall below your current total.' },
+        { t: 'Resolution', d: 'Correct forecasts award bankroll. Failed attempts trigger penalties.' }
+      ]
     }
   }
 };

@@ -13,7 +13,6 @@ export const initialState = {
   gamePhase: PHASES.LANDING,
   leaderboard: [],
 
-  // Session state
   sessionChecked: false,
   sessionValid: false,
   backendDown: false,
@@ -27,7 +26,6 @@ export const initialState = {
     targetRoute: ''
   },
 
-  // Animation scaffold
   isDrawing: false,
   drawQueue: [],
   animationNonce: 0,

@@ -5,7 +5,6 @@ import { EndSummaryPanel } from '../components/EndSummaryPanel.js';
 import { EndHistoryPanel } from '../components/EndHistoryPanel.js';
 import { allowPlayAgainTransition } from '../../services/AppController.js';
 import { GlobalTopBar } from '../components/GlobalTopBar.js';
-import { calculatePlayerRank } from '../../engine/gameRules.js';
 import { store } from '../../state/State.js';
 import { RulesModal } from '../components/RulesModal.js';
 import { MobileMenu } from '../components/MobileMenu.js';
@@ -13,10 +12,8 @@ import { MobileMenu } from '../components/MobileMenu.js';
 export function EndView({ state, engine }) {
   const topScores = state.leaderboard || [];
   
-  // Use DB history if available, otherwise fallback to local
   const rawHistory = state.lifetimeHistory.length > 0 ? state.lifetimeHistory : HistoryService.getHistory();
   
-  // Normalize fields between DB (final_score/ended_at) and Local (score/timestamp)
   const history = rawHistory.map(entry => ({
     id: entry._id || entry.id,
     score: entry.final_score ?? entry.score ?? 0,
@@ -42,7 +39,7 @@ export function EndView({ state, engine }) {
         class: 'flex items-center gap-1.5 px-3 py-1 rounded-lg border border-white/10 bg-white/5 text-slate-400 shadow-xl backdrop-blur-md transition-all' 
       },
         h('div', { class: 'icon-wallet w-3.5 h-3.5' }),
-        h('span', { class: 'text-[9px] font-black uppercase tracking-widest' }, 'PLAYER')
+        h('span', { class: 'text-[9px] font-black uppercase tracking-widest' }, TEXT.game.playerLabel)
       );
     }
     
@@ -65,7 +62,6 @@ export function EndView({ state, engine }) {
     );
   };
 
-  // Dynamic Commentary Logic
   const topScoresList = topScores.map(s => s.score || s.highest_score || 0);
   const firstPlaceScore = topScoresList[0] || 0;
   const fifthPlaceScore = topScoresList[4] || 0;
@@ -128,12 +124,10 @@ export function EndView({ state, engine }) {
       )
     ),
 
-    // Rules Modal
     state.isRulesOpen ? RulesModal({
       onClose: () => store.setState({ isRulesOpen: false })
     }) : null,
 
-    // Mobile Menu Modal (New separate component)
     MobileMenu({
       isOpen: state.isMobileMenuOpen,
       onClose: () => store.setState({ isMobileMenuOpen: false }),

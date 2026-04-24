@@ -1,4 +1,6 @@
-const STORAGE_KEY = 'mahjong_betting_history';
+import { GAME_CONFIG } from '../utils/constants.js';
+
+const STORAGE_KEY = GAME_CONFIG.STORAGE_KEYS.HISTORY;
 
 export const HistoryService = {
   saveGame(playerName, score) {
@@ -11,7 +13,7 @@ export const HistoryService = {
     };
 
     history.unshift(newEntry);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(0, 50))); // Keep last 50
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(0, GAME_CONFIG.MAX_HISTORY_ITEMS)));
     return newEntry;
   },
 

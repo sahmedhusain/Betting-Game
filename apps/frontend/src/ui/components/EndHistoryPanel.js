@@ -13,7 +13,6 @@ export function EndHistoryPanel({ history, bestScore, playerName }) {
         h('span', { class: 'text-[9px] font-bold text-slate-500 uppercase tracking-widest' }, TEXT.end.records)
       ),
 
-      // Lifetime Stats Summary
       h('div', { class: 'grid grid-cols-2 gap-4 mb-8 shrink-0' },
         h('div', { class: 'p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] bg-white/[0.03] border border-white/5 flex flex-col justify-center' },
           h('div', { class: 'flex items-center gap-3 mb-2' },
@@ -39,8 +38,8 @@ export function EndHistoryPanel({ history, bestScore, playerName }) {
 
           return h('div', {
             class: `group relative p-7 rounded-[2rem] border transition-all duration-300 ${isFirst
-                ? 'bg-emerald-500/10 border-emerald-500/20 shadow-lg shadow-emerald-500/5'
-                : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.04] hover:border-white/10'
+              ? 'bg-emerald-500/10 border-emerald-500/20 shadow-lg shadow-emerald-500/5'
+              : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.04] hover:border-white/10'
               }`,
             key: `history-${entry.id || i}`
           },

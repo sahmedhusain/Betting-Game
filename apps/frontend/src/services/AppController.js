@@ -66,27 +66,25 @@ export function phaseFromHash() {
   if (hash === ROUTES.LANDING) return PHASES.LANDING;
   if (hash === ROUTES.ERROR) return PHASES.ERROR;
 
-  // Unknown route
-  return null; 
+  return null;
 }
 
 export function handleRouting() {
   const rawHash = window.location.hash || ROUTES.LANDING;
   const normalizedHash = normalizeHash(rawHash);
-  
+
   if (rawHash !== normalizedHash) {
     navigateToHash(normalizedHash, { replace: true });
     return;
   }
 
   const state = store.getState();
-  if (!state.sessionChecked) return; // Wait for bootstrap
+  if (!state.sessionChecked) return;
 
   let phase = phaseFromHash();
 
-  // Handle 404 (Unknown Route)
   if (phase === null) {
-    store.setState({ 
+    store.setState({
       gamePhase: PHASES.ERROR,
       errorData: { ...TEXT.error.notFound, targetRoute: ROUTES.LANDING }
     });
@@ -94,10 +92,9 @@ export function handleRouting() {
     return;
   }
 
-  // Handle 401 (Unauthorized)
   if (!isValidPhaseState(phase, state)) {
     if (!state.sessionValid) {
-      store.setState({ 
+      store.setState({
         gamePhase: PHASES.ERROR,
         errorData: { ...TEXT.error.unauthorized, targetRoute: ROUTES.LANDING }
       });
@@ -111,11 +108,11 @@ export function handleRouting() {
 
   if (state.gamePhase !== phase) {
     const patch = getPhaseResetPatch(phase);
-    
+
     if (phase === PHASES.ERROR && !state.errorData.code) {
       patch.errorData = { ...TEXT.error.notFound, targetRoute: ROUTES.LANDING };
     }
-    
+
     store.setState({ gamePhase: phase, ...patch });
   }
 }
@@ -163,7 +160,7 @@ export function handleSideEffects() {
   }
 
   if (state.sessionChecked && state.sessionValid === false && state.gamePhase !== PHASES.LANDING && state.gamePhase !== PHASES.ERROR) {
-    store.setState({ 
+    store.setState({
       gamePhase: PHASES.ERROR,
       errorData: { ...TEXT.error.unauthorized, targetRoute: ROUTES.LANDING }
     });

@@ -1,6 +1,6 @@
 import { TILE_TYPES, SUITS, TILE_VALUES, WINDS, DRAGONS, FLOWERS, SEASONS } from '../utils/constants.js';
 
-export const dynamicTileValues = { // Up down scales for Winds and Dragons "dynamic"
+export const dynamicTileValues = {
     'EAST': TILE_VALUES.INITIAL_BASE,
     'SOUTH': TILE_VALUES.INITIAL_BASE,
     'WEST': TILE_VALUES.INITIAL_BASE,
@@ -20,7 +20,6 @@ export const dynamicTileValues = { // Up down scales for Winds and Dragons "dyna
     'WINTER': TILE_VALUES.SPECIAL_BASE
 };
 
-// numbred and non-numbred tiles values return
 export function getTileValue(tile) {
     if (tile.type === TILE_TYPES.NUMBER) {
         return tile.faceValue;
@@ -36,7 +35,6 @@ export function updateDynamicValue(tileName, delta) {
     return 0;
 }
 
-// Genarate a standard deck of 144 tiles
 export function generateBaseDeck() {
     const deck = [];
     let idCounter = 1;

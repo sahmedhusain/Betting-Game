@@ -1,5 +1,5 @@
 import { createElement as h } from '../../picojs/framework/core.js';
-import { ASSETS } from '../../utils/constants.js';
+import { ASSETS, TEXT } from '../../utils/constants.js';
 
 export function LoadingView() {
   return h('div', { 
@@ -17,6 +17,6 @@ export function LoadingView() {
       h('div', { class: 'w-1.5 h-1.5 rounded-full bg-emerald-500 animate-bounce [animation-delay:-0.15s]' }),
       h('div', { class: 'w-1.5 h-1.5 rounded-full bg-emerald-500 animate-bounce' })
     ),
-    h('p', { class: 'mt-6 text-[10px] font-black uppercase tracking-[0.4em] text-slate-500' }, 'Authenticating')
+    h('p', { class: 'mt-6 text-[10px] font-black uppercase tracking-[0.4em] text-slate-500' }, TEXT.loading.authenticating)
   );
 }

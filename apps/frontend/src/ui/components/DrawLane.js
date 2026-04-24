@@ -12,11 +12,10 @@ export function DrawLane({ state, isDistributing = false }) {
   const isLowPile = state.drawPileCount <= 5;
   const isEmptyPile = state.drawPileCount === 0;
 
-  // Choose animation based on state
-  const pileAnimClass = isReshuffling 
-    ? 'animate-pile-reshuffle' 
+  const pileAnimClass = isReshuffling
+    ? 'animate-pile-reshuffle'
     : (isDistributing ? 'animate-pile-shake' : '');
-    
+
   const lowPileClass = isLowPile && !isEmptyPile ? 'ring-2 ring-amber-500/50 shadow-lg shadow-amber-500/20' : '';
 
   return h(
@@ -33,7 +32,7 @@ export function DrawLane({ state, isDistributing = false }) {
       previewCount > 0
         ? Array.from({ length: previewCount }).map((_, i) => {
           const offset = i * 1.5;
-          
+
           return h(
             'div',
             {
@@ -45,15 +44,15 @@ export function DrawLane({ state, isDistributing = false }) {
                 animationFillMode: 'forwards',
               }
             },
-            
+
             h('div', { class: 'absolute inset-0 bg-gradient-to-br from-black/5 to-transparent pointer-events-none' }),
-            
-            h('img', { 
+
+            h('img', {
               src: ASSETS.TILES.BACK,
-              alt: 'Card Back',
+              alt: TEXT.game.cardBackAlt,
               class: 'w-full h-full object-cover'
             }),
-            
+
             h('div', { class: 'absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-60' })
           );
         })
@@ -62,15 +61,15 @@ export function DrawLane({ state, isDistributing = false }) {
           (isLowPile || isReshuffling) && h(
             'div',
             { class: 'text-[10px] font-black text-amber-500 animate-pulse-slow' },
-            isReshuffling ? '↻ RESHUFFLING...' : 'RELOADING...'
+            isReshuffling ? TEXT.game.reshuffling : TEXT.game.reloading
           )
         )
     ),
 
     (isDistributing || isReshuffling) && h('div', { class: 'w-full flex items-center justify-center gap-2 py-4 border-t border-white/5 animate-fade-in z-10' },
       h('div', { class: `w-1.5 h-1.5 rounded-full ${isReshuffling ? 'bg-amber-500' : 'bg-emerald-500'} animate-pulse` }),
-      h('p', { class: `text-[9px] font-black uppercase tracking-[0.2em] ${isReshuffling ? 'text-amber-500' : 'text-emerald-400'}` }, 
-        isReshuffling ? 'Reshuffling Deck' : TEXT.game.resolvingHand
+      h('p', { class: `text-[9px] font-black uppercase tracking-[0.2em] ${isReshuffling ? 'text-amber-500' : 'text-emerald-400'}` },
+        isReshuffling ? TEXT.game.resolvingDeck : TEXT.game.resolvingHand
       )
     )
   );

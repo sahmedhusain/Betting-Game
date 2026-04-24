@@ -46,7 +46,6 @@
     animation-delay: -2s;
   }
 
-  /* Premium Rank Icons */
   .icon-medal {
     background-color: currentColor;
     -webkit-mask: var(--url-icon-medal) no-repeat center;
@@ -122,7 +121,6 @@
     mask: var(--url-icon-lower) no-repeat center;
   }
 
-  /* Scrollbar hiding utilities */
   .no-scrollbar {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */

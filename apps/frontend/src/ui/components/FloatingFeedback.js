@@ -1,4 +1,5 @@
 import { createElement as h } from '../../picojs/framework/core.js';
+import { TEXT } from '../../utils/constants.js';
 
 /**
  * @param {Object} props
@@ -15,7 +16,7 @@ export function FloatingFeedback({ isVisible, isWin, onAnimationEnd }) {
     : 'animate-float-feedback-loss';
 
   const icon = isWin ? '✓' : '✕';
-  const text = isWin ? 'Bim!' : 'Oh Snap!';
+  const text = isWin ? TEXT.game.feedbackWin : TEXT.game.feedbackLoss;
   
   const accentColor = isWin ? '#10b981' : '#f43f5e';
   const glowColor = isWin ? 'rgba(16,185,129,0.5)' : 'rgba(244,63,94,0.5)';

@@ -15,5 +15,16 @@ export const GAME_CONFIG = {
     x: 0,
     y: 0
   },
+  RANK_THRESHOLDS: {
+    LEGEND: 500,
+    EXPERT: 200
+  },
+  LEADERBOARD_FETCH_INTERVAL: 5000,
+  STORAGE_KEYS: {
+    PLAYER_NAME: 'mahjong_player_name',
+    HISTORY: 'mahjong_betting_history'
+  },
+  RESHUFFLE_DELAY_MS: 800,
+  MAX_HISTORY_ITEMS: 50,
   SOUND_DISABLED: import.meta.env.VITE_SOUND_DISABLED === 'true'
 };

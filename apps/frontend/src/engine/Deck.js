@@ -1,4 +1,5 @@
 import { generateBaseDeck } from './TileConfig.js';
+import { GAME_CONFIG } from '../utils/constants.js';
 
 export class Deck {
     constructor() {
@@ -10,13 +11,11 @@ export class Deck {
 
 
     initializeNewDeck() {
-        // grab a fresh deck and shuffle it right away
         const freshDeck = generateBaseDeck();
         this.drawPile = this.shuffle(freshDeck);
     }
 
     shuffle(array) {
-        // standard fisher-yates shuffle
         const shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -33,8 +32,7 @@ export class Deck {
     reshuffle() {
         this.reshuffleCount++;
 
-        // if we reshuffled 3 times, stop the game
-        if (this.reshuffleCount >= 3) {
+        if (this.reshuffleCount >= GAME_CONFIG.MAX_RESHUFFLES) {
             return false;
         }
 
@@ -50,7 +48,6 @@ export class Deck {
     draw(count) {
         const drawnTiles = [];
 
-        // pull tiles one by one, reshuffling if the pile empties
         for (let i = 0; i < count; i++) {
             if (this.drawPile.length === 0) {
                 const canReshuffle = this.reshuffle();

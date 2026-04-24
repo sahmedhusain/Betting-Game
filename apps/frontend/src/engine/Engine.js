@@ -2,9 +2,12 @@ import { store } from '../state/State.js';
 import { Deck } from './Deck.js';
 import { calculateHandValue, updateDynamicValue } from './TileConfig.js';
 import { TILE_TYPES } from '../utils/constants.js';
-import { GAME_CONFIG, PHASES, BET_TYPES, GAME_ACTIONS, TEXT } from '../utils/constants.js';
+import { GAME_CONFIG, PHASES, BET_TYPES, TEXT } from '../utils/constants.js';
 import { Api } from '../services/Api.js';
 import { soundService } from '../services/SoundService.js';
+import { SessionService } from '../services/SessionService.js';
+import { LeaderboardService } from '../services/LeaderboardService.js';
+import { StateSyncService } from '../services/StateSyncService.js';
 import {
   applyDynamicAdjustments,
   calculateScoreDelta,
@@ -17,132 +20,36 @@ import { HistoryService } from '../services/HistoryService.js';
 class GameEngine {
   constructor() {
     this.deck = new Deck();
-    this.lastLeaderboardFetch = 0;
-    this.minFetchInterval = 5000; // 5 seconds
   }
 
   async validateSession() {
-    // Silent Check: If no local identifier exists
-    const localName = localStorage.getItem('mahjong_player_name');
-    if (!localName) {
-      store.setState({ 
-        sessionChecked: true, 
-        sessionValid: false,
-        backendDown: false
-      });
-      return false;
+    const response = await SessionService.validateSession();
+    if (response && response.game_state) {
+      this.restoreSession(response.game_state);
     }
-
-    try {
-      const response = await Api.validateSession();
-      store.setState({ 
-        sessionChecked: true, 
-        sessionValid: true, 
-        playerName: response.username,
-        backendDown: false,
-        isGameFinished: response.is_game_finished
-      });
-
-      if (response.game_state) {
-        this.restoreSession(response.game_state);
-      }
-
-      return true;
-    } catch (err) {
-      const isNetworkError = err.message === 'Failed to fetch' || err.message.includes('network');
-      
-      store.setState({ 
-        sessionChecked: true, 
-        sessionValid: false,
-        backendDown: isNetworkError
-      });
-      
-      return false;
-    }
+    return !!response;
   }
 
   async startSession(username) {
-    try {
-      const session = await Api.startSession(username);
-      store.setState({ 
-        sessionValid: true, 
-        playerName: session.username,
-        sessionError: '',
-        backendDown: false,
-        isGameFinished: false
-      });
-      localStorage.setItem('mahjong_player_name', session.username);
-      
-      this.loadLeaderboard(true); // Force fetch on login
-      
+    const session = await SessionService.startSession(username);
+    if (session) {
+      LeaderboardService.loadLeaderboard(true);
       return true;
-    } catch (err) {
-      const isNetworkError = err.message === 'Failed to fetch' || err.message.includes('network');
-      store.setState({ 
-        sessionError: err.message,
-        backendDown: isNetworkError
-      });
-      return false;
     }
+    return false;
   }
 
   async logout() {
-    try {
-      await Api.logoutSession();
-    } catch (err) {
-      console.error('Logout failed:', err);
-    }
-    store.setState({ 
-      sessionValid: false, 
-      playerName: '', 
-      gamePhase: PHASES.LANDING,
-      currentHand: [],
-      history: [],
-      score: GAME_CONFIG.INITIAL_SCORE,
-      isGameFinished: false
-    });
-    localStorage.clear();
-    soundService.stopAmbient();
-    
-    this.loadLeaderboard(true); // Force fetch on logout
+    await SessionService.logout();
+    LeaderboardService.loadLeaderboard(true);
   }
 
   syncState() {
-    const state = store.getState();
-    if (!state.sessionValid || state.gamePhase === PHASES.LANDING) return;
-
-    Api.saveGameState({
-      state: {
-        score: state.score,
-        current_hand: state.currentHand,
-        history: state.history,
-        deck_state: state.deckState,
-        reshuffle_count: state.reshuffleCount,
-        game_phase: state.gamePhase
-      },
-      is_game_finished: state.isGameFinished
-    }).catch(err => console.warn('Failed to sync state:', err));
+    StateSyncService.syncState();
   }
 
   async loadLeaderboard(force = false) {
-    const now = Date.now();
-    if (!force && (now - this.lastLeaderboardFetch < this.minFetchInterval)) {
-      return;
-    }
-
-    try {
-      this.lastLeaderboardFetch = now;
-      const scores = await Api.getLeaderboard();
-      if (Array.isArray(scores)) {
-        store.setState({ leaderboard: scores, backendDown: false });
-      }
-    } catch (err) {
-      const isNetworkError = err.message === 'Failed to fetch' || err.message.includes('network');
-      if (isNetworkError) {
-        store.setState({ backendDown: true });
-        console.error(TEXT.engine.errors.loadLeaderboardFailed, err);
-      }
-    }
+    return LeaderboardService.loadLeaderboard(force);
   }
 
   startGame(playerName) {
@@ -169,7 +76,6 @@ class GameEngine {
     });
 
     this.syncState();
-    
     this.loadLeaderboard();
   }
 
@@ -218,10 +124,9 @@ class GameEngine {
     const nextHand = this.deck.draw(GAME_CONFIG.HAND_SIZE);
     const deckStats = this.deck.getStats();
     
-    // Check if a reshuffle occurred during draw
     if (deckStats.reshuffleCount > prevReshuffleCount) {
       store.setState({ isReshuffling: true });
-      setTimeout(() => store.setState({ isReshuffling: false }), 800);
+      setTimeout(() => store.setState({ isReshuffling: false }), GAME_CONFIG.RESHUFFLE_DELAY_MS);
     }
 
     if (nextHand.length < GAME_CONFIG.HAND_SIZE) {
@@ -310,27 +215,22 @@ class GameEngine {
     soundService.stopAmbient();
     soundService.playGameOver();
 
-    // 1. Sync final state to DB
     this.syncState();
 
-    // 2. Save final score to permanent records
     try {
       await Api.saveScore(state.playerName, state.score, state.history.length);
     } catch (err) {
       console.error(TEXT.engine.errors.saveScoreFailed, err);
     }
 
-    // 3. Fetch latest history from DB (Authoritative)
     try {
       const dbHistory = await Api.getGameHistory();
       store.setState({ lifetimeHistory: dbHistory || [] });
     } catch (err) {
       console.warn('Failed to load DB history:', err);
-      // Fallback to local storage if DB fails
       store.setState({ lifetimeHistory: HistoryService.getHistory() });
     }
 
-    // 4. Update phase and leaderboard
     store.setState({ gamePhase: PHASES.GAME_OVER, isGameFinished: true });
     await this.loadLeaderboard(true);
   }

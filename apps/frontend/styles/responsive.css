@@ -1,6 +1,4 @@
-/* Tablet and Mobile Responsiveness */
-
-/* Layout Scaling */
+/* Tablet */
 @media (max-width: 1280px) {
   :root {
     --play-shell-y: 2rem;
@@ -18,6 +16,7 @@
   }
 }
 
+/* Mobile */
 @media (max-width: 768px) {
   :root {
     --play-shell-x: 1rem;
@@ -32,7 +31,6 @@
     border-radius: 1.5rem !important;
   }
 
-  /* Force stacking on mobile */
   .grid-cols-12 {
     grid-template-columns: 1fr !important;
   }
@@ -41,31 +39,26 @@
     grid-column: span 1 / span 1 !important;
   }
 
-  /* Adjust Game Arena for mobile */
   #game-arena-panel {
     gap: 1.5rem !important;
   }
 
-  /* Scale down large titles */
   h1 {
     font-size: 3rem !important;
     line-height: 1 !important;
   }
 
-  /* History Panel height on mobile */
   .play-history-container {
     height: 500px !important;
     position: relative !important;
   }
 
-  /* Fix absolute positioning in stacked layout */
   .xl\:col-span-4.self-stretch.relative {
     height: 600px;
     margin-top: 1rem;
   }
 }
 
-/* Specific component fixes for touch */
 @media (pointer: coarse) {
   button, .cursor-pointer {
     min-height: 44px;
@@ -73,9 +66,7 @@
   }
 }
 
-/* Hide scrollbars but keep functionality on Mobile/Tablet */
 @media (max-width: 1280px) {
-  /* Global Force Hide */
   * {
     -ms-overflow-style: none !important;
     scrollbar-width: none !important;
@@ -88,7 +79,7 @@
     background: transparent !important;
   }
 
-  /* Specific fix for containers with custom scrollbars */
+
   .custom-scrollbar::-webkit-scrollbar,
   .play-shell::-webkit-scrollbar,
   .play-history-container::-webkit-scrollbar {
@@ -99,7 +90,7 @@
   .play-shell {
     overflow-y: auto !important;
     height: 100vh !important;
-    padding-bottom: 6rem !important; /* Force space at the very bottom */
+    padding-bottom: 6rem !important;
     -webkit-overflow-scrolling: touch;
   }
 }

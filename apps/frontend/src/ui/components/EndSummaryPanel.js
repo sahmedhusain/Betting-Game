@@ -5,7 +5,6 @@ import { formatScore } from '../../utils/helpers.js';
 export function EndSummaryPanel({ score, bestScore, comment, onPlayAgain }) {
   return h('div', { class: 'lg:col-span-7 flex flex-col h-full min-h-0 p-1 shrink-0' },
     h('div', { class: 'glass-panel p-8 sm:p-16 rounded-[3rem] border border-white/5 relative overflow-hidden h-full flex flex-col justify-center min-h-[500px] lg:min-h-0' },
-      // Glow background
       h('div', { class: 'absolute -top-24 -left-24 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full' }),
 
       h('div', { class: 'relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left' },

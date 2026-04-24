@@ -9,7 +9,6 @@ import { LoadingView } from './views/LoadingView.js';
 export function resolveView(state, engine) {
   const shell = (phaseKey, content) => h('div', { key: `page-${phaseKey}` }, content);
 
-  // Guard protected routes during initial bootstrap
   if (!state.sessionChecked && (state.gamePhase === PHASES.PLAYING || state.gamePhase === PHASES.GAME_OVER)) {
     return shell('loading', LoadingView());
   }

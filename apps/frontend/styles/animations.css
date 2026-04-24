@@ -184,7 +184,6 @@
   animation-delay: 400ms;
 }
 
-/* Card Reshuffle Animation */
 @keyframes cardReshuffleOut {
   0% {
     opacity: 1;
@@ -413,7 +412,7 @@
     padding-top: 20px;
     padding-bottom: 20px;
     transform: translateY(0);
-    overflow: hidden; /* Keep hidden to avoid scrollbar flash during expand */
+    overflow: hidden;
   }
 }
 
