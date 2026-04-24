@@ -56,7 +56,7 @@ func SaveScore(c *fiber.Ctx) error {
 
 	username, ok := c.Locals("username").(string)
 	if !ok || username == "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized: Identity missing"})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": constants.ErrUnauthorizedIdentityMissing})
 	}
 
 	err := scoreService.ProcessAndSave(username, input.Score, input.HandsPlayed)

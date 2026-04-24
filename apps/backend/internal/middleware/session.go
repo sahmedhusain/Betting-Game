@@ -12,12 +12,12 @@ var sessionService = services.NewSessionService()
 func SessionGuard(c *fiber.Ctx) error {
 	sessionID := c.Cookies(constants.SessionCookieName)
 	if sessionID == "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized: No session cookie"})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": constants.ErrNoSessionCookie})
 	}
 
 	session, err := sessionService.ValidateSession(sessionID)
 	if err != nil || session == nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized: Invalid or expired session"})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": constants.ErrInvalidOrExpiredSession})
 	}
 
 	// Attach username to locals for downstream handlers

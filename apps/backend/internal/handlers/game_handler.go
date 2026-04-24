@@ -19,7 +19,7 @@ func SaveGameSession(c *fiber.Ctx) error {
 
 	username, ok := c.Locals("username").(string)
 	if !ok || username == "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized: Identity missing"})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": constants.ErrUnauthorizedIdentityMissing})
 	}
 
 	session := models.GameSession{
@@ -43,17 +43,17 @@ func SaveGameSession(c *fiber.Ctx) error {
 func GetGameHistory(c *fiber.Ctx) error {
 	username, ok := c.Locals("username").(string)
 	if !ok || username == "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized"})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": constants.ErrUnauthorized})
 	}
 
-	limit := int64(c.QueryInt("limit", 20))
+	limit := int64(c.QueryInt("limit", int(constants.DefaultHistoryLimit)))
 	if limit <= 0 {
-		limit = 20
+		limit = constants.DefaultHistoryLimit
 	}
 
 	history, err := gameService.GetHistory(username, limit)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch history"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": constants.ErrFailedFetchHistory})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(history)

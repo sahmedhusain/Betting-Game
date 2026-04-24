@@ -46,7 +46,7 @@ func getEnvInt(key string, fallback int) int {
 
 	value, err := strconv.Atoi(raw)
 	if err != nil || value <= 0 {
-		log.Printf("Invalid %s=%q, using default %d", key, raw, fallback)
+		log.Printf(constants.MsgInvalidEnvValueFmt, key, raw, fallback)
 		return fallback
 	}
 

@@ -15,7 +15,7 @@ import (
 func GetTopUsers(limit int64) ([]models.User, error) {
 	collection := config.GetCollection(constants.UsersCollection)
 
-	opts := options.Find().SetSort(bson.D{{Key: "highest_score", Value: -1}}).SetLimit(limit) // -1 is descending order
+	opts := options.Find().SetSort(bson.D{{Key: constants.FieldHighestScore, Value: -1}}).SetLimit(limit) // -1 is descending order
 
 	cursor, err := collection.Find(context.Background(), bson.D{}, opts)
 	if err != nil {
@@ -36,16 +36,16 @@ func SaveScore(username string, newScore int, handsPlayed int) error {
 	collection := config.GetCollection(constants.UsersCollection)
 	now := time.Now()
 
-	filter := bson.D{{Key: "username", Value: username}}
+	filter := bson.D{{Key: constants.FieldUsername, Value: username}}
 
 	update := bson.D{ // Update Data in MongoDB
-		{Key: "$max", Value: bson.D{{Key: "highest_score", Value: newScore}}},
+		{Key: "$max", Value: bson.D{{Key: constants.FieldHighestScore, Value: newScore}}},
 		{Key: "$inc", Value: bson.D{
-			{Key: "total_score", Value: newScore},
-			{Key: "total_games_played", Value: 1},
+			{Key: constants.FieldTotalScore, Value: newScore},
+			{Key: constants.FieldTotalGamesPlayed, Value: 1},
 		}},
-		{Key: "$set", Value: bson.D{{Key: "updated_at", Value: now}}},
-		{Key: "$setOnInsert", Value: bson.D{{Key: "created_at", Value: now}}},
+		{Key: "$set", Value: bson.D{{Key: constants.FieldUpdatedAt, Value: now}}},
+		{Key: "$setOnInsert", Value: bson.D{{Key: constants.FieldCreatedAt, Value: now}}},
 	}
 	opts := options.Update().SetUpsert(true)
 	_, err := collection.UpdateOne(context.Background(), filter, update, opts)

@@ -23,22 +23,22 @@ func LoadEnv() {
 
 	wd, err := os.Getwd()
 	if err != nil {
-		log.Printf("Warning: unable to determine working directory: %v", err)
+		log.Printf(constants.ErrWorkingDirFmt, err)
 		return
 	}
 
 	envPath, err := findEnvFile(wd)
 	if err != nil {
-		log.Println("Warning: .env file not found; relying on environment variables")
+		log.Println(constants.MsgEnvFileNotFound)
 		return
 	}
 
 	if err := godotenv.Load(envPath); err != nil {
-		log.Printf("Warning: failed to load .env from %s: %v", envPath, err)
+		log.Printf(constants.ErrEnvLoadFmt, envPath, err)
 		return
 	}
 
-	log.Printf("Loaded environment from %s", envPath)
+	log.Printf(constants.MsgEnvLoadedFmt, envPath)
 }
 
 func findEnvFile(startDir string) (string, error) {

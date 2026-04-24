@@ -1,6 +1,7 @@
 package services
 
 import (
+	"backend/internal/constants"
 	"backend/internal/models"
 	"backend/internal/repository"
 	"backend/internal/validation"
@@ -22,11 +23,11 @@ func (s *ScoreService) ProcessAndSave(username string, score int, handsPlayed in
 	}
 
 	if score < 0 {
-		return errors.New("score cannot be negative")
+		return errors.New(constants.ErrScoreCannotBeNegative)
 	}
 
 	if handsPlayed < 0 {
-		return errors.New("hands_played cannot be negative")
+		return errors.New(constants.ErrHandsPlayedCannotBeNegative)
 	}
 
 	// Save to user aggregate

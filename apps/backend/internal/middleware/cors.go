@@ -1,15 +1,23 @@
 package middleware
 
 import (
+	"backend/internal/constants"
+	"os"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
-// SetupCORS initializes the cross-origin resource sharing policy
 func SetupCORS() fiber.Handler {
+	origins := os.Getenv(constants.EnvAllowedOrigins)
+	if origins == "" {
+		origins = constants.DefaultAllowedOrigins
+	}
+
 	return cors.New(cors.Config{
-		AllowOrigins: "*", // We can restrict this via ENV later
-		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
-		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
+		AllowOrigins:     origins,
+		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowCredentials: true,
 	})
 }

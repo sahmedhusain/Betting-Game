@@ -6,4 +6,5 @@ const (
 	MaxPlayerNameLength     = 16
 	DefaultRateLimitMax     = 120
 	DefaultRateLimitWindow  = 60
+	DefaultHistoryLimit     = int64(20)
 )

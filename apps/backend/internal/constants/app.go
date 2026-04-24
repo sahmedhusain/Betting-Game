@@ -6,4 +6,5 @@ const (
 	DefaultDatabaseName    = "betting_game"
 	HealthPath             = "/api/health"
 	MongoConnectionTimeout = 10
+	DefaultAllowedOrigins  = "*"
 )

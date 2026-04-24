@@ -44,13 +44,13 @@ func StartSession(c *fiber.Ctx) error {
 func ValidateSession(c *fiber.Ctx) error {
 	sessionID := c.Cookies(constants.SessionCookieName)
 	if sessionID == "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "No active session"})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": constants.ErrNoSessionCookie})
 	}
 
 	session, err := sessionService.ValidateSession(sessionID)
 	if err != nil || session == nil {
 		c.ClearCookie(constants.SessionCookieName)
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid or expired session"})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": constants.ErrInvalidOrExpiredSession})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -64,7 +64,7 @@ func ValidateSession(c *fiber.Ctx) error {
 func SaveGameState(c *fiber.Ctx) error {
 	sessionID := c.Cookies(constants.SessionCookieName)
 	if sessionID == "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized"})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": constants.ErrUnauthorized})
 	}
 
 	var input struct {
@@ -77,10 +77,10 @@ func SaveGameState(c *fiber.Ctx) error {
 	}
 
 	if err := sessionService.UpdateGameState(sessionID, input.State, input.IsGameFinished); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save state"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": constants.ErrFailedSaveState})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "State saved"})
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": constants.MsgStateSaved})
 }
 
 func LogoutSession(c *fiber.Ctx) error {
@@ -90,5 +90,5 @@ func LogoutSession(c *fiber.Ctx) error {
 	}
 
 	c.ClearCookie(constants.SessionCookieName)
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Logged out"})
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": constants.MsgLoggedOut})
 }

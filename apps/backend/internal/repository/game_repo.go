@@ -20,9 +20,9 @@ func SaveGameSession(session models.GameSession) error {
 func GetGameHistory(username string, limit int64) ([]models.GameSession, error) {
 	collection := config.GetCollection(constants.GameSessionsCollection)
 
-	opts := options.Find().SetSort(bson.D{{Key: "ended_at", Value: -1}}).SetLimit(limit)
+	opts := options.Find().SetSort(bson.D{{Key: constants.FieldEndedAt, Value: -1}}).SetLimit(limit)
 
-	filter := bson.D{{Key: "username", Value: username}}
+	filter := bson.D{{Key: constants.FieldUsername, Value: username}}
 	cursor, err := collection.Find(context.Background(), filter, opts)
 	if err != nil {
 		return nil, err

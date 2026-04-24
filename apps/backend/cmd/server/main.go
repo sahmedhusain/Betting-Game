@@ -45,6 +45,6 @@ func main() {
 
 	log.Printf(constants.MsgServerStartingPortFmt, port)
 	if err := app.Listen(":" + port); err != nil {
-		log.Fatalf("Critical server failure: %v\n", err)
+		log.Fatalf(constants.ErrCriticalServerFmt, err)
 	}
 }
