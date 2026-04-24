@@ -34,3 +34,7 @@ func (s *GameService) PrepareSession(session *models.GameSession) error {
 func (s *GameService) LogSession(session models.GameSession) error {
 	return repository.SaveGameSession(session)
 }
+
+func (s *GameService) GetHistory(username string, limit int64) ([]models.GameSession, error) {
+	return repository.GetGameHistory(username, limit)
+}

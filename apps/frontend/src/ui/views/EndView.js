@@ -7,8 +7,19 @@ import { allowPlayAgainTransition } from '../../services/AppController.js';
 
 export function EndView({ state, engine }) {
   const topScores = state.leaderboard || [];
-  const history = HistoryService.getHistory();
-  const bestScore = HistoryService.getBestScore();
+  
+  // Use DB history if available, otherwise fallback to local
+  const rawHistory = state.lifetimeHistory.length > 0 ? state.lifetimeHistory : HistoryService.getHistory();
+  
+  // Normalize fields between DB (final_score/ended_at) and Local (score/timestamp)
+  const history = rawHistory.map(entry => ({
+    id: entry._id || entry.id,
+    score: entry.final_score ?? entry.score ?? 0,
+    timestamp: entry.ended_at ?? entry.timestamp ?? new Date().toISOString(),
+    playerName: entry.username ?? entry.playerName ?? state.playerName
+  }));
+
+  const bestScore = history.length > 0 ? Math.max(...history.map(h => h.score)) : state.score;
   const currentScore = state.score;
 
   // Dynamic Commentary Logic

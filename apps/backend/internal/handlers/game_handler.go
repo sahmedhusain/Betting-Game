@@ -39,3 +39,22 @@ func SaveGameSession(c *fiber.Ctx) error {
 	}
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": constants.MsgGameSessionLogged})
 }
+
+func GetGameHistory(c *fiber.Ctx) error {
+	username, ok := c.Locals("username").(string)
+	if !ok || username == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized"})
+	}
+
+	limit := int64(c.QueryInt("limit", 20))
+	if limit <= 0 {
+		limit = 20
+	}
+
+	history, err := gameService.GetHistory(username, limit)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch history"})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(history)
+}

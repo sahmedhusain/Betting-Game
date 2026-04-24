@@ -155,5 +155,11 @@ export const Api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
+  },
+  
+  async getGameHistory() {
+    return await requestJson(`${API_CONFIG.BASE_URL}${API_ENDPOINTS.GAMES}`, {
+      method: 'GET'
+    });
   }
 };

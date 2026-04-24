@@ -9,6 +9,7 @@ export const initialState = {
   discardPileCount: 0,
   reshuffleCount: 0,
   history: [],
+  lifetimeHistory: [],
   gamePhase: PHASES.LANDING,
   leaderboard: [],
 

@@ -23,6 +23,7 @@ func SetupRoutes(app *fiber.App) {
 	// Protected gameplay endpoints
 	api.Post(constants.ScoresPath, middleware.SessionGuard, handlers.SaveScore)
 	api.Post(constants.GamesPath, middleware.SessionGuard, handlers.SaveGameSession)
+	api.Get(constants.GamesPath, middleware.SessionGuard, handlers.GetGameHistory)
 
 	admin := api.Group(constants.AdminPath)
 	admin.Post(constants.ResetPath, handlers.ResetDatabase)

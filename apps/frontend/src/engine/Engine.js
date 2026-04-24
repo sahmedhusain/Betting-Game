@@ -310,16 +310,28 @@ class GameEngine {
     soundService.stopAmbient();
     soundService.playGameOver();
 
-    HistoryService.saveGame(state.playerName, state.score);
-    store.setState({ gamePhase: PHASES.GAME_OVER, isGameFinished: true });
+    // 1. Sync final state to DB
     this.syncState();
 
+    // 2. Save final score to permanent records
     try {
       await Api.saveScore(state.playerName, state.score, state.history.length);
     } catch (err) {
       console.error(TEXT.engine.errors.saveScoreFailed, err);
     }
 
+    // 3. Fetch latest history from DB (Authoritative)
+    try {
+      const dbHistory = await Api.getGameHistory();
+      store.setState({ lifetimeHistory: dbHistory || [] });
+    } catch (err) {
+      console.warn('Failed to load DB history:', err);
+      // Fallback to local storage if DB fails
+      store.setState({ lifetimeHistory: HistoryService.getHistory() });
+    }
+
+    // 4. Update phase and leaderboard
+    store.setState({ gamePhase: PHASES.GAME_OVER, isGameFinished: true });
     await this.loadLeaderboard(true);
   }
 }
