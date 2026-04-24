@@ -4,6 +4,10 @@ import { HistoryService } from '../../services/HistoryService.js';
 import { EndSummaryPanel } from '../components/EndSummaryPanel.js';
 import { EndHistoryPanel } from '../components/EndHistoryPanel.js';
 import { allowPlayAgainTransition } from '../../services/AppController.js';
+import { GlobalTopBar } from '../components/GlobalTopBar.js';
+import { calculatePlayerRank } from '../../engine/gameRules.js';
+import { store } from '../../state/State.js';
+import { RulesModal } from '../components/RulesModal.js';
 
 export function EndView({ state, engine }) {
   const topScores = state.leaderboard || [];
@@ -21,6 +25,44 @@ export function EndView({ state, engine }) {
 
   const bestScore = history.length > 0 ? Math.max(...history.map(h => h.score)) : state.score;
   const currentScore = state.score;
+
+  const sessionName = (state.playerName || '').trim();
+  const playerEntry = sessionName ? topScores.find(entry => {
+    const entryName = (entry.player_name || entry.username || '').trim();
+    return entryName.toLowerCase() === sessionName.toLowerCase();
+  }) : null;
+
+  const playerRank = playerEntry ? topScores.indexOf(playerEntry) + 1 : 0;
+  const highestScore = playerEntry ? (playerEntry.highest_score || playerEntry.score) : bestScore;
+
+  const getRankBadge = (rank) => {
+    if (rank <= 0 || rank > 5) {
+      return h('div', { 
+        class: 'flex items-center gap-1.5 px-3 py-1 rounded-lg border border-white/10 bg-white/5 text-slate-400 shadow-xl backdrop-blur-md transition-all' 
+      },
+        h('div', { class: 'icon-wallet w-3.5 h-3.5' }),
+        h('span', { class: 'text-[9px] font-black uppercase tracking-widest' }, 'PLAYER')
+      );
+    }
+    
+    const configs = {
+      1: { label: TEXT.leaderboard.legend, icon: 'icon-medal', color: 'text-amber-500', bg: 'bg-amber-500/20', border: 'border-amber-500/30' },
+      2: { label: TEXT.leaderboard.rank(2), icon: 'icon-medal', color: 'text-slate-200', bg: 'bg-slate-300/20', border: 'border-slate-300/40' },
+      3: { label: TEXT.leaderboard.rank(3), icon: 'icon-medal', color: 'text-orange-400', bg: 'bg-orange-500/20', border: 'border-orange-500/40' },
+      4: { label: TEXT.leaderboard.rank(4), icon: 'icon-star', color: 'text-emerald-400', bg: 'bg-emerald-500/15', border: 'border-emerald-500/30' },
+      5: { label: TEXT.leaderboard.rank(5), icon: 'icon-star', color: 'text-emerald-400', bg: 'bg-emerald-500/15', border: 'border-emerald-500/30' }
+    };
+    
+    const config = configs[rank];
+    if (!config) return null;
+
+    return h('div', { 
+      class: `flex items-center gap-1.5 px-3 py-1 rounded-lg border shadow-xl backdrop-blur-md transition-all ${config.bg} ${config.border} ${config.color}` 
+    },
+      h('div', { class: `${config.icon} w-3.5 h-3.5` }),
+      h('span', { class: 'text-[9px] font-black uppercase tracking-widest' }, config.label)
+    );
+  };
 
   // Dynamic Commentary Logic
   const topScoresList = topScores.map(s => s.score || s.highest_score || 0);
@@ -46,19 +88,46 @@ export function EndView({ state, engine }) {
     }
   };
 
-  return h('div', { class: 'w-full h-screen p-[8vh] flex flex-col items-center justify-center animate-fade-in overflow-hidden' },
-    h('div', { class: 'w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20 items-stretch flex-1 min-h-0' },
-      EndSummaryPanel({
-        score: currentScore,
-        bestScore,
-        comment: getComment(),
-        onPlayAgain: handlePlayAgain
+  return h(
+    'div',
+    {
+      class: 'play-shell relative w-full h-screen overflow-hidden px-[var(--play-shell-x)] py-[var(--play-shell-y)] flex flex-col'
+    },
+
+    h(
+      'div',
+      {
+        class: 'relative z-10 w-full max-w-[1480px] mx-auto flex flex-col gap-[var(--play-gap)] h-full animate-fade-in'
+      },
+
+      GlobalTopBar({
+        playerName: state.playerName,
+        highestScore: highestScore,
+        rankBadge: getRankBadge(playerRank),
+        onRulesClick: () => store.setState({ isRulesOpen: true }),
+        onLogoutClick: () => engine.logout()
       }),
-      EndHistoryPanel({
-        history,
-        bestScore,
-        playerName: state.playerName
-      })
-    )
+
+      h('div', { class: 'flex-1 min-h-0 flex items-center justify-center' },
+        h('div', { class: 'w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20 items-stretch h-full py-4' },
+          EndSummaryPanel({
+            score: currentScore,
+            bestScore,
+            comment: getComment(),
+            onPlayAgain: handlePlayAgain
+          }),
+          EndHistoryPanel({
+            history,
+            bestScore,
+            playerName: state.playerName
+          })
+        )
+      )
+    ),
+
+    // Rules Modal
+    state.isRulesOpen ? RulesModal({
+      onClose: () => store.setState({ isRulesOpen: false })
+    }) : null
   );
 }

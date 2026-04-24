@@ -7,8 +7,7 @@ export function EndHistoryPanel({ history, bestScore, playerName }) {
     h('div', { class: 'glass-panel p-8 rounded-[2.5rem] h-full flex flex-col border border-white/5 overflow-hidden min-h-0' },
       h('div', { class: 'flex items-center justify-between mb-8' },
         h('div', { class: 'flex flex-col' },
-          h('h3', { class: 'text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-1' }, TEXT.end.activityHistory),
-          h('span', { class: 'text-sm font-black text-emerald-400 font-outfit uppercase' }, playerName || TEXT.end.anonymous)
+          h('h3', { class: 'text-[10px] font-black uppercase tracking-[0.4em] text-slate-500' }, TEXT.end.activityHistory)
         ),
         h('div', { class: 'h-[1px] flex-1 mx-6 bg-white/5' }),
         h('span', { class: 'text-[9px] font-bold text-slate-500 uppercase tracking-widest' }, TEXT.end.records)

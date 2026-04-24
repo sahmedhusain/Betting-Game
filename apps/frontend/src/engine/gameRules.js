@@ -45,3 +45,9 @@ export function applyDynamicAdjustments({
 
   return boundaryHit;
 }
+
+export function calculatePlayerRank(score) {
+  if (score >= 500) return 'LEGEND';
+  if (score >= 200) return 'EXPERT';
+  return 'PLAYER';
+}

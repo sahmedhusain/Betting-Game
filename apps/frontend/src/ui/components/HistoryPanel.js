@@ -11,7 +11,11 @@ export function HistoryPanel({ history = [] }) {
     { class: 'flex flex-col h-full min-h-0 animate-fade-in' },
     
     h('div', { class: 'mb-6 px-2' },
-      h('h3', { class: 'text-[10px] font-black uppercase tracking-[0.34em] text-emerald-400 mb-4' }, TEXT.game.handHistory),
+      h('div', { class: 'flex items-center justify-between mb-4' },
+        h('h3', { class: 'text-[10px] font-black uppercase tracking-[0.4em] text-slate-500' }, TEXT.game.handHistory),
+        h('div', { class: 'h-[1px] flex-1 mx-6 bg-white/5' }),
+        h('span', { class: 'text-[9px] font-bold text-slate-500 uppercase tracking-widest' }, TEXT.game.cards)
+      ),
       
       h('div', { class: 'grid grid-cols-2 gap-3' },
         // Total Wins Badge
