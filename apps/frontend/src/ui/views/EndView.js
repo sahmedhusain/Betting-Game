@@ -60,7 +60,10 @@ export function EndView({ state, engine }) {
       class: `flex items-center gap-1.5 px-3 py-1 rounded-lg border shadow-xl backdrop-blur-md transition-all ${config.bg} ${config.border} ${config.color}` 
     },
       h('div', { class: `${config.icon} w-3.5 h-3.5` }),
-      h('span', { class: 'text-[9px] font-black uppercase tracking-widest' }, config.label)
+      h('span', { class: 'text-[9px] font-black uppercase tracking-widest' }, 
+        h('span', { class: 'hidden lg:inline' }, config.label),
+        h('span', { class: 'lg:hidden inline' }, rank.toString().padStart(2, '0'))
+      )
     );
   };
 
@@ -91,7 +94,7 @@ export function EndView({ state, engine }) {
   return h(
     'div',
     {
-      class: 'play-shell relative w-full h-screen overflow-hidden px-[var(--play-shell-x)] py-[var(--play-shell-y)] flex flex-col'
+      class: 'play-shell relative w-full h-screen overflow-hidden xl:overflow-hidden overflow-y-auto px-[var(--play-shell-x)] py-[var(--play-shell-y)] flex flex-col'
     },
 
     h(
@@ -104,12 +107,14 @@ export function EndView({ state, engine }) {
         playerName: state.playerName,
         highestScore: highestScore,
         rankBadge: getRankBadge(playerRank),
+        isMenuOpen: state.isMobileMenuOpen,
+        onMenuToggle: () => store.setState({ isMobileMenuOpen: !state.isMobileMenuOpen }),
         onRulesClick: () => store.setState({ isRulesOpen: true }),
         onLogoutClick: () => engine.logout()
       }),
 
-      h('div', { class: 'flex-1 min-h-0 flex items-center justify-center' },
-        h('div', { class: 'w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20 items-stretch h-full py-4' },
+      h('div', { class: 'flex-1 min-h-0 flex items-start lg:items-center justify-center pt-8 lg:pt-0' },
+        h('div', { class: 'w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20 items-start lg:items-stretch h-auto lg:h-full py-4' },
           EndSummaryPanel({
             score: currentScore,
             bestScore,

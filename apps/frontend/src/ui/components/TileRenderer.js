@@ -72,9 +72,9 @@ export function TileRenderer({ tile, compact = false, animateFlip = false, flipD
       )
     ),
 
-    // Label (Outside the flip container so it remains upright)
+    // Label (Always visible on Mobile, hover on Desktop)
     h('span', { 
-      class: `text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 text-center leading-tight w-full max-w-[var(--play-tile-w)] transition-opacity group-hover:opacity-0 ${animateFlip ? 'animate-fade-in' : ''}`,
+      class: `text-[10px] md:text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 text-center leading-tight w-full max-w-[var(--play-tile-w)] transition-all lg:group-hover:opacity-0 ${animateFlip ? 'animate-fade-in' : ''}`,
       style: animateFlip ? `animation-delay: calc(${flipDelay} + 600ms); animation-fill-mode: both; opacity: 0;` : ''
     }, getLabel())
   );

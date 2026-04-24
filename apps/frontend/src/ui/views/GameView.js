@@ -46,7 +46,10 @@ export function GameView({ state, engine }) {
       class: `flex items-center gap-1.5 px-3 py-1 rounded-lg border shadow-xl backdrop-blur-md transition-all ${config.bg} ${config.border} ${config.color}` 
     },
       h('div', { class: `${config.icon} w-3.5 h-3.5` }),
-      h('span', { class: 'text-[9px] font-black uppercase tracking-widest' }, config.label)
+      h('span', { class: 'text-[9px] font-black uppercase tracking-widest' }, 
+        h('span', { class: 'hidden lg:inline' }, config.label),
+        h('span', { class: 'lg:hidden inline' }, rank.toString().padStart(2, '0'))
+      )
     );
   };
 
@@ -58,7 +61,7 @@ export function GameView({ state, engine }) {
   return h(
     'div',
     {
-      class: 'play-shell relative w-full h-screen overflow-hidden px-[var(--play-shell-x)] py-[var(--play-shell-y)] flex flex-col'
+      class: 'play-shell relative w-full h-screen overflow-hidden xl:overflow-hidden overflow-y-auto px-[var(--play-shell-x)] py-[var(--play-shell-y)] flex flex-col'
     },
 
     h(
@@ -71,6 +74,8 @@ export function GameView({ state, engine }) {
         playerName: state.playerName,
         highestScore: highestScore,
         rankBadge: getRankBadge(playerRank),
+        isMenuOpen: state.isMobileMenuOpen,
+        onMenuToggle: () => store.setState({ isMobileMenuOpen: !state.isMobileMenuOpen }),
         onRulesClick: () => store.setState({ isRulesOpen: true }),
         onLogoutClick: () => engine.logout()
       }),
@@ -103,7 +108,9 @@ export function GameView({ state, engine }) {
               'div',
               { class: 'grid grid-cols-1 lg:grid-cols-[minmax(160px,200px)_1fr] gap-[var(--play-gap)] items-stretch' },
               
-              DrawLane({ state, isDistributing: isLocked }),
+              h('div', { class: 'hidden lg:block' },
+                DrawLane({ state, isDistributing: isLocked })
+              ),
               
               h('div', { class: 'flex flex-col gap-4 relative w-full' },
                 
@@ -123,36 +130,34 @@ export function GameView({ state, engine }) {
                   })
                 ),
 
-                h('div', { class: 'shrink-0 mt-2' },
-                  h('div', { class: 'flex flex-col sm:flex-row gap-4 w-full' },
-                    h('button', {
-                      class: `group flex-1 flex items-center justify-center gap-2.5 px-8 py-6 rounded-3xl font-black text-xs uppercase tracking-[0.2em] transition-all relative overflow-hidden ${
-                        isLocked 
-                        ? 'bg-white/5 text-slate-600 cursor-not-allowed border border-white/5 opacity-50' 
-                        : 'bg-slate-800/60 border border-white/10 text-slate-300 hover:bg-slate-700 hover:text-white hover:border-indigo-500/50 shadow-2xl active:scale-95'
-                      }`,
-                      disabled: isLocked,
-                      onclick: () => engine.betLower()
-                    }, 
-                      !isLocked && h('div', { class: 'absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-400/20 to-transparent' }),
-                      IconWrapper(ASSETS.ICONS.LOWER, 'w-7 h-7'),
-                      h('span', { class: 'leading-none' }, TEXT.game.betLower)
-                    ),
-                    h('button', {
-                      class: `group flex-1 flex items-center justify-center gap-2.5 px-8 py-6 rounded-3xl font-black text-xs uppercase tracking-[0.2em] transition-all relative overflow-hidden ${
-                        isLocked 
-                        ? 'bg-emerald-900/20 text-emerald-800 cursor-not-allowed border border-emerald-900/30' 
-                        : 'bg-emerald-600 border border-emerald-400/30 text-white shadow-[0_0_30px_rgba(16,185,129,0.2)] hover:bg-emerald-500 hover:shadow-[0_0_40px_rgba(16,185,129,0.4)] active:scale-95'
-                      }`,
-                      disabled: isLocked,
-                      onclick: () => engine.betHigher()
-                    }, 
-                      !isLocked && h('div', { class: 'absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent' }),
-                      IconWrapper(ASSETS.ICONS.HIGHER, 'w-7 h-7'),
-                      h('span', { class: 'leading-none' }, TEXT.game.betHigher)
+                    h('div', { class: 'flex flex-row gap-3 w-full max-w-md mx-auto shrink-0 mt-2' },
+                      h('button', {
+                        class: `group flex-1 flex items-center justify-center gap-2 px-4 py-4 lg:px-8 lg:py-6 rounded-2xl lg:rounded-3xl font-black text-xs uppercase tracking-[0.2em] transition-all relative overflow-hidden ${
+                          isLocked 
+                          ? 'bg-white/5 text-slate-600 cursor-not-allowed border border-white/5 opacity-50' 
+                          : 'bg-slate-800/60 border border-white/10 text-slate-300 hover:bg-slate-700 hover:text-white hover:border-indigo-500/50 shadow-2xl active:scale-95'
+                        }`,
+                        disabled: isLocked,
+                        onclick: () => engine.betLower()
+                      }, 
+                        !isLocked && h('div', { class: 'absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-400/20 to-transparent' }),
+                        IconWrapper(ASSETS.ICONS.LOWER, 'w-5 h-5 lg:w-7 lg:h-7'),
+                        h('span', { class: 'leading-none hidden md:inline' }, TEXT.game.betLower)
+                      ),
+                      h('button', {
+                        class: `group flex-1 flex items-center justify-center gap-2 px-4 py-4 lg:px-8 lg:py-6 rounded-2xl lg:rounded-3xl font-black text-xs uppercase tracking-[0.2em] transition-all relative overflow-hidden ${
+                          isLocked 
+                          ? 'bg-emerald-900/20 text-emerald-800 cursor-not-allowed border border-emerald-900/30' 
+                          : 'bg-emerald-600 border border-emerald-400/30 text-white shadow-[0_0_30px_rgba(16,185,129,0.2)] hover:bg-emerald-500 hover:shadow-[0_0_40px_rgba(16,185,129,0.4)] active:scale-95'
+                        }`,
+                        disabled: isLocked,
+                        onclick: () => engine.betHigher()
+                      }, 
+                        !isLocked && h('div', { class: 'absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent' }),
+                        IconWrapper(ASSETS.ICONS.HIGHER, 'w-5 h-5 lg:w-7 lg:h-7'),
+                        h('span', { class: 'leading-none hidden md:inline' }, TEXT.game.betHigher)
+                      )
                     )
-                  )
-                )
               )
             )
           )
@@ -162,12 +167,12 @@ export function GameView({ state, engine }) {
         h(
           'div',
           {
-            class: 'xl:col-span-4 self-stretch relative'
+            class: 'xl:col-span-4 self-stretch relative min-h-[500px] xl:min-h-0'
           },
           h(
             'div',
             {
-              class: 'absolute inset-0'
+              class: 'xl:absolute xl:inset-0 h-full w-full'
             },
             h(
               'div',

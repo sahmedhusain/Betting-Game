@@ -8,7 +8,7 @@ import { TileRenderer } from './TileRenderer.js';
  */
 export function HandDisplay({ tiles = [], showDistributionAnimation = true, isExiting = false, distributionSeed = 0 }) {
   return h('div', {
-    class: `glass-panel p-[max(0.95rem,1.5vw)] md:p-[max(1.4rem,2.5vw)] rounded-[var(--play-panel-radius)] md:rounded-[calc(var(--play-panel-radius)*1.35)] flex flex-wrap gap-[max(0.5rem,1vw)] sm:gap-[max(0.65rem,1.2vw)] justify-center items-center shadow-2xl relative overflow-hidden transition-all duration-300 min-h-[clamp(220px,36vh,460px)] ${isExiting ? 'animate-hand-exit' : ''}`,
+    class: `glass-panel p-6 lg:p-[max(1.4rem,2.5vw)] rounded-[var(--play-panel-radius)] lg:rounded-[calc(var(--play-panel-radius)*1.35)] flex flex-wrap gap-4 lg:gap-[max(0.65rem,1.2vw)] justify-center items-center shadow-2xl relative overflow-hidden transition-all duration-300 min-h-[clamp(280px,40vh,460px)] ${isExiting ? 'animate-hand-exit' : ''}`,
     key: 'hand-display'
   },
     h('div', { class: 'absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none' }),
@@ -21,7 +21,7 @@ export function HandDisplay({ tiles = [], showDistributionAnimation = true, isEx
         : '';
 
       return h('div', {
-        class: `${delayClass}`, // Removed transition-all to prevent conflicts with keyframes
+        class: `flex justify-center w-[28%] lg:w-auto ${delayClass}`, // Force 3+2 wrap on mobile
         key: `${tile.id}-${distributionSeed}`,
         style: {
           animationFillMode: 'both',

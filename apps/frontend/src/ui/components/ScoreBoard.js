@@ -17,22 +17,22 @@ export function ScoreBoard({ state }) {
     return h(
       'div',
       { 
-        class: `relative overflow-hidden group flex items-center gap-4 ${bgColor} border border-white/10 rounded-2xl px-5 py-5 transition-all hover:bg-white/[0.08] hover:border-white/20 shadow-xl` 
+        class: `relative overflow-hidden group flex items-center gap-2 lg:gap-4 ${bgColor} border border-white/10 rounded-xl lg:rounded-2xl px-2 py-1.5 lg:px-5 lg:py-5 transition-all hover:bg-white/[0.08] hover:border-white/20 shadow-xl flex-1 lg:flex-none min-w-0` 
       },
       h('div', { class: `absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent ${highlightColor} to-transparent opacity-50 group-hover:opacity-100 transition-opacity` }),
       
-      h('div', { class: 'w-11 h-11 flex items-center justify-center rounded-xl bg-black/30 shrink-0 border border-white/5 shadow-inner' },
-        h('div', { class: `${iconClass} ${iconColorClass}` })
+      h('div', { class: 'w-7 h-7 lg:w-11 lg:h-11 flex items-center justify-center rounded-lg lg:rounded-xl bg-black/30 shrink-0 border border-white/5 shadow-inner' },
+        h('div', { class: `${iconClass} ${iconColorClass} scale-[0.65] lg:scale-100` })
       ),
       h('div', { class: 'flex flex-col' },
-        h('span', { class: 'text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1' }, label),
-        h('span', { class: `text-xl md:text-2xl font-black font-outfit tracking-tighter leading-none ${colorClass}` }, value)
+        h('span', { class: 'hidden lg:block text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1' }, label),
+        h('span', { class: `text-sm lg:text-2xl font-black font-outfit tracking-tighter leading-none ${colorClass}` }, value)
       )
     );
   };
 
   return h('div', { class: 'animate-fade-in' },
-    h('div', { class: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4' },
+    h('div', { class: 'flex flex-row lg:grid lg:grid-cols-4 gap-2 lg:gap-4 overflow-x-auto no-scrollbar' },
       
       StatBlock({
         iconClass: 'icon-bankroll',
@@ -61,14 +61,16 @@ export function ScoreBoard({ state }) {
         bgColor: 'bg-amber-500/[0.03]'
       }),
 
-      StatBlock({
-        iconClass: 'icon-discarded',
-        iconColorClass: 'text-slate-400',
-        label: TEXT.game.discarded,
-        value: state.discardPileCount,
-        colorClass: 'text-slate-300',
-        bgColor: 'bg-slate-500/[0.02]'
-      })
+      h('div', { class: 'hidden md:block flex-1' },
+        StatBlock({
+          iconClass: 'icon-discarded',
+          iconColorClass: 'text-slate-400',
+          label: TEXT.game.discarded,
+          value: state.discardPileCount,
+          colorClass: 'text-slate-300',
+          bgColor: 'bg-slate-500/[0.02]'
+        })
+      )
     )
   );
 }

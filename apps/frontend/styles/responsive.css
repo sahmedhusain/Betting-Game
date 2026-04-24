@@ -1,0 +1,78 @@
+/* Tablet and Mobile Responsiveness */
+
+/* Layout Scaling */
+@media (max-width: 1280px) {
+  :root {
+    --play-shell-y: 2rem;
+    --play-lane-min-h: 220px;
+  }
+  
+  .play-shell {
+    overflow-y: auto !important;
+    height: auto !important;
+    min-height: 100vh;
+  }
+
+  .mobile-contents {
+    display: contents;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --play-shell-x: 1rem;
+    --play-shell-y: 1.5rem;
+    --play-gap: 1rem;
+    --play-panel-pad: 1.25rem;
+    --play-tile-w: 52px;
+    --play-tile-h: 78px;
+  }
+
+  .glass-panel {
+    border-radius: 1.5rem !important;
+  }
+
+  /* Force stacking on mobile */
+  .grid-cols-12 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .col-span-8, .col-span-4, .col-span-7, .col-span-5 {
+    grid-column: span 1 / span 1 !important;
+  }
+
+  /* Adjust Game Arena for mobile */
+  #game-arena-panel {
+    gap: 1.5rem !important;
+  }
+
+  /* Scale down large titles */
+  h1 {
+    font-size: 3rem !important;
+    line-height: 1 !important;
+  }
+
+  /* History Panel height on mobile */
+  .play-history-container {
+    height: 500px !important;
+    position: relative !important;
+  }
+
+  /* Fix absolute positioning in stacked layout */
+  .xl\:col-span-4.self-stretch.relative {
+    height: 600px;
+    margin-top: 1rem;
+  }
+}
+
+/* Specific component fixes for touch */
+@media (pointer: coarse) {
+  button, .cursor-pointer {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 3px;
+  }
+}

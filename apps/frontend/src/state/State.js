@@ -45,6 +45,7 @@ export const initialState = {
   hasAttemptedStart: false,
   showJoinForm: false,
   isRulesOpen: false,
+  isMobileMenuOpen: false,
   deckState: null
 };
 
