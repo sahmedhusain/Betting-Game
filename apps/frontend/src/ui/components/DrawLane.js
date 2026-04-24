@@ -17,10 +17,10 @@ export function DrawLane({ state, isDistributing = false }) {
   return h(
     'div',
     {
-      class: `glass-panel p-4 rounded-2xl h-full ${UI_CONFIG.DRAW_LANE_MIN_HEIGHT_CLASS} flex flex-col items-center justify-between relative overflow-hidden transition-all duration-300 ${lowPileClass}`,
+      class: `glass-panel p-[max(0.75rem,1.1vw)] rounded-[var(--play-panel-radius)] h-full ${UI_CONFIG.DRAW_LANE_MIN_HEIGHT_CLASS} flex flex-col items-center justify-between relative overflow-hidden transition-all duration-300 ${lowPileClass}`,
     },
 
-    h('p', { class: 'text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 text-center' }, TEXT.game.drawLaneWithCount(state.drawPileCount)),
+    h('p', { class: 'text-[10px] md:text-[11px] font-black uppercase tracking-[0.26em] text-slate-500 text-center' }, TEXT.game.drawLaneWithCount(state.drawPileCount)),
 
     h(
       'div',
@@ -42,7 +42,7 @@ export function DrawLane({ state, isDistributing = false }) {
             h('img', { 
               src: ASSETS.TILES.BACK,
               alt: 'Card Back',
-              class: 'w-full h-full object-cover rounded-[0.95rem]'
+              class: 'w-full h-full object-cover rounded-[0.82rem]'
             })
           );
         })

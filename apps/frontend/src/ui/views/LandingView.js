@@ -23,7 +23,7 @@ export function LandingView({ state, engine }) {
           h('div', { class: 'w-10 h-10 flex items-center justify-center group-hover:rotate-12 transition-transform' },
             h('img', { 
               src: ASSETS.BRANDING.LOGO, 
-              alt: 'Logo', 
+              alt: TEXT.landing.logoAlt, 
               class: 'w-full h-full drop-shadow-lg' 
             })
           ),
@@ -36,7 +36,7 @@ export function LandingView({ state, engine }) {
           h('h1', { class: 'text-5xl sm:text-7xl lg:text-8xl font-black font-outfit tracking-tighter leading-none whitespace-pre-line text-white mb-6' }, TEXT.landing.title),
           h('div', { class: 'flex items-center gap-4 mb-6' },
             h('p', { class: 'text-slate-400 text-lg lg:text-xl max-w-xl leading-relaxed' }, TEXT.landing.subtitle),
-            state.backendDown && h('div', { class: 'px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-widest animate-pulse' }, 'Server Offline')
+            state.backendDown && h('div', { class: 'px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-widest animate-pulse' }, TEXT.landing.serverOffline)
           )
         ),
 

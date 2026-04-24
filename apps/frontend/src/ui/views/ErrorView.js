@@ -24,7 +24,7 @@ export function ErrorView({ state, engine }) {
       h('div', { class: 'mb-8 flex justify-center animate-bounce-slow' },
         h('img', { 
           src: errorIcon, 
-          alt: 'Error Icon',
+          alt: TEXT.error.iconAlt,
           class: 'w-12 h-12 drop-shadow-[0_0_15px_rgba(244,63,94,0.3)]' 
         })
       ),
@@ -57,7 +57,7 @@ export function ErrorView({ state, engine }) {
             class: 'w-full sm:w-auto group px-12 py-5 bg-white text-slate-950 hover:bg-rose-500 hover:text-white rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all active:scale-95 flex items-center justify-center gap-3 shadow-xl shadow-white/5',
             onclick: () => { window.location.hash = displayTarget; }
           },
-            h('span', { class: 'opacity-50 group-hover:-translate-x-1 transition-transform' }, '←'),
+            h('span', { class: 'opacity-50 group-hover:-translate-x-1 transition-transform' }, UI_CONFIG.SYMBOLS.ARROW_LEFT),
             h('span', {}, displayButtonText)
           )
         )
@@ -65,7 +65,7 @@ export function ErrorView({ state, engine }) {
 
       // Meta Info
       h('p', { class: 'mt-12 text-[8px] font-black uppercase tracking-[0.6em] text-slate-700 animate-pulse' }, 
-        'SYSTEM_INTEGRITY_COMPROMISED // ERROR_CODE: ' + displayCode
+        TEXT.error.integrityCompromised(displayCode)
       )
     )
   );

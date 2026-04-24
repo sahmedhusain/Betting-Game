@@ -8,10 +8,10 @@ import { TileRenderer } from './TileRenderer.js';
  */
 export function HandDisplay({ tiles = [], showDistributionAnimation = true, isExiting = false, distributionSeed = 0 }) {
   return h('div', {
-    class: `glass-panel p-6 md:p-16 rounded-[2rem] md:rounded-[3rem] flex flex-wrap gap-3 sm:gap-4 md:gap-6 justify-center items-center shadow-2xl relative overflow-hidden transition-all duration-300 ${isExiting ? 'animate-hand-exit' : ''}`,
+    class: `glass-panel p-[max(0.95rem,1.5vw)] md:p-[max(1.4rem,2.5vw)] rounded-[var(--play-panel-radius)] md:rounded-[calc(var(--play-panel-radius)*1.35)] flex flex-wrap gap-[max(0.5rem,1vw)] sm:gap-[max(0.65rem,1.2vw)] justify-center items-center shadow-2xl relative overflow-hidden transition-all duration-300 min-h-[clamp(220px,36vh,460px)] ${isExiting ? 'animate-hand-exit' : ''}`,
     key: 'hand-display'
   },
-    h('div', { class: 'absolute inset-0 bg-gradient-to-tr from-emerald-500/5 to-transparent pointer-events-none' }),
+    h('div', { class: 'absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(16,185,129,0.12),transparent_34%),linear-gradient(140deg,rgba(15,23,42,0.06),transparent)] pointer-events-none' }),
     ...tiles.map((tile, index) => {
       const delayClass = showDistributionAnimation
         ? `animate-card-distribute animate-distribute-delay-${Math.min(index + 1, 5)}`

@@ -19,7 +19,7 @@ export function TileRenderer({ tile, compact = false, key }) {
 
   const tileSize = compact
     ? 'w-14 h-20 p-2'
-    : 'w-16 h-24 sm:w-20 sm:h-28 md:w-24 md:h-32 p-3 sm:p-4';
+    : 'w-[var(--play-tile-w)] h-[var(--play-tile-h)] p-[var(--play-tile-pad)]';
 
   return h('div', {
     key,
@@ -35,11 +35,11 @@ export function TileRenderer({ tile, compact = false, key }) {
       h('img', {
         src: imagePath,
         alt: tile.name || `${tile.faceValue} ${tile.suit}`,
-        class: `w-full ${isSpecial ? 'h-[65%]' : 'h-full'} object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-500`
+        class: `w-full ${isSpecial ? 'h-[65%]' : 'h-full'} object-contain drop-shadow-xl group-hover:scale-105 transition-transform duration-500`
       }),
       
       isSpecial && h('span', { 
-        class: 'text-[8px] sm:text-[9px] font-bold uppercase tracking-tighter text-emerald-400 opacity-90 group-hover:opacity-100 transition-opacity text-center leading-none mt-auto' 
+        class: 'text-[8px] sm:text-[9px] font-bold uppercase tracking-tight text-emerald-300 opacity-90 group-hover:opacity-100 transition-opacity text-center leading-none mt-auto' 
       }, getSpecialLabel())
     ),
 

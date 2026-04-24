@@ -92,8 +92,8 @@
 }
 
 .draw-preview-card {
-  width: 64px;
-  height: 92px;
+  width: clamp(56px, 5.1vw, 78px);
+  height: clamp(82px, 7.1vw, 112px);
   border-radius: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(2, 6, 23, 0.75);

@@ -1,11 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Inter:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Inter:wght@100..900&display=swap");
 
 :root {
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-highlight: rgba(255, 255, 255, 0.12);
   --accent-emerald: #10b981;
-  
+  --play-shell-x: clamp(0.9rem, 2.3vw, 2.1rem);
+  --play-shell-y: clamp(0.95rem, 2.2vh, 1.95rem);
+  --play-gap: clamp(0.9rem, 1.7vw, 1.65rem);
+  --play-panel-pad: clamp(1rem, 1.7vw, 1.7rem);
+  --play-panel-radius: clamp(1.25rem, 2vw, 2rem);
+  --play-history-height: clamp(460px, 72vh, 780px);
+  --play-lane-min-h: clamp(180px, 31vh, 312px);
+  --play-tile-w: clamp(62px, 6.2vw, 98px);
+  --play-tile-h: clamp(94px, 9.1vw, 140px);
+  --play-tile-pad: clamp(0.48rem, 0.85vw, 0.92rem);
+  --play-stat-value: clamp(1.35rem, 2.5vw, 2.55rem);
+
   /* Assets */
   --url-icon-medal: url("/assets/icons/medal.svg");
   --url-icon-star: url("/assets/icons/star.svg");
@@ -22,8 +33,15 @@
     overflow-x: hidden;
   }
 
-  h1, h2, h3, .font-outfit {
-    font-family: 'Outfit', sans-serif;
+  #app {
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-outfit {
+    font-family: "Outfit", sans-serif;
   }
 }
 
@@ -38,13 +56,21 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.5));
+  background: linear-gradient(
+    180deg,
+    rgba(16, 185, 129, 0.2),
+    rgba(16, 185, 129, 0.5)
+  );
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(16, 185, 129, 0.4), rgba(16, 185, 129, 0.7));
+  background: linear-gradient(
+    180deg,
+    rgba(16, 185, 129, 0.4),
+    rgba(16, 185, 129, 0.7)
+  );
 }
 
 .custom-scrollbar {

@@ -20,7 +20,9 @@ export const I18N = {
       nameRules: (minLen, maxLen) => `Character limit: ${minLen}–${maxLen}`,
       startButton: 'Start Game',
       hallOfFame: 'Leaderboard',
-      serverUnavailable: 'Server unavailable. Please try again later.'
+      serverUnavailable: 'Server unavailable. Please try again later.',
+      serverOffline: 'Server Offline',
+      logoAlt: 'Logo'
     },
     game: {
       drawLane: 'Draw Lane',
@@ -38,6 +40,8 @@ export const I18N = {
       betHigher: 'Bet Higher',
       waitingForFirstBet: 'Waiting for first bet...',
       handHistory: 'Hand History',
+      leaveGame: 'LEAVE GAME',
+      leaveGameTitle: 'Leave Game',
       sessionHand: (number) => `GAME HAND #${number}`,
       handValue: 'Hand Value',
       drawLaneWithCount: (count) => `Draw Lane · ${count}`
@@ -115,7 +119,9 @@ export const I18N = {
         title: 'Unexpected Error',
         message: 'An unexpected state occurred. Please try again or contact support.',
         buttonText: 'BACK TO HOME'
-      }
+      },
+      integrityCompromised: (code) => `SYSTEM_INTEGRITY_COMPROMISED // ERROR_CODE: ${code}`,
+      iconAlt: 'Error Icon'
     },
     tiles: {
       WIND_EAST: 'East Wind',

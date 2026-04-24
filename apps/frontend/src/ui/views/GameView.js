@@ -16,7 +16,7 @@ export function GameView({ state, engine }) {
   return h(
     'div',
     {
-      class: 'w-full min-h-screen bg-gradient-to-br from-slate-900 via-[#131f2d] to-slate-900 px-4 py-5 md:py-8'
+      class: 'play-shell relative w-full min-h-screen overflow-hidden px-[var(--play-shell-x)] py-[var(--play-shell-y)]'
     },
 
     FloatingFeedback({
@@ -29,56 +29,77 @@ export function GameView({ state, engine }) {
     h(
       'div',
       {
-        class: 'w-full max-w-7xl mx-auto flex flex-col gap-6 md:gap-7 animate-fade-in'
+        class: 'relative z-10 w-full max-w-[1480px] mx-auto flex flex-col gap-[var(--play-gap)] animate-fade-in'
       },
 
-      h('div', { class: 'glass-panel border border-white/10 rounded-[1.6rem] px-5 py-4 md:px-7 md:py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4' },
-        h('div', { class: 'flex items-center gap-4' },
-          h('div', { class: 'w-11 h-11 flex items-center justify-center' },
-            h('img', { 
-              src: ASSETS.BRANDING.LOGO, 
-              alt: 'Logo', 
-              class: 'w-full h-full drop-shadow-xl' 
-            })
+      // Redesigned Top Bar with Player Name on Left and Leave Button on Right
+      h('div', { class: 'flex items-center justify-between gap-6 px-2 md:px-4 mb-4' },
+        
+        // Left Section: Logo + Branding + Player Name
+        h('div', { class: 'flex items-center gap-6' },
+          h('div', { class: 'flex items-center gap-4' },
+            h('div', { class: 'w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/5 rounded-xl border border-white/10 shadow-2xl overflow-hidden' },
+              h('img', { 
+                src: ASSETS.BRANDING.LOGO, 
+                alt: 'Logo', 
+                class: 'w-full h-full object-cover drop-shadow-xl' 
+              })
+            ),
+            h('div', { class: 'hidden sm:flex flex-col' },
+              h('span', { class: 'text-base font-black tracking-tighter text-white leading-none' }, TEXT.landing.branding),
+              h('span', { class: 'text-[9px] font-bold tracking-[0.3em] text-emerald-500 uppercase mt-1' }, TEXT.landing.logoSubtitle)
+            )
           ),
-          h('div', {},
-            h('h1', { class: 'text-xl md:text-2xl font-black text-white tracking-tight font-outfit' }, UI_CONFIG.GAME_BRANDING.TITLE),
-            h('p', { class: 'text-[10px] uppercase tracking-[0.26em] font-black text-emerald-400' }, UI_CONFIG.GAME_BRANDING.SUBTITLE)
+          
+          // Separator
+          h('div', { class: 'hidden md:block w-[1px] h-8 bg-white/10 mx-2' }),
+
+          // Player Name Section
+          h('div', { class: 'flex items-center gap-3' },
+            h('span', { class: 'text-[9px] font-black tracking-[0.3em] text-slate-500 uppercase' }, `${TEXT.game.playerLabel}:`),
+            h('span', { class: 'text-lg font-black text-white tracking-tight font-outfit' }, state.playerName || TEXT.game.anonymousPlayer)
           )
         ),
-        h('div', { class: 'flex items-center gap-4 text-right' },
-          h('div', { class: 'flex flex-col items-end' },
-            h('span', { class: 'text-[10px] uppercase tracking-[0.2em] font-black text-slate-500 mb-1' }, TEXT.game.playerLabel),
-            h('span', { class: 'px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm md:text-base font-black text-white tracking-wide' }, state.playerName || TEXT.game.anonymousPlayer)
-          ),
+        
+        // Right Section: Leave Button
+        h('div', { class: 'flex items-center' },
           h('button', {
-            class: 'w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-500 hover:text-white hover:bg-rose-500/20 hover:border-rose-500/30 transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed',
-            title: 'Logout',
+            class: 'group flex items-center gap-3 px-6 py-3 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500 hover:text-white transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed',
+            title: TEXT.game.leaveGameTitle,
             disabled: state.isResolvingBet,
             onclick: () => engine.logout()
-          }, UI_CONFIG.SYMBOLS.CLOSE || '×')
+          }, 
+            h('span', { class: 'text-[10px] font-black uppercase tracking-[0.2em] hidden md:block' }, TEXT.game.leaveGame),
+            h('div', { class: 'w-5 h-5 flex items-center justify-center' },
+              h('img', { 
+                src: ASSETS.ICONS.LEAVE, 
+                alt: TEXT.game.leaveGameTitle, 
+                class: 'w-full h-full opacity-80 group-hover:opacity-100 transition-opacity' 
+              })
+            )
+          )
         )
       ),
 
       h(
         'div',
-        { class: 'grid grid-cols-1 xl:grid-cols-12 gap-6 md:gap-7' },
+        { class: 'grid grid-cols-1 xl:grid-cols-12 gap-[var(--play-gap)] items-start' },
 
         h(
           'div',
-          { class: 'xl:col-span-8 space-y-6' },
+          { class: 'xl:col-span-8 space-y-[var(--play-gap)]' },
 
           h(
             'div',
             {
-              class: 'glass-panel p-5 md:p-7 rounded-[2rem] border border-white/10'
+              class: 'glass-panel p-[var(--play-panel-pad)] rounded-[var(--play-panel-radius)] border border-white/10 overflow-hidden'
             },
 
             ScoreBoard({ state, engine }),
 
             h(
               'div',
-              { class: 'grid grid-cols-1 lg:grid-cols-[185px_1fr] gap-6 md:gap-7 items-stretch mt-6 md:mt-7' },
+              { class: 'grid grid-cols-1 lg:grid-cols-[minmax(160px,200px)_1fr] gap-[var(--play-gap)] items-stretch mt-[var(--play-gap)]' },
               DrawLane({ state, isDistributing: state.isResolvingBet }),
               HandDisplay({
                 tiles: state.currentHand,
@@ -91,21 +112,21 @@ export function GameView({ state, engine }) {
             h(
               'div',
               {
-                class: 'grid grid-cols-2 gap-4 mt-7 pt-6 border-t border-white/10'
+                class: 'grid grid-cols-2 gap-4 mt-[var(--play-gap)] pt-6 border-t border-white/5'
               },
 
               h(
                 'div',
                 { class: 'text-center' },
-                h('div', { class: 'text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-2' }, TEXT.game.discarded),
-                h('div', { class: 'text-2xl font-black text-slate-300 font-outfit' }, state.discardPileCount)
+                h('div', { class: 'text-[9px] font-black uppercase tracking-[0.4em] text-slate-500 mb-2' }, TEXT.game.discarded),
+                h('div', { class: 'text-3xl md:text-4xl font-black text-slate-300 font-outfit tracking-tighter' }, state.discardPileCount)
               ),
 
               h(
                 'div',
                 { class: 'text-center' },
-                h('div', { class: 'text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-2' }, TEXT.game.reshuffles),
-                h('div', { class: 'text-2xl font-black text-emerald-400 font-outfit' }, `${state.reshuffleCount}/${GAME_CONFIG.MAX_RESHUFFLES}`)
+                h('div', { class: 'text-[9px] font-black uppercase tracking-[0.4em] text-slate-500 mb-2' }, TEXT.game.reshuffles),
+                h('div', { class: 'text-3xl md:text-4xl font-black text-emerald-400 font-outfit tracking-tighter' }, `${state.reshuffleCount}/${GAME_CONFIG.MAX_RESHUFFLES}`)
               )
             )
           )
@@ -119,7 +140,7 @@ export function GameView({ state, engine }) {
           h(
             'div',
             {
-              class: `glass-panel p-6 md:p-7 rounded-[2rem] border border-white/10 ${UI_CONFIG.GAME_HISTORY_PANEL_HEIGHT_CLASS} ${UI_CONFIG.GAME_HISTORY_PANEL_MAX_HEIGHT_CLASS} flex flex-col overflow-hidden`
+              class: `glass-panel p-[var(--play-panel-pad)] rounded-[var(--play-panel-radius)] border border-white/10 ${UI_CONFIG.GAME_HISTORY_PANEL_HEIGHT_CLASS} ${UI_CONFIG.GAME_HISTORY_PANEL_MAX_HEIGHT_CLASS} flex flex-col overflow-hidden`
             },
             HistoryPanel({ history: state.history })
           )
