@@ -14,13 +14,22 @@ export function HistoryPanel({ history = [] }) {
       h('h3', { class: 'text-[10px] font-black uppercase tracking-[0.34em] text-emerald-400 mb-4' }, TEXT.game.handHistory),
       
       h('div', { class: 'grid grid-cols-2 gap-3' },
-        h('div', { class: 'bg-emerald-500/5 border border-emerald-500/10 rounded-2xl p-3 flex flex-col' },
-          h('span', { class: 'text-[8px] font-black uppercase tracking-widest text-emerald-500/60 mb-1' }, TEXT.game.totalWins),
-          h('span', { class: 'text-xl font-black font-outfit text-emerald-400' }, totalWins)
+        // Total Wins Badge
+        h('div', { 
+          class: 'relative overflow-hidden group bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-4 transition-all hover:bg-emerald-500/10 hover:border-emerald-500/30 shadow-xl' 
+        },
+          h('div', { class: 'absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent' }),
+          h('span', { class: 'text-[8px] font-black uppercase tracking-widest text-emerald-500/60 mb-2 block' }, TEXT.game.totalWins),
+          h('span', { class: 'text-2xl font-black font-outfit text-emerald-400 drop-shadow-lg' }, totalWins)
         ),
-        h('div', { class: 'bg-rose-500/5 border border-rose-500/10 rounded-2xl p-3 flex flex-col' },
-          h('span', { class: 'text-[8px] font-black uppercase tracking-widest text-rose-500/60 mb-1' }, TEXT.game.totalLosses),
-          h('span', { class: 'text-xl font-black font-outfit text-rose-400' }, totalLosses)
+        
+        // Total Losses Badge
+        h('div', { 
+          class: 'relative overflow-hidden group bg-rose-500/5 border border-rose-500/20 rounded-2xl p-4 transition-all hover:bg-rose-500/10 hover:border-rose-500/30 shadow-xl' 
+        },
+          h('div', { class: 'absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-rose-400/40 to-transparent' }),
+          h('span', { class: 'text-[8px] font-black uppercase tracking-widest text-rose-500/60 mb-2 block' }, TEXT.game.totalLosses),
+          h('span', { class: 'text-2xl font-black font-outfit text-rose-400 drop-shadow-lg' }, totalLosses)
         )
       )
     ),

@@ -16,17 +16,16 @@ export function FloatingFeedback({ isVisible, isWin, position = { x: 0, y: 0 }, 
 
   const icon = isWin ? '✓' : '✕';
   const text = isWin ? 'Bim!' : 'Oh Snap!';
-  const colorClass = isWin ? 'text-green-500' : 'text-red-500';
-  const iconBgClass = isWin
-    ? 'bg-green-500/20 border-green-500/30'
-    : 'bg-red-500/20 border-red-500/30';
+  
+  const accentColor = isWin ? '#10b981' : '#f43f5e';
+  const glowColor = isWin ? 'rgba(16,185,129,0.8)' : 'rgba(244,63,94,0.8)';
 
   return h(
     'div',
     {
-      class: 'fixed inset-0 pointer-events-none flex items-center justify-center',
+      class: 'absolute inset-x-0 bottom-0 pointer-events-none flex items-center justify-center -translate-y-12 md:-translate-y-16',
       style: {
-        zIndex: 70,
+        zIndex: 99999,
       },
       onanimationend: onAnimationEnd,
     },
@@ -34,20 +33,28 @@ export function FloatingFeedback({ isVisible, isWin, position = { x: 0, y: 0 }, 
     h(
       'div',
       {
-        class: `flex flex-col items-center gap-4 ${animationClass}`,
+        class: `flex flex-row items-center gap-4 ${animationClass}`,
+        style: { opacity: '1 !important' }
       },
 
-      // Icon Container
-      h(
-        'div',
-        {
-          class: `w-24 h-24 md:w-28 md:h-28 rounded-full ${iconBgClass} border-2 flex items-center justify-center backdrop-blur-sm shadow-2xl`,
-        },
-        h('span', { class: `text-5xl md:text-6xl font-black ${colorClass}` }, icon)
-      ),
+      // Raw Icon
+      h('span', { 
+        class: 'text-5xl md:text-7xl font-black leading-none',
+        style: { 
+          color: accentColor,
+          filter: `drop-shadow(0 0 15px ${glowColor}) drop-shadow(0 0 30px ${glowColor})`,
+          opacity: '1'
+        }
+      }, icon),
 
-      // Text
-      h('span', { class: `text-4xl md:text-6xl font-black ${colorClass} tracking-wider uppercase drop-shadow-[0_0_28px_rgba(16,185,129,0.45)]` }, text)
+      h('span', { 
+        class: 'text-4xl md:text-6xl font-black italic leading-none tracking-tight',
+        style: { 
+          color: accentColor,
+          filter: `drop-shadow(0 0 20px ${glowColor}) drop-shadow(0 0 40px ${glowColor})`,
+          opacity: '1'
+        }
+      }, text)
     )
   );
 }

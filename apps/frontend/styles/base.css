@@ -6,7 +6,7 @@
   --glass-highlight: rgba(255, 255, 255, 0.12);
   --accent-emerald: #10b981;
   --play-shell-x: clamp(0.9rem, 2.3vw, 2.1rem);
-  --play-shell-y: clamp(0.95rem, 2.2vh, 1.95rem);
+  --play-shell-y: clamp(4rem, 8vh, 6rem);
   --play-gap: clamp(0.9rem, 1.7vw, 1.65rem);
   --play-panel-pad: clamp(1rem, 1.7vw, 1.7rem);
   --play-panel-radius: clamp(1.25rem, 2vw, 2rem);

@@ -17,9 +17,22 @@ import { HistoryService } from '../services/HistoryService.js';
 class GameEngine {
   constructor() {
     this.deck = new Deck();
+    this.lastLeaderboardFetch = 0;
+    this.minFetchInterval = 5000; // 5 seconds
   }
 
   async validateSession() {
+    // Silent Check: If no local identifier exists
+    const localName = localStorage.getItem('mahjong_player_name');
+    if (!localName) {
+      store.setState({ 
+        sessionChecked: true, 
+        sessionValid: false,
+        backendDown: false
+      });
+      return false;
+    }
+
     try {
       const response = await Api.validateSession();
       store.setState({ 
@@ -37,11 +50,13 @@ class GameEngine {
       return true;
     } catch (err) {
       const isNetworkError = err.message === 'Failed to fetch' || err.message.includes('network');
+      
       store.setState({ 
         sessionChecked: true, 
         sessionValid: false,
         backendDown: isNetworkError
       });
+      
       return false;
     }
   }
@@ -58,7 +73,7 @@ class GameEngine {
       });
       localStorage.setItem('mahjong_player_name', session.username);
       
-      this.loadLeaderboard();
+      this.loadLeaderboard(true); // Force fetch on login
       
       return true;
     } catch (err) {
@@ -89,7 +104,7 @@ class GameEngine {
     localStorage.clear();
     soundService.stopAmbient();
     
-    this.loadLeaderboard();
+    this.loadLeaderboard(true); // Force fetch on logout
   }
 
   syncState() {
@@ -109,17 +124,23 @@ class GameEngine {
     }).catch(err => console.warn('Failed to sync state:', err));
   }
 
-  async loadLeaderboard() {
+  async loadLeaderboard(force = false) {
+    const now = Date.now();
+    if (!force && (now - this.lastLeaderboardFetch < this.minFetchInterval)) {
+      return;
+    }
+
     try {
+      this.lastLeaderboardFetch = now;
       const scores = await Api.getLeaderboard();
       if (Array.isArray(scores)) {
         store.setState({ leaderboard: scores, backendDown: false });
       }
     } catch (err) {
-      console.error(TEXT.engine.errors.loadLeaderboardFailed, err);
       const isNetworkError = err.message === 'Failed to fetch' || err.message.includes('network');
       if (isNetworkError) {
         store.setState({ backendDown: true });
+        console.error(TEXT.engine.errors.loadLeaderboardFailed, err);
       }
     }
   }
@@ -193,7 +214,15 @@ class GameEngine {
     if (state.isResolvingBet) return;
 
     const currentVal = state.currentHandValue;
+    const prevReshuffleCount = state.reshuffleCount || 0;
     const nextHand = this.deck.draw(GAME_CONFIG.HAND_SIZE);
+    const deckStats = this.deck.getStats();
+    
+    // Check if a reshuffle occurred during draw
+    if (deckStats.reshuffleCount > prevReshuffleCount) {
+      store.setState({ isReshuffling: true });
+      setTimeout(() => store.setState({ isReshuffling: false }), 800);
+    }
 
     if (nextHand.length < GAME_CONFIG.HAND_SIZE) {
       this.endGame();
@@ -291,7 +320,7 @@ class GameEngine {
       console.error(TEXT.engine.errors.saveScoreFailed, err);
     }
 
-    await this.loadLeaderboard();
+    await this.loadLeaderboard(true);
   }
 }
 

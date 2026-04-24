@@ -152,20 +152,20 @@
 @keyframes cardDistributeSlide {
   0% {
     opacity: 0;
-    transform: translateY(24px) scale(0.85) rotate(-8deg);
+    transform: translate(-300px, 100px) scale(0.6) rotate(-30deg);
   }
-  70% {
+  60% {
     opacity: 1;
-    transform: translateY(-2px) scale(1.02) rotate(0deg);
+    transform: translate(20px, -10px) scale(1.05) rotate(5deg);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1) rotate(0deg);
+    transform: translate(0, 0) scale(1) rotate(0deg);
   }
 }
 
 .animate-card-distribute {
-  animation: cardDistributeSlide 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: cardDistributeSlide 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .animate-distribute-delay-1 {
@@ -185,46 +185,57 @@
 }
 
 /* Card Reshuffle Animation */
-@keyframes cardReshuffle {
+@keyframes cardReshuffleOut {
   0% {
     opacity: 1;
-    transform: translateY(0) rotateZ(0deg);
-  }
-  40% {
-    opacity: 0.7;
-    transform: translateY(-12px) rotateZ(-8deg);
-  }
-  70% {
-    opacity: 0.5;
-    transform: scale(0.95) rotateZ(15deg);
+    transform: translateX(0) scale(1) rotate(0deg);
   }
   100% {
     opacity: 0;
-    transform: scale(0.8) rotateZ(20deg);
+    transform: translateX(200px) scale(0.8) rotate(15deg);
   }
 }
 
 .animate-card-reshuffle-out {
-  animation: cardReshuffle 0.6s ease-in-out forwards;
+  animation: cardReshuffleOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes cardReshuffleIn {
   0% {
     opacity: 0;
-    transform: scale(0.8) rotateZ(20deg) translateY(20px);
-  }
-  60% {
-    opacity: 0.7;
-    transform: scale(1.05) rotateZ(-4deg) translateY(-4px);
+    transform: translateX(-200px) scale(0.8) rotate(-15deg);
   }
   100% {
     opacity: 1;
-    transform: scale(1) rotateZ(0deg) translateY(0);
+    transform: translateX(0) scale(1) rotate(0deg);
   }
 }
 
 .animate-card-reshuffle-in {
-  animation: cardReshuffleIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: cardReshuffleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pileReshuffle {
+  0% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; }
+  30% { transform: scale(1.1) translateY(-10px) rotate(5deg); opacity: 0.7; }
+  60% { transform: scale(0.9) translateY(5px) rotate(-5deg); opacity: 0.9; }
+  100% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; }
+}
+
+.animate-pile-reshuffle {
+  animation: pileReshuffle 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes pileShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-2px) rotate(-0.5deg); }
+  40% { transform: translateX(2px) rotate(0.5deg); }
+  60% { transform: translateX(-1.5px) rotate(-0.2deg); }
+  80% { transform: translateX(1.5px) rotate(0.2deg); }
+}
+
+.animate-pile-shake {
+  animation: pileShake 0.4s ease-in-out infinite;
 }
 
 @keyframes floatFeedback {

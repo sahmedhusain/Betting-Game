@@ -25,7 +25,6 @@ export function GameView({ state, engine }) {
   const playerRank = playerEntry ? leaderboard.indexOf(playerEntry) + 1 : 0;
   const highestScore = playerEntry ? (playerEntry.highest_score || playerEntry.score) : 0;
   
-  // Rank specific formatting
   const getRankBadge = (rank) => {
     if (rank <= 0 || rank > 5) return null;
     
@@ -53,13 +52,6 @@ export function GameView({ state, engine }) {
     {
       class: 'play-shell relative w-full h-screen overflow-hidden px-[var(--play-shell-x)] py-[var(--play-shell-y)] flex flex-col'
     },
-
-    FloatingFeedback({
-      isVisible: floatingFeedback.isVisible,
-      isWin: floatingFeedback.isWin,
-      position: floatingFeedback.position,
-      onAnimationEnd: null,
-    }),
 
     h(
       'div',
@@ -90,9 +82,7 @@ export function GameView({ state, engine }) {
             h('div', { class: 'flex items-center gap-4' },
               h('span', { class: 'text-xl md:text-2xl font-black text-white tracking-tight font-outfit leading-none' }, state.playerName || TEXT.game.anonymousPlayer),
               
-              // Group stats badges together
               h('div', { class: 'flex items-center gap-2' },
-                // Personal Best Badge
                 highestScore > 0 && h('div', { 
                   class: 'flex items-center gap-1.5 px-3 py-1 rounded-lg border border-white/10 bg-white/5 text-slate-300 shadow-xl backdrop-blur-md transition-all' 
                 },
@@ -100,7 +90,6 @@ export function GameView({ state, engine }) {
                   h('span', { class: 'text-[9px] font-black tracking-widest leading-none' }, highestScore.toLocaleString())
                 ),
 
-                // Rank Badge
                 getRankBadge(playerRank)
               )
             )
@@ -108,11 +97,12 @@ export function GameView({ state, engine }) {
         ),
         h('div', { class: 'flex items-center' },
           h('button', {
-            class: 'group flex items-center gap-3 px-6 py-3 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500 hover:text-white transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed',
+            class: 'group flex items-center gap-3 px-6 py-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-500 hover:bg-rose-500 hover:text-white transition-all shadow-xl shadow-rose-500/10 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed relative overflow-hidden',
             title: TEXT.game.leaveGameTitle,
             disabled: isLocked,
             onclick: () => engine.logout()
           }, 
+            h('div', { class: 'absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-rose-400/40 to-transparent' }),
             h('span', { class: 'text-[10px] font-black uppercase tracking-[0.2em] hidden md:block' }, TEXT.game.leaveGame),
             h('div', { class: 'w-5 h-5 flex items-center justify-center' },
               h('img', { 
@@ -127,20 +117,21 @@ export function GameView({ state, engine }) {
 
       h(
         'div',
-        { class: 'grid grid-cols-1 xl:grid-cols-12 gap-[var(--play-gap)] items-stretch flex-1 min-h-0 mb-4' },
+        { class: 'grid grid-cols-1 xl:grid-cols-12 gap-[var(--play-gap)] items-start shrink-0 mb-4' },
 
-        // Game Engine
+        // Game Engine (Arena) - The Height Master
         h(
           'div',
-          { class: 'xl:col-span-8 h-full min-h-0' },
+          { class: 'xl:col-span-8' },
 
           h(
             'div',
             {
-              class: 'glass-panel p-[var(--play-panel-pad)] rounded-[var(--play-panel-radius)] border border-white/10 overflow-hidden flex flex-col gap-[var(--play-gap)] h-full'
+              id: 'game-arena-panel',
+              class: 'glass-panel p-[var(--play-panel-pad)] rounded-[var(--play-panel-radius)] border border-white/10 overflow-hidden flex flex-col gap-6'
             },
 
-            h('div', { class: 'px-2' },
+            h('div', { class: 'px-2 shrink-0' },
               h('h3', { class: 'text-[10px] font-black uppercase tracking-[0.34em] text-emerald-400' }, TEXT.game.bettingArena)
             ),
 
@@ -148,52 +139,71 @@ export function GameView({ state, engine }) {
 
             h(
               'div',
-              { class: 'grid grid-cols-1 lg:grid-cols-[minmax(160px,200px)_1fr] gap-[var(--play-gap)] items-stretch flex-1 min-h-0' },
+              { class: 'grid grid-cols-1 lg:grid-cols-[minmax(160px,200px)_1fr] gap-[var(--play-gap)] items-stretch' },
+              
               DrawLane({ state, isDistributing: isLocked }),
-              HandDisplay({
-                tiles: state.currentHand,
-                showDistributionAnimation: true,
-                isExiting: state.isHandExiting,
-                distributionSeed: state.handDistributionNonce || 0
-              })
-            ),
+              
+              h('div', { class: 'flex flex-col gap-4 relative w-full' },
+                
+                h('div', { class: 'relative w-full' },
+                  HandDisplay({
+                    tiles: state.currentHand,
+                    showDistributionAnimation: true,
+                    isExiting: state.isHandExiting,
+                    distributionSeed: state.handDistributionNonce || 0
+                  }),
 
-            // Betting Actions
-            h('div', { class: 'pt-6 border-t border-white/5 shrink-0 mt-auto' },
-              h('div', { class: 'flex flex-col sm:flex-row gap-4 w-full' },
-                h('button', {
-                  class: `group flex-1 flex items-center justify-center gap-4 px-10 py-6 rounded-3xl font-black text-[10px] uppercase tracking-[0.2em] transition-all ${isLocked ? 'bg-white/5 text-slate-600 cursor-not-allowed border border-white/10' : 'bg-slate-800/40 border border-white/10 text-slate-300 hover:bg-slate-700 hover:text-white hover:border-white/20 shadow-2xl active:scale-95'}`,
-                  disabled: isLocked,
-                  onclick: () => engine.betLower()
-                }, 
-                  h('div', { class: 'icon-lower transition-transform group-hover:translate-y-0.5' }),
-                  h('span', {}, TEXT.game.betLower)
+                  FloatingFeedback({
+                    isVisible: floatingFeedback.isVisible,
+                    isWin: floatingFeedback.isWin,
+                    position: floatingFeedback.position,
+                    onAnimationEnd: null,
+                  })
                 ),
-                h('button', {
-                  class: `group flex-1 flex items-center justify-center gap-4 px-10 py-6 rounded-3xl font-black text-[10px] uppercase tracking-[0.2em] transition-all ${isLocked ? 'bg-emerald-900/30 text-emerald-700 cursor-not-allowed border border-emerald-700/30' : 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-2xl shadow-emerald-500/20 active:scale-95'}`,
-                  disabled: isLocked,
-                  onclick: () => engine.betHigher()
-                }, 
-                  h('div', { class: 'icon-higher transition-transform group-hover:-translate-y-0.5' }),
-                  h('span', {}, TEXT.game.betHigher)
+
+                h('div', { class: 'shrink-0 mt-2' },
+                  h('div', { class: 'flex flex-col sm:flex-row gap-4 w-full' },
+                    h('button', {
+                      class: `group flex-1 flex items-center justify-center gap-4 px-10 py-6 rounded-3xl font-black text-[10px] uppercase tracking-[0.2em] transition-all ${isLocked ? 'bg-white/5 text-slate-600 cursor-not-allowed border border-white/10' : 'bg-slate-800/40 border border-white/10 text-slate-300 hover:bg-slate-700 hover:text-white hover:border-white/20 shadow-2xl active:scale-95'}`,
+                      disabled: isLocked,
+                      onclick: () => engine.betLower()
+                    }, 
+                      h('div', { class: 'icon-lower transition-transform group-hover:translate-y-0.5' }),
+                      h('span', {}, TEXT.game.betLower)
+                    ),
+                    h('button', {
+                      class: `group flex-1 flex items-center justify-center gap-4 px-10 py-6 rounded-3xl font-black text-[10px] uppercase tracking-[0.2em] transition-all ${isLocked ? 'bg-emerald-900/30 text-emerald-700 cursor-not-allowed border border-emerald-700/30' : 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-2xl shadow-emerald-500/20 active:scale-95'}`,
+                      disabled: isLocked,
+                      onclick: () => engine.betHigher()
+                    }, 
+                      h('div', { class: 'icon-higher transition-transform group-hover:-translate-y-0.5' }),
+                      h('span', {}, TEXT.game.betHigher)
+                    )
+                  )
                 )
               )
             )
           )
         ),
 
-        // History Panel
+        // History Panel - Restricted Height
         h(
           'div',
           {
-            class: 'xl:col-span-4 h-full min-h-0'
+            class: 'xl:col-span-4 self-stretch relative'
           },
           h(
             'div',
             {
-              class: 'glass-panel p-[var(--play-panel-pad)] rounded-[var(--play-panel-radius)] border border-white/10 flex flex-col overflow-hidden h-full'
+              class: 'absolute inset-0'
             },
-            HistoryPanel({ history: state.history })
+            h(
+              'div',
+              {
+                class: 'glass-panel p-[var(--play-panel-pad)] rounded-[var(--play-panel-radius)] border border-white/10 flex flex-col overflow-hidden h-full'
+              },
+              HistoryPanel({ history: state.history })
+            )
           )
         )
       )
