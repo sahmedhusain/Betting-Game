@@ -20,8 +20,8 @@ export function GlobalTopBar({ playerName, highestScore, rankBadge, onRulesClick
     ),
     h('span', { class: 'text-slate-600' }, '→')
   );
-
-  return h('div', { class: 'relative flex items-center justify-between gap-6 px-2 md:px-4 shrink-0' },
+  return h('div', { class: 'sticky top-0 z-50 w-full bg-transparent py-4 md:py-0' },
+    h('div', { class: 'relative flex items-center justify-between gap-6 px-2 md:px-4 shrink-0' },
     h('div', { class: 'flex items-center gap-8' },
       h('div', { class: 'flex items-center gap-4' },
         h('div', { class: 'w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/5 rounded-xl border border-white/10 shadow-2xl overflow-hidden' },
@@ -95,51 +95,13 @@ export function GlobalTopBar({ playerName, highestScore, rankBadge, onRulesClick
 
     // Mobile Hamburger
     h('button', {
-      class: 'md:hidden w-12 h-12 flex flex-col items-center justify-center gap-1.5 bg-white/5 border border-white/10 rounded-xl active:scale-90 transition-all z-[60]',
+      class: 'md:hidden w-12 h-12 flex flex-col items-center justify-center gap-1.5 bg-white/5 border border-white/10 rounded-xl active:scale-90 transition-all z-[110]',
       onclick: onMenuToggle
     },
       h('div', { class: `w-6 h-0.5 bg-white transition-all ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}` }),
       h('div', { class: `w-6 h-0.5 bg-white transition-all ${isMenuOpen ? 'opacity-0' : ''}` }),
       h('div', { class: `w-6 h-0.5 bg-white transition-all ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}` })
-    ),
-
-    // Mobile Menu Overlay
-    isMenuOpen && h('div', { 
-      class: 'fixed inset-0 z-50 bg-[#020617]/95 backdrop-blur-xl animate-fade-in p-8 pt-28 flex flex-col gap-6 md:hidden' 
-    },
-      h('div', { class: 'flex flex-col gap-6 mb-4' },
-        // Identity Section
-        h('div', { class: 'flex flex-col gap-2 px-2' },
-          h('span', { class: 'text-[10px] font-black uppercase tracking-[0.4em] text-emerald-500' }, 'Active Session'),
-          h('span', { class: 'text-3xl font-black text-white tracking-tight' }, playerName || TEXT.game.anonymousPlayer)
-        ),
-
-        h('div', { class: 'flex items-center justify-between p-6 rounded-2xl bg-white/5 border border-white/10' },
-          h('div', { class: 'flex flex-col' },
-            h('span', { class: 'text-[10px] font-bold text-slate-500 uppercase tracking-widest' }, 'Highest Score'),
-            h('span', { class: 'text-2xl font-black text-white' }, highestScore.toLocaleString())
-          ),
-          h('div', { class: 'scale-125' }, rankBadge)
-        )
-      ),
-
-      MenuItem({ 
-        label: 'HOW TO PLAY', 
-        icon: ASSETS.ICONS.INFO, 
-        onClick: onRulesClick,
-        colorClass: 'text-emerald-400'
-      }),
-
-      MenuItem({ 
-        label: TEXT.game.leaveGame, 
-        icon: ASSETS.ICONS.LEAVE, 
-        onClick: onLogoutClick,
-        colorClass: 'text-rose-500'
-      }),
-
-      h('div', { class: 'mt-auto text-center' },
-        h('p', { class: 'text-[9px] font-bold text-slate-600 uppercase tracking-[0.4em]' }, TEXT.landing.logoSubtitle)
-      )
+    )
     )
   );
 }

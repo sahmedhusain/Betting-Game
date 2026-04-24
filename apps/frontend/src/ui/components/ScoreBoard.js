@@ -61,16 +61,14 @@ export function ScoreBoard({ state }) {
         bgColor: 'bg-amber-500/[0.03]'
       }),
 
-      h('div', { class: 'hidden md:block flex-1' },
-        StatBlock({
-          iconClass: 'icon-discarded',
-          iconColorClass: 'text-slate-400',
-          label: TEXT.game.discarded,
-          value: state.discardPileCount,
-          colorClass: 'text-slate-300',
-          bgColor: 'bg-slate-500/[0.02]'
-        })
-      )
+      StatBlock({
+        iconClass: 'icon-discarded',
+        iconColorClass: 'text-slate-400',
+        label: TEXT.game.discarded,
+        value: state.discardPileCount,
+        colorClass: 'text-slate-300',
+        bgColor: 'bg-slate-500/[0.02]'
+      })
     )
   );
 }

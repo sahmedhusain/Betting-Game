@@ -49,32 +49,21 @@
   }
 }
 
+/* Global Scrollbar Hiding */
+* {
+  -ms-overflow-style: none !important;  /* IE and Edge */
+  scrollbar-width: none !important;  /* Firefox */
+}
+
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    180deg,
-    rgba(16, 185, 129, 0.2),
-    rgba(16, 185, 129, 0.5)
-  );
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(16, 185, 129, 0.4),
-    rgba(16, 185, 129, 0.7)
-  );
+.custom-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
 }
 
 .custom-scrollbar {

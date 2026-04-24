@@ -8,6 +8,7 @@ import { DrawLane } from '../components/DrawLane.js';
 import { FloatingFeedback } from '../components/FloatingFeedback.js';
 import { RulesModal } from '../components/RulesModal.js';
 import { GlobalTopBar } from '../components/GlobalTopBar.js';
+import { MobileMenu } from '../components/MobileMenu.js';
 
 export function GameView({ state, engine }) {
   const isLocked = !!state.isResolvingBet;
@@ -43,13 +44,10 @@ export function GameView({ state, engine }) {
     if (!config) return null;
 
     return h('div', { 
-      class: `flex items-center gap-1.5 px-3 py-1 rounded-lg border shadow-xl backdrop-blur-md transition-all ${config.bg} ${config.border} ${config.color}` 
+      class: `flex items-center gap-1 px-2 py-0.5 rounded-md border shadow-lg backdrop-blur-md transition-all ${config.bg} ${config.border} ${config.color}` 
     },
-      h('div', { class: `${config.icon} w-3.5 h-3.5` }),
-      h('span', { class: 'text-[9px] font-black uppercase tracking-widest' }, 
-        h('span', { class: 'hidden lg:inline' }, config.label),
-        h('span', { class: 'lg:hidden inline' }, rank.toString().padStart(2, '0'))
-      )
+      h('div', { class: `${config.icon} w-3 h-3` }),
+      h('span', { class: 'text-[8px] font-black uppercase tracking-widest' }, config.label)
     );
   };
 
@@ -64,21 +62,21 @@ export function GameView({ state, engine }) {
       class: 'play-shell relative w-full h-screen overflow-hidden xl:overflow-hidden overflow-y-auto px-[var(--play-shell-x)] py-[var(--play-shell-y)] flex flex-col'
     },
 
+    GlobalTopBar({
+      playerName: state.playerName,
+      highestScore: highestScore,
+      rankBadge: getRankBadge(playerRank),
+      isMenuOpen: state.isMobileMenuOpen,
+      onMenuToggle: () => store.setState({ isMobileMenuOpen: !state.isMobileMenuOpen }),
+      onRulesClick: () => store.setState({ isRulesOpen: true }),
+      onLogoutClick: () => engine.logout()
+    }),
+
     h(
       'div',
       {
-        class: 'relative z-10 w-full max-w-[1480px] mx-auto flex flex-col gap-[var(--play-gap)] h-full animate-fade-in'
+        class: 'relative z-10 w-full max-w-[1480px] mx-auto flex flex-col gap-[var(--play-gap)] animate-fade-in pt-4 md:pt-8 pb-12'
       },
-
-      GlobalTopBar({
-        playerName: state.playerName,
-        highestScore: highestScore,
-        rankBadge: getRankBadge(playerRank),
-        isMenuOpen: state.isMobileMenuOpen,
-        onMenuToggle: () => store.setState({ isMobileMenuOpen: !state.isMobileMenuOpen }),
-        onRulesClick: () => store.setState({ isRulesOpen: true }),
-        onLogoutClick: () => engine.logout()
-      }),
 
       h(
         'div',
@@ -189,6 +187,17 @@ export function GameView({ state, engine }) {
     // Rules Modal
     state.isRulesOpen ? RulesModal({
       onClose: () => store.setState({ isRulesOpen: false })
-    }) : null
+    }) : null,
+
+    // Mobile Menu Modal (New separate component)
+    MobileMenu({
+      isOpen: state.isMobileMenuOpen,
+      onClose: () => store.setState({ isMobileMenuOpen: false }),
+      playerName: state.playerName,
+      highestScore: highestScore,
+      rankBadge: getRankBadge(playerRank),
+      onRulesClick: () => store.setState({ isRulesOpen: true }),
+      onLogoutClick: () => engine.logout()
+    })
   );
 }

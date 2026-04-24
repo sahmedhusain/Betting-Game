@@ -71,8 +71,35 @@
     min-height: 44px;
     min-width: 44px;
   }
+}
+
+/* Hide scrollbars but keep functionality on Mobile/Tablet */
+@media (max-width: 1280px) {
+  /* Global Force Hide */
+  * {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+  }
   
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 3px;
+  *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+  }
+
+  /* Specific fix for containers with custom scrollbars */
+  .custom-scrollbar::-webkit-scrollbar,
+  .play-shell::-webkit-scrollbar,
+  .play-history-container::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+  }
+
+  .play-shell {
+    overflow-y: auto !important;
+    height: 100vh !important;
+    padding-bottom: 6rem !important; /* Force space at the very bottom */
+    -webkit-overflow-scrolling: touch;
   }
 }
