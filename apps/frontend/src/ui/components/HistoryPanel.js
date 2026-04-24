@@ -49,7 +49,7 @@ export function HistoryPanel({ history = [] }) {
         )
         : h(
           'div',
-          { class: 'h-full space-y-3 overflow-y-auto pr-2 custom-scrollbar', key: 'history-list' },
+          { class: 'h-full xl:max-h-[550px] space-y-3 overflow-y-auto pr-2 custom-scrollbar', key: 'history-list' },
           ...safeHistory.slice().reverse().map((entry, i) => {
             const isWin = entry.result === HAND_RESULTS.WIN;
             const entryId = safeHistory.length - i;

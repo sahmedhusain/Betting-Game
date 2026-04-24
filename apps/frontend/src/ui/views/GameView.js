@@ -75,7 +75,7 @@ export function GameView({ state, engine }) {
     h(
       'div',
       {
-        class: 'relative z-10 w-full max-w-[1480px] mx-auto flex flex-col gap-[var(--play-gap)] animate-fade-in pt-4 md:pt-8 pb-12'
+        class: 'relative z-10 w-full max-w-[1480px] mx-auto flex flex-col gap-[var(--play-gap)] animate-fade-in pt-4 md:pt-8 pb-24'
       },
 
       h(

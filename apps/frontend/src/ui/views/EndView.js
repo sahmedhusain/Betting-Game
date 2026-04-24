@@ -104,11 +104,11 @@ export function EndView({ state, engine }) {
     h(
       'div',
       {
-        class: 'relative z-10 w-full max-w-[1480px] mx-auto flex flex-col gap-[var(--play-gap)] animate-fade-in pt-4 md:pt-8 pb-12'
+        class: 'relative z-10 w-full max-w-[1480px] mx-auto flex flex-col gap-[var(--play-gap)] animate-fade-in pt-4 md:pt-8 pb-24'
       },
 
-      h('div', { class: 'flex-1 min-h-0 flex items-start lg:items-center justify-center pt-8 lg:pt-0' },
-        h('div', { class: 'w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20 items-start lg:items-stretch h-auto lg:h-full py-4' },
+      h('div', { class: 'flex-1 min-h-0 flex items-center justify-center pt-8 lg:pt-0 pb-12' },
+        h('div', { class: 'w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20 items-stretch lg:h-[75vh] py-4' },
           EndSummaryPanel({
             score: currentScore,
             bestScore,

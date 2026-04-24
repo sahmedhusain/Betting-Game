@@ -31,7 +31,7 @@ export function LandingView({ state, engine }) {
   );
 
   return h('div', { class: 'relative w-full h-screen overflow-hidden xl:overflow-hidden overflow-y-auto no-scrollbar flex flex-col' },
-    h('div', { class: 'w-full max-w-7xl mx-auto px-6 pt-10 pb-8 md:pt-24 md:pb-12 xl:h-[90vh] xl:max-h-[800px] flex flex-col animate-fade-in flex-1' },
+    h('div', { class: 'w-full max-w-7xl mx-auto px-6 pt-10 pb-20 md:pt-24 md:pb-32 xl:h-[90vh] xl:max-h-[800px] flex flex-col animate-fade-in flex-1' },
       h('div', { class: 'grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20 items-start h-full' },
 
         h('div', { class: 'lg:col-span-7 flex flex-col h-full' },
