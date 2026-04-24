@@ -18,6 +18,10 @@ export const ASSETS = {
     DISCARDED: '/assets/icons/discarded.svg',
     REFRESH: '/assets/icons/refresh.svg',
     HIGHER: '/assets/icons/higher.svg',
-    LOWER: '/assets/icons/lower.svg'
+    LOWER: '/assets/icons/lower.svg',
+    ENTER: '/assets/icons/enter.svg',
+    INFO: '/assets/icons/info.svg',
+    KEY_H: '/assets/icons/key_h.svg',
+    KEY_L: '/assets/icons/key_l.svg'
   }
 };

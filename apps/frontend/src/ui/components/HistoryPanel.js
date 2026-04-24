@@ -59,7 +59,7 @@ export function HistoryPanel({ history = [] }) {
                 'div',
                 {
                   key: `hand-${entryId}`,
-                  class: 'flex items-center justify-between bg-white/[0.03] p-4 md:p-5 rounded-3xl border border-white/5 hover:bg-white/5 transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]'
+                  class: `flex items-center justify-between bg-white/[0.03] p-4 md:p-5 rounded-3xl border border-white/5 hover:bg-white/5 transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.07)] ${i === 0 ? 'animate-history-entry' : ''}`
                 },
                 h(
                   'div',

@@ -7,7 +7,7 @@ import { createElement as h } from '../../picojs/framework/core.js';
  * @param {Object} props.position
  * @param {Function} props.onAnimationEnd
  */
-export function FloatingFeedback({ isVisible, isWin, position = { x: 0, y: 0 }, onAnimationEnd }) {
+export function FloatingFeedback({ isVisible, isWin, onAnimationEnd }) {
   if (!isVisible) return h('div', {});
 
   const animationClass = isWin
@@ -18,32 +18,24 @@ export function FloatingFeedback({ isVisible, isWin, position = { x: 0, y: 0 }, 
   const text = isWin ? 'Bim!' : 'Oh Snap!';
   
   const accentColor = isWin ? '#10b981' : '#f43f5e';
-  const glowColor = isWin ? 'rgba(16,185,129,0.8)' : 'rgba(244,63,94,0.8)';
+  const glowColor = isWin ? 'rgba(16,185,129,0.5)' : 'rgba(244,63,94,0.5)';
+  const borderColor = 'border-white/10';
+  const bgColor = 'bg-white/[0.03]';
 
   return h(
     'div',
     {
-      class: 'absolute inset-x-0 bottom-0 pointer-events-none flex items-center justify-center -translate-y-12 md:-translate-y-16',
-      style: {
-        zIndex: 99999,
-      },
+      class: 'absolute inset-0 pointer-events-none flex items-center justify-center z-[99999]',
       onanimationend: onAnimationEnd,
     },
-
-    h(
-      'div',
-      {
-        class: `flex flex-row items-center gap-4 ${animationClass}`,
-        style: { opacity: '1 !important' }
-      },
-
-      // Raw Icon
+    h('div', {
+      class: `flex items-center gap-6 px-10 py-6 rounded-[2.5rem] border backdrop-blur-[100px] shadow-2xl ${animationClass} ${borderColor} ${bgColor}`
+    },
       h('span', { 
         class: 'text-5xl md:text-7xl font-black leading-none',
         style: { 
           color: accentColor,
-          filter: `drop-shadow(0 0 15px ${glowColor}) drop-shadow(0 0 30px ${glowColor})`,
-          opacity: '1'
+          filter: `drop-shadow(0 0 15px ${glowColor})`,
         }
       }, icon),
 
@@ -51,8 +43,7 @@ export function FloatingFeedback({ isVisible, isWin, position = { x: 0, y: 0 }, 
         class: 'text-4xl md:text-6xl font-black italic leading-none tracking-tight',
         style: { 
           color: accentColor,
-          filter: `drop-shadow(0 0 20px ${glowColor}) drop-shadow(0 0 40px ${glowColor})`,
-          opacity: '1'
+          filter: `drop-shadow(0 0 20px ${glowColor})`,
         }
       }, text)
     )

@@ -26,7 +26,12 @@ export function HandDisplay({ tiles = [], showDistributionAnimation = true, isEx
         style: {
           animationFillMode: 'both',
         }
-      }, TileRenderer({ tile, key: tile.id }));
+      }, TileRenderer({ 
+        tile, 
+        key: tile.id,
+        animateFlip: showDistributionAnimation,
+        flipDelay: showDistributionAnimation ? `${(index + 1) * 100 + 500}ms` : '0ms'
+      }));
     })
   );
 }

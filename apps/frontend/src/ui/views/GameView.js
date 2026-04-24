@@ -1,10 +1,12 @@
 import { createElement as h } from '../../picojs/framework/core.js';
+import { store } from '../../state/State.js';
 import { GAME_CONFIG, TEXT, UI_CONFIG, ASSETS } from '../../utils/constants.js';
 import { ScoreBoard } from '../components/ScoreBoard.js';
 import { HistoryPanel } from '../components/HistoryPanel.js';
 import { HandDisplay } from '../components/HandDisplay.js';
 import { DrawLane } from '../components/DrawLane.js';
 import { FloatingFeedback } from '../components/FloatingFeedback.js';
+import { RulesModal } from '../components/RulesModal.js';
 
 export function GameView({ state, engine }) {
   const isLocked = !!state.isResolvingBet;
@@ -46,6 +48,11 @@ export function GameView({ state, engine }) {
       h('span', { class: 'text-[9px] font-black uppercase tracking-widest' }, config.label)
     );
   };
+
+  const IconWrapper = (src, size = 'w-6 h-6') => h('span', {
+    class: `inline-block ${size} bg-current transition-all duration-300`,
+    style: `-webkit-mask: url("${src}") no-repeat center / contain; mask: url("${src}") no-repeat center / contain;`
+  });
 
   return h(
     'div',
@@ -95,7 +102,17 @@ export function GameView({ state, engine }) {
             )
           )
         ),
-        h('div', { class: 'flex items-center' },
+        
+        // Right Side Top Bar: Rules + Leave
+        h('div', { class: 'flex items-center gap-8' },
+          h('button', {
+            class: 'group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-emerald-400 transition-all active:scale-95 px-2 py-1',
+            onclick: () => store.setState({ isRulesOpen: true })
+          }, 
+            IconWrapper(ASSETS.ICONS.INFO, 'w-3.5 h-3.5'),
+            h('span', {}, 'How to Play?')
+          ),
+
           h('button', {
             class: 'group flex items-center gap-3 px-6 py-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-500 hover:bg-rose-500 hover:text-white transition-all shadow-xl shadow-rose-500/10 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed relative overflow-hidden',
             title: TEXT.game.leaveGameTitle,
@@ -119,7 +136,7 @@ export function GameView({ state, engine }) {
         'div',
         { class: 'grid grid-cols-1 xl:grid-cols-12 gap-[var(--play-gap)] items-start shrink-0 mb-4' },
 
-        // Game Engine (Arena) - The Height Master
+        // Game Engine (Arena)
         h(
           'div',
           { class: 'xl:col-span-8' },
@@ -150,7 +167,7 @@ export function GameView({ state, engine }) {
                     tiles: state.currentHand,
                     showDistributionAnimation: true,
                     isExiting: state.isHandExiting,
-                    distributionSeed: state.handDistributionNonce || 0
+                    distributionSeed: state.handDistribution_nonce || 0
                   }),
 
                   FloatingFeedback({
@@ -168,7 +185,7 @@ export function GameView({ state, engine }) {
                       disabled: isLocked,
                       onclick: () => engine.betLower()
                     }, 
-                      h('div', { class: 'icon-lower transition-transform group-hover:translate-y-0.5' }),
+                      IconWrapper(ASSETS.ICONS.LOWER),
                       h('span', {}, TEXT.game.betLower)
                     ),
                     h('button', {
@@ -176,7 +193,7 @@ export function GameView({ state, engine }) {
                       disabled: isLocked,
                       onclick: () => engine.betHigher()
                     }, 
-                      h('div', { class: 'icon-higher transition-transform group-hover:-translate-y-0.5' }),
+                      IconWrapper(ASSETS.ICONS.HIGHER),
                       h('span', {}, TEXT.game.betHigher)
                     )
                   )
@@ -186,7 +203,7 @@ export function GameView({ state, engine }) {
           )
         ),
 
-        // History Panel - Restricted Height
+        // History Panel
         h(
           'div',
           {
@@ -207,6 +224,11 @@ export function GameView({ state, engine }) {
           )
         )
       )
-    )
+    ),
+
+    // Rules Modal
+    state.isRulesOpen ? RulesModal({
+      onClose: () => store.setState({ isRulesOpen: false })
+    }) : null
   );
 }

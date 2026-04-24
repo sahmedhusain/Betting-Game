@@ -8,12 +8,7 @@ export const I18N = {
       subtitle: 'Premium betting experience powered by state-of-the-art tile mechanics.',
       logoSubtitle: 'STRATEGIC TILE ENGINE',
       playNow: 'Play Now',
-      rulesTitle: 'How to Play',
-      rules: [
-        'Place bets on tile sequence outcomes',
-        'Manage your bankroll through strategic rounds',
-        'Climb the leaderboard with high-performance play'
-      ],
+      rulesTitle: 'How to Play?',
       identifyPlayer: 'Player Name',
       namePlaceholder: 'YOUR NAME',
       allowedNameChars: 'Only alphanumeric, dot (.), underscore (_), or hyphen (-) characters are allowed.',
