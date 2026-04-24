@@ -1,0 +1,49 @@
+services:
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    ports:
+      - "${BACKEND_PORT:-8080}:${BACKEND_PORT:-8080}"
+    env_file:
+      - .env
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017
+    depends_on:
+      - mongodb
+    networks:
+      - betting-network
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+        - VITE_APP_NAME=${VITE_APP_NAME}
+        - VITE_LEADERBOARD_INTERVAL=${VITE_LEADERBOARD_INTERVAL}
+        - VITE_SOUND_DISABLED=${VITE_SOUND_DISABLED}
+    ports:
+      - "${FRONTEND_PORT:-5173}:80"
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    networks:
+      - betting-network
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - betting-network
+
+networks:
+  betting-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:

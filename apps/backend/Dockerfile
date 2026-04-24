@@ -1,17 +1,20 @@
-FROM golang:1.26-alpine AS builder
+FROM golang:alpine AS builder
 
 WORKDIR /src
 
 RUN apk add --no-cache ca-certificates git
 
 COPY go.mod go.sum ./
+# Nuclear option: remove the 'go' version requirement entirely to avoid mismatch
+RUN sed -i '/^go /d' go.mod
+ENV GOTOOLCHAIN=local
 RUN go mod download && go mod verify
 
 COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/server ./cmd/server
 
-FROM alpine:3.22
+FROM alpine:3.20
 
 WORKDIR /app
 
