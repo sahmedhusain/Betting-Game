@@ -1,6 +1,6 @@
 import { store } from '../state/State.js';
 import { engine } from '../engine/Engine.js';
-import { PHASES, ROUTES, KEYS, TEXT } from '../utils/constants.js';
+import { PHASES, ROUTES, KEYS, TEXT, GAME_OVER_REASONS } from '../utils/constants.js';
 import { normalizePlayerName, validatePlayerName } from '../utils/helpers.js';
 
 function normalizeHash(rawHash = '') {
@@ -90,7 +90,7 @@ export function handleRouting() {
 
   if (state.gamePhase === PHASES.PLAYING && phase !== PHASES.PLAYING) {
     store.setState({ wasRefreshed: true, score: 0, isGameFinished: true });
-    engine.endGame();
+    engine.endGame(GAME_OVER_REASONS.CHEAT_DETECTED);
 
     navigateToHash(ROUTES.GAME_OVER, { replace: true });
     return;
@@ -197,7 +197,7 @@ export async function handleBootstrap() {
       gamePhase: PHASES.GAME_OVER
     });
 
-    await engine.endGame();
+    await engine.endGame(GAME_OVER_REASONS.CHEAT_DETECTED);
 
     navigateToHash(ROUTES.GAME_OVER, { replace: true });
     return;

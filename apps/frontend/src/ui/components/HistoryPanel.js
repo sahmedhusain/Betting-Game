@@ -89,9 +89,14 @@ export function HistoryPanel({ history = [] }) {
           { class: 'h-full xl:max-h-[550px] space-y-3 overflow-y-auto px-6 py-4 custom-scrollbar', key: 'history-list' }, // Increased padding
           ...safeHistory.slice().reverse().map((entry, i) => {
             const isWin = entry.result === HAND_RESULTS.WIN;
+            const isPush = entry.result === HAND_RESULTS.PUSH;
             const entryId = safeHistory.length - i;
             const numericValue = Number(entry.value);
             const displayValue = Number.isFinite(numericValue) ? `${numericValue}` : TEXT.game.notAvailable;
+
+            let indicatorClass = 'bg-rose-500';
+            if (isWin) indicatorClass = 'bg-emerald-500 shadow-[0_0_15px_#10b981]';
+            else if (isPush) indicatorClass = 'bg-slate-500';
 
             return h(
               'div',
@@ -103,7 +108,7 @@ export function HistoryPanel({ history = [] }) {
                 h(
                   'div',
                   { class: 'flex items-center gap-3 md:gap-4' },
-                  h('div', { class: `w-1 h-8 rounded-full ${isWin ? 'bg-emerald-500 shadow-[0_0_15px_#10b981]' : 'bg-rose-500'}` }),
+                  h('div', { class: `w-1 h-8 rounded-full ${indicatorClass}` }),
                   h('div', {},
                     h('p', { class: 'text-[9px] text-slate-500 font-black' }, TEXT.game.sessionHand(safeHistory.length - i)),
                     h('p', { class: 'font-black text-xs md:text-sm uppercase tracking-wide' }, entry.result)

@@ -113,7 +113,8 @@ export function EndView({ state, engine }) {
             score: currentScore,
             bestScore,
             comment: getComment(),
-            onPlayAgain: handlePlayAgain
+            onPlayAgain: handlePlayAgain,
+            gameOverReason: state.gameOverReason
           }),
           EndHistoryPanel({
             history,

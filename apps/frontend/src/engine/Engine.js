@@ -2,7 +2,7 @@ import { store } from '../state/State.js';
 import { Deck } from './Deck.js';
 import { calculateHandValue, updateDynamicValue, getTileValue } from './TileConfig.js';
 import { TILE_TYPES } from '../utils/constants.js';
-import { GAME_CONFIG, PHASES, BET_TYPES, HAND_RESULTS, TEXT } from '../utils/constants.js';
+import { GAME_CONFIG, PHASES, BET_TYPES, HAND_RESULTS, GAME_OVER_REASONS, TEXT } from '../utils/constants.js';
 import { Api } from '../services/Api.js';
 import { soundService } from '../services/SoundService.js';
 import { SessionService } from '../services/SessionService.js';
@@ -95,6 +95,9 @@ class GameEngine {
         deckState: gameState.deck_state,
         isGameFinished: gameState.game_phase === PHASES.GAME_OVER,
         wasRefreshed: !!gameState.was_refreshed,
+        gameOverReason: (gameState.game_phase === PHASES.GAME_OVER && gameState.was_refreshed) 
+          ? GAME_OVER_REASONS.CHEAT_DETECTED 
+          : '',
         ...this.deck.getStats()
       });
 
@@ -143,7 +146,7 @@ class GameEngine {
           getTileValue
         })]
       });
-      this.endGame();
+      this.endGame(GAME_OVER_REASONS.DECK_EXHAUSTED);
       return;
     }
 
@@ -233,7 +236,7 @@ class GameEngine {
           getTileValue
         })]
       });
-      this.endGame();
+      this.endGame(GAME_OVER_REASONS.BOUNDARY_HIT);
     }
   }
 
@@ -241,7 +244,7 @@ class GameEngine {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  async endGame() {
+  async endGame(reason) {
     sessionStorage.removeItem('game_active');
     const state = store.getState();
     soundService.stopAmbient();
@@ -261,7 +264,11 @@ class GameEngine {
       store.setState({ lifetimeHistory: HistoryService.getHistory() });
     }
 
-    store.setState({ gamePhase: PHASES.GAME_OVER, isGameFinished: true });
+    store.setState({ 
+      gamePhase: PHASES.GAME_OVER, 
+      isGameFinished: true,
+      gameOverReason: reason
+    });
     this.syncState();
     await this.loadLeaderboard(true);
   }

@@ -18,6 +18,7 @@ export const initialState = {
   backendDown: false,
   sessionError: '',
   isGameFinished: false,
+  gameOverReason: '',
   errorData: {
     code: '',
     title: '',
