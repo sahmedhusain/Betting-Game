@@ -190,16 +190,28 @@ export const I18N = {
       bamboo: 'Bamboo',
       characters: 'Characters',
       dots: 'Dots',
-      sections: {
-        core: 'SYSTEM_CORE // 01',
-        registry: 'TILE_REGISTRY // 02',
-        inputs: 'INPUT_MATRIX // 03'
-      },
       mechanics: [
         { t: 'Analysis', d: 'The sum of all 5 tiles in your hand determines your Current Score.' },
         { t: 'Prediction', d: 'Forecast if the next hand value will exceed or fall below your current total.' },
-        { t: 'Resolution', d: 'Correct forecasts award bankroll. Failed attempts trigger penalties.' }
-      ]
+        { t: 'Resolution', d: 'Correct forecasts award +1 bankroll. Failed attempts penalize -1.' }
+      ],
+      dynamicScaling: [
+        { t: 'Growth', d: 'Non-number tiles in a winning hand increase their global value by +1.' },
+        { t: 'Decay', d: 'Non-number tiles in a losing hand decrease their global value by -1.' },
+        { t: 'Neutral', d: 'Pushes (Ties) result in no value changes for any tiles.' }
+      ],
+      termination: [
+        { t: 'Boundary', d: 'Game ends if any non-number tile reaches a value of exactly 0 or 10.' },
+        { t: 'Depletion', d: 'Game ends after the 3rd time the deck is fully exhausted (2 reshuffles allowed).' },
+        { t: 'Security', d: 'Any detected session tampering or illegal navigation triggers immediate termination.' }
+      ],
+      sections: {
+        core: 'SYSTEM_CORE // 01',
+        registry: 'TILE_REGISTRY // 02',
+        inputs: 'INPUT_MATRIX // 03',
+        valuation: 'DYNAMIC_VALUATION // 04',
+        termination: 'SYSTEM_TERMINATION // 05'
+      }
     }
   }
 };

@@ -5,9 +5,9 @@ import { TileRenderer } from './TileRenderer.js';
 export function RulesModal({ onClose }) {
 
   const honorTiles = [
-    { type: 'WIND', name: 'EAST', value: 10, label: TEXT.rules.winds },
-    { type: 'DRAGON', name: 'RED', value: 10, label: TEXT.rules.dragons },
-    { type: 'FLOWER', name: 'PLUM', value: 20, label: TEXT.rules.flowers }
+    { type: 'WIND', name: 'EAST', value: 5, label: TEXT.rules.winds },
+    { type: 'DRAGON', name: 'RED', value: 5, label: TEXT.rules.dragons },
+    { type: 'WIND', name: 'WEST', value: 5, label: TEXT.rules.winds }
   ];
 
   const suitTiles = [
@@ -21,6 +21,16 @@ export function RulesModal({ onClose }) {
     { icon: ASSETS.ICONS.KEY_L, action: TEXT.game.betLowerAction, desc: TEXT.game.keyboardL },
     { icon: ASSETS.ICONS.ENTER, action: TEXT.game.confirmAction, desc: TEXT.game.keyboardEnter }
   ];
+
+  const RuleSection = (title, items) => h('div', { class: 'flex flex-col gap-8' },
+    h('h4', { class: 'text-[11px] font-black uppercase tracking-[0.5em] text-emerald-500/50' }, title),
+    h('div', { class: 'grid grid-cols-1 md:grid-cols-3 gap-6' },
+      items.map(item => h('div', { class: 'p-8 rounded-[2.5rem] bg-white/[0.03] border border-white/5 group hover:bg-white/[0.05] transition-all' },
+        h('h5', { class: 'text-xl font-black text-white mb-3 group-hover:text-emerald-400 transition-colors' }, item.t),
+        h('p', { class: 'text-sm text-slate-400 leading-relaxed' }, item.d)
+      ))
+    )
+  );
 
   const TileInfoCard = (tile, value) => h('div', {
     class: 'flex flex-col items-center p-6 rounded-[2.5rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all group'
@@ -82,15 +92,7 @@ export function RulesModal({ onClose }) {
 
         h('div', { class: 'flex-1 overflow-y-auto p-6 lg:p-12 pt-4 lg:pt-6 no-scrollbar flex flex-col gap-10 lg:gap-16' },
 
-          h('div', { class: 'flex flex-col gap-8' },
-            h('h4', { class: 'text-[11px] font-black uppercase tracking-[0.5em] text-emerald-500/50' }, TEXT.rules.sections.core),
-            h('div', { class: 'grid grid-cols-1 md:grid-cols-3 gap-6' },
-              TEXT.rules.mechanics.map((item, i) => h('div', { class: 'p-8 rounded-[2.5rem] bg-white/[0.03] border border-white/5' },
-                h('h5', { class: 'text-xl font-black text-white mb-3' }, item.t),
-                h('p', { class: 'text-sm text-slate-400 leading-relaxed' }, item.d)
-              ))
-            )
-          ),
+          RuleSection(TEXT.rules.sections.core, TEXT.rules.mechanics),
 
           h('div', { class: 'flex flex-col gap-8' },
             h('h4', { class: 'text-[11px] font-black uppercase tracking-[0.5em] text-emerald-500/50' }, TEXT.rules.sections.registry),
@@ -115,6 +117,10 @@ export function RulesModal({ onClose }) {
               )
             )
           ),
+
+          RuleSection(TEXT.rules.sections.valuation, TEXT.rules.dynamicScaling),
+
+          RuleSection(TEXT.rules.sections.termination, TEXT.rules.termination),
 
           h('div', { class: 'flex flex-col gap-8 mb-8' },
             h('h4', { class: 'text-[11px] font-black uppercase tracking-[0.5em] text-emerald-500/50' }, TEXT.rules.sections.inputs),
