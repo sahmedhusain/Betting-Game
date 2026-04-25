@@ -88,7 +88,7 @@ export function handleRouting() {
 
   let phase = phaseFromHash();
 
-  if (state.gamePhase === PHASES.PLAYING && phase !== PHASES.PLAYING) {
+  if (state.gamePhase === PHASES.PLAYING && phase !== PHASES.PLAYING && phase !== PHASES.GAME_OVER) {
     store.setState({ wasRefreshed: true, score: 0, isGameFinished: true });
     engine.endGame(GAME_OVER_REASONS.CHEAT_DETECTED);
 

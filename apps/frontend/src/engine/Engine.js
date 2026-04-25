@@ -140,7 +140,7 @@ class GameEngine {
       const finalState = store.getState();
       store.setState({
         history: [...finalState.history, createHistoryEntry({
-          hand: state.currentHand,
+          hand: finalState.currentHand,
           value: currentVal,
           result: HAND_RESULTS.LOSS,
           getTileValue
@@ -246,9 +246,18 @@ class GameEngine {
 
   async endGame(reason) {
     sessionStorage.removeItem('game_active');
+    
+    store.setState({ 
+      gamePhase: PHASES.GAME_OVER, 
+      isGameFinished: true,
+      gameOverReason: reason
+    });
+
     const state = store.getState();
     soundService.stopAmbient();
     soundService.playGameOver();
+
+    this.syncState();
 
     try {
       await Api.saveScore(state.playerName, state.score, state.history.length);
@@ -264,12 +273,6 @@ class GameEngine {
       store.setState({ lifetimeHistory: HistoryService.getHistory() });
     }
 
-    store.setState({ 
-      gamePhase: PHASES.GAME_OVER, 
-      isGameFinished: true,
-      gameOverReason: reason
-    });
-    this.syncState();
     await this.loadLeaderboard(true);
   }
 }
