@@ -13,7 +13,7 @@ import {
   calculateScoreDelta,
   clampScore,
   createHistoryEntry,
-  isWinningBet
+  determineResult
 } from './gameRules.js';
 import { HistoryService } from '../services/HistoryService.js';
 
@@ -139,17 +139,19 @@ class GameEngine {
     }
 
     const nextVal = calculateHandValue(nextHand);
-    const isWin = isWinningBet({ betType, currentVal, nextVal });
+    const result = determineResult({ betType, currentVal, nextVal });
 
-    if (isWin) {
+    if (result === HAND_RESULTS.WIN) {
       soundService.playWin();
-    } else {
+    } else if (result === HAND_RESULTS.LOSS) {
       soundService.playLoss();
+    } else {
+      soundService.playClick(); // Tie sound fallback
     }
 
     const boundaryHit = applyDynamicAdjustments({
       hand: nextHand,
-      isWin,
+      result,
       tileTypes: TILE_TYPES,
       updateDynamicValue,
       dynamicMin: GAME_CONFIG.DYNAMIC_MIN,
@@ -157,7 +159,7 @@ class GameEngine {
     });
 
     const scoreDelta = calculateScoreDelta({
-      isWin,
+      result,
       currentVal,
       nextVal,
       winScoreBase: GAME_CONFIG.WIN_SCORE_BASE,
@@ -170,7 +172,7 @@ class GameEngine {
       isResolvingBet: true,
       floatingFeedback: {
         isVisible: true,
-        isWin,
+        result,
         position: GAME_CONFIG.DEFAULT_FEEDBACK_POSITION
       }
     });
@@ -188,7 +190,7 @@ class GameEngine {
       score: newScore,
       currentHand: nextHand,
       currentHandValue: nextVal,
-      history: [...state.history, createHistoryEntry({ hand: state.currentHand, value: currentVal, isWin })],
+      history: [...state.history, createHistoryEntry({ hand: state.currentHand, value: currentVal, result })],
       handDistributionNonce: (state.handDistributionNonce || 0) + 1,
       floatingFeedback: {
         isVisible: false,

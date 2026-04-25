@@ -57,6 +57,7 @@ export const I18N = {
       tileValue: 'Value',
       feedbackWin: 'Bim!',
       feedbackLoss: 'Snap!',
+      feedbackPush: 'Push!',
       betHigherAction: 'Bet Higher',
       betLowerAction: 'Bet Lower',
       confirmAction: 'Confirm',

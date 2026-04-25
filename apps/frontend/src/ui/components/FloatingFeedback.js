@@ -1,25 +1,28 @@
 import { createElement as h } from '../../picojs/framework/core.js';
-import { TEXT } from '../../utils/constants.js';
+import { HAND_RESULTS, TEXT, UI_CONFIG } from '../../utils/constants.js';
 
 /**
  * @param {Object} props
  * @param {boolean} props.isVisible
- * @param {boolean} props.isWin
- * @param {Object} props.position
+ * @param {string} props.result
  * @param {Function} props.onAnimationEnd
  */
-export function FloatingFeedback({ isVisible, isWin, onAnimationEnd }) {
+export function FloatingFeedback({ isVisible, result, onAnimationEnd }) {
   if (!isVisible) return h('div', {});
+
+  const isWin = result === HAND_RESULTS.WIN;
+  const isLoss = result === HAND_RESULTS.LOSS;
+  const isPush = result === HAND_RESULTS.PUSH;
 
   const animationClass = isWin
     ? 'animate-float-feedback-win'
-    : 'animate-float-feedback-loss';
+    : (isLoss ? 'animate-float-feedback-loss' : 'animate-float-feedback-push');
 
-  const icon = isWin ? '✓' : '✕';
-  const text = isWin ? TEXT.game.feedbackWin : TEXT.game.feedbackLoss;
+  const icon = isWin ? UI_CONFIG.SYMBOLS.WIN : (isLoss ? UI_CONFIG.SYMBOLS.LOSS : UI_CONFIG.SYMBOLS.PUSH);
+  const text = isWin ? TEXT.game.feedbackWin : (isLoss ? TEXT.game.feedbackLoss : TEXT.game.feedbackPush);
   
-  const accentColor = isWin ? '#10b981' : '#f43f5e';
-  const glowColor = isWin ? 'rgba(16,185,129,0.5)' : 'rgba(244,63,94,0.5)';
+  const accentColor = isWin ? '#10b981' : (isLoss ? '#f43f5e' : '#94a3b8');
+  const glowColor = isWin ? 'rgba(16,185,129,0.5)' : (isLoss ? 'rgba(244,63,94,0.5)' : 'rgba(148,163,184,0.5)');
   const borderColor = 'border-white/10';
   const bgColor = 'bg-white/[0.03]';
 

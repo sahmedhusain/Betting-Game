@@ -7,8 +7,9 @@ export const dynamicTileValues = {
     'NORTH': TILE_VALUES.INITIAL_BASE,
     'RED': TILE_VALUES.INITIAL_BASE,
     'GREEN': TILE_VALUES.INITIAL_BASE,
-    'WHITE': TILE_VALUES.INITIAL_BASE,
-    // Flowers
+    'WHITE': TILE_VALUES.INITIAL_BASE
+    /*
+    / Flowers
     'PLUM': TILE_VALUES.SPECIAL_BASE,
     'ORCHID': TILE_VALUES.SPECIAL_BASE,
     'BAMBOO_FLOWER': TILE_VALUES.SPECIAL_BASE,
@@ -18,6 +19,7 @@ export const dynamicTileValues = {
     'SUMMER': TILE_VALUES.SPECIAL_BASE,
     'AUTUMN': TILE_VALUES.SPECIAL_BASE,
     'WINTER': TILE_VALUES.SPECIAL_BASE
+    */
 };
 
 export function getTileValue(tile) {
@@ -64,15 +66,15 @@ export function generateBaseDeck() {
     for (const dragon of DRAGONS) {
         addTile(TILE_TYPES.DRAGON, SUITS.NONE, dragon, TILE_VALUES.INITIAL_BASE);
     }
-
-    for (const flower of FLOWERS) {
-        addTile(TILE_TYPES.FLOWER, SUITS.NONE, flower, TILE_VALUES.SPECIAL_BASE, 1);
-    }
-
-    for (const season of SEASONS) {
-        addTile(TILE_TYPES.SEASON, SUITS.NONE, season, TILE_VALUES.SPECIAL_BASE, 1);
-    }
-
+    /*
+        for (const flower of FLOWERS) {
+            addTile(TILE_TYPES.FLOWER, SUITS.NONE, flower, TILE_VALUES.SPECIAL_BASE, 1);
+        }
+    
+        for (const season of SEASONS) {
+            addTile(TILE_TYPES.SEASON, SUITS.NONE, season, TILE_VALUES.SPECIAL_BASE, 1);
+        }
+    */
     return deck;
 }
 

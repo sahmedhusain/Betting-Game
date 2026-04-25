@@ -1,10 +1,28 @@
 import { createElement as h } from '../../picojs/framework/core.js';
-import { HAND_RESULTS, TEXT } from '../../utils/constants.js';
+import { HAND_RESULTS, TEXT, ASSETS } from '../../utils/constants.js';
 
 export function HistoryPanel({ history = [] }) {
   const safeHistory = history || [];
   const totalWins = safeHistory.filter(entry => entry.result === HAND_RESULTS.WIN).length;
   const totalLosses = safeHistory.length - totalWins;
+
+  const renderMiniTile = (tile) => {
+    const filename = tile.type === 'NUMBER'
+      ? `${tile.faceValue}_${tile.suit}.svg`
+      : `${tile.name}.svg`;
+    const imagePath = `${ASSETS.TILES.BASE}${filename}`;
+
+    return h('div', {
+      class: 'w-6 h-8 rounded-md bg-white/10 border border-white/5 p-0.5 flex items-center justify-center shadow-inner overflow-hidden',
+      title: tile.name
+    },
+      h('img', {
+        src: imagePath,
+        alt: tile.name,
+        class: 'w-full h-full object-contain'
+      })
+    );
+  };
 
   return h(
     'div',
@@ -60,22 +78,27 @@ export function HistoryPanel({ history = [] }) {
               'div',
               {
                 key: `hand-${entryId}`,
-                class: `flex items-center justify-between bg-white/[0.03] p-4 md:p-5 rounded-3xl border border-white/5 hover:bg-white/5 transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.07)] ${i === 0 ? 'animate-history-entry' : ''}`
+                class: `flex flex-col gap-3 bg-white/[0.03] p-4 md:p-5 rounded-3xl border border-white/5 hover:bg-white/5 transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.07)] ${i === 0 ? 'animate-history-entry' : ''}`
               },
-              h(
-                'div',
-                { class: 'flex items-center gap-3 md:gap-4' },
-                h('div', { class: `w-1 h-8 rounded-full ${isWin ? 'bg-emerald-500 shadow-[0_0_15px_#10b981]' : 'bg-rose-500'}` }),
-                h('div', {},
-                  h('p', { class: 'text-[9px] text-slate-500 font-black' }, TEXT.game.sessionHand(safeHistory.length - i)),
-                  h('p', { class: 'font-black text-xs md:text-sm uppercase tracking-wide' }, entry.result)
+              h('div', { class: 'flex items-center justify-between' },
+                h(
+                  'div',
+                  { class: 'flex items-center gap-3 md:gap-4' },
+                  h('div', { class: `w-1 h-8 rounded-full ${isWin ? 'bg-emerald-500 shadow-[0_0_15px_#10b981]' : 'bg-rose-500'}` }),
+                  h('div', {},
+                    h('p', { class: 'text-[9px] text-slate-500 font-black' }, TEXT.game.sessionHand(safeHistory.length - i)),
+                    h('p', { class: 'font-black text-xs md:text-sm uppercase tracking-wide' }, entry.result)
+                  )
+                ),
+                h(
+                  'div',
+                  { class: 'text-right' },
+                  h('p', { class: 'text-[9px] text-slate-500 font-black uppercase' }, TEXT.game.handValue),
+                  h('p', { class: `font-outfit font-black text-lg md:text-xl ${isWin ? 'text-emerald-400' : 'text-slate-200'}` }, displayValue)
                 )
               ),
-              h(
-                'div',
-                { class: 'text-right' },
-                h('p', { class: 'text-[9px] text-slate-500 font-black uppercase' }, TEXT.game.handValue),
-                h('p', { class: `font-outfit font-black text-lg md:text-xl ${isWin ? 'text-emerald-400' : 'text-slate-200'}` }, displayValue)
+              entry.hand && h('div', { class: 'flex flex-wrap gap-1.5 pt-1' },
+                ...entry.hand.map(renderMiniTile)
               )
             );
           })

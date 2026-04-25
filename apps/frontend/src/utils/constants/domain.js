@@ -5,7 +5,8 @@ export const BET_TYPES = {
 
 export const HAND_RESULTS = {
   WIN: 'WIN',
-  LOSS: 'LOSS'
+  LOSS: 'LOSS',
+  PUSH: 'PUSH'
 };
 
 export const GAME_ACTIONS = {
