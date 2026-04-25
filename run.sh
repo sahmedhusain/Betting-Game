@@ -134,8 +134,19 @@ show_help() {
     echo -e "  ./run.sh db reset"
 }
 
+check_docker() {
+    if [ -f /.dockerenv ] || grep -q 'docker' /proc/self/cgroup 2>/dev/null; then
+        echo -e "  [${CYAN}DOCKER${NC}] Running inside a container."
+        return 0
+    else
+        echo -e "  [${BLUE}NATIVE${NC}] Running on host system."
+        return 1
+    fi
+}
+
 check_deps() {
     echo -e "${CYAN}--- Dependency Check ---${NC}"
+    check_docker
     local missing=0
     
     check_tool() {
@@ -215,6 +226,15 @@ run_full_check() {
 
 # --- ACTIONS ---
 
+ensure_frontend_deps() {
+    if [ ! -d "$FRONTEND_DIR/node_modules" ]; then
+        log_warn "node_modules missing in $FRONTEND_DIR. Running npm install..."
+        cd "$FRONTEND_DIR" || exit
+        npm install
+        cd - > /dev/null || exit
+    fi
+}
+
 start_backend() {
     log_info "Starting Backend..."
     cd "$BACKEND_DIR" || exit
@@ -222,6 +242,7 @@ start_backend() {
 }
 
 start_frontend() {
+    ensure_frontend_deps
     log_info "Starting Frontend..."
     cd "$FRONTEND_DIR" || exit
     npm run dev
@@ -237,8 +258,9 @@ build_backend() {
 
 build_frontend() {
     log_info "Building Frontend..."
+    ensure_frontend_deps
     cd "$FRONTEND_DIR" || exit
-    npm install && npm run build
+    npm run build
     log_success "Frontend built in $FRONTEND_DIR/dist"
 }
 

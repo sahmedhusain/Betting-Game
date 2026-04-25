@@ -35,6 +35,12 @@ class SoundService {
     playLoss();
   }
 
+  async playPush() { 
+    if (this.isMuted) return;
+    const { playPush } = await import('../audio/sfx/push.js');
+    playPush();
+  }
+
   async playGameOver() { 
     if (this.isMuted) return;
     const { playGameOver } = await import('../audio/sfx/gameOver.js');

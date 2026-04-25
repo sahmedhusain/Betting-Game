@@ -121,7 +121,7 @@ export function GameView({ state, engine }) {
 
                   FloatingFeedback({
                     isVisible: floatingFeedback.isVisible,
-                    isWin: floatingFeedback.isWin,
+                    result: floatingFeedback.result,
                     position: floatingFeedback.position,
                     onAnimationEnd: null,
                   })

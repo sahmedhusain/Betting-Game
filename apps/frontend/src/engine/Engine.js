@@ -1,8 +1,8 @@
 import { store } from '../state/State.js';
 import { Deck } from './Deck.js';
-import { calculateHandValue, updateDynamicValue } from './TileConfig.js';
+import { calculateHandValue, updateDynamicValue, getTileValue } from './TileConfig.js';
 import { TILE_TYPES } from '../utils/constants.js';
-import { GAME_CONFIG, PHASES, BET_TYPES, TEXT } from '../utils/constants.js';
+import { GAME_CONFIG, PHASES, BET_TYPES, HAND_RESULTS, TEXT } from '../utils/constants.js';
 import { Api } from '../services/Api.js';
 import { soundService } from '../services/SoundService.js';
 import { SessionService } from '../services/SessionService.js';
@@ -84,7 +84,7 @@ class GameEngine {
   restoreSession(gameState) {
     if (gameState && gameState.deck_state) {
       this.deck.importState(gameState.deck_state);
-      
+
       store.setState({
         score: gameState.score,
         currentHand: gameState.current_hand,
@@ -102,7 +102,7 @@ class GameEngine {
         soundService.playAmbient();
         sessionStorage.setItem('game_active', 'true');
       }
-      
+
       this.loadLeaderboard();
     }
   }
@@ -127,13 +127,22 @@ class GameEngine {
     const prevReshuffleCount = state.reshuffleCount || 0;
     const nextHand = this.deck.draw(GAME_CONFIG.HAND_SIZE);
     const deckStats = this.deck.getStats();
-    
+
     if (deckStats.reshuffleCount > prevReshuffleCount) {
       store.setState({ isReshuffling: true });
       setTimeout(() => store.setState({ isReshuffling: false }), GAME_CONFIG.RESHUFFLE_DELAY_MS);
     }
 
     if (nextHand.length < GAME_CONFIG.HAND_SIZE) {
+      const finalState = store.getState();
+      store.setState({
+        history: [...finalState.history, createHistoryEntry({
+          hand: state.currentHand,
+          value: currentVal,
+          result: HAND_RESULTS.LOSS,
+          getTileValue
+        })]
+      });
       this.endGame();
       return;
     }
@@ -146,7 +155,7 @@ class GameEngine {
     } else if (result === HAND_RESULTS.LOSS) {
       soundService.playLoss();
     } else {
-      soundService.playClick(); // Tie sound fallback
+      soundService.playPush();
     }
 
     const boundaryHit = applyDynamicAdjustments({
@@ -190,11 +199,16 @@ class GameEngine {
       score: newScore,
       currentHand: nextHand,
       currentHandValue: nextVal,
-      history: [...state.history, createHistoryEntry({ hand: state.currentHand, value: currentVal, result })],
+      history: [...state.history, createHistoryEntry({
+        hand: state.currentHand,
+        value: currentVal,
+        result,
+        getTileValue
+      })],
       handDistributionNonce: (state.handDistributionNonce || 0) + 1,
       floatingFeedback: {
         isVisible: false,
-        isWin,
+        result,
         position: GAME_CONFIG.DEFAULT_FEEDBACK_POSITION
       },
       deckState: this.deck.exportState(),
@@ -209,7 +223,18 @@ class GameEngine {
     store.setState({ isResolvingBet: false });
 
     this.deck.discard(state.currentHand);
-    if (boundaryHit) this.endGame();
+    if (boundaryHit) {
+      const finalState = store.getState();
+      store.setState({
+        history: [...finalState.history, createHistoryEntry({
+          hand: nextHand,
+          value: nextVal,
+          result,
+          getTileValue
+        })]
+      });
+      this.endGame();
+    }
   }
 
   sleep(ms) {

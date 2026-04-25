@@ -17,9 +17,12 @@ export function clampScore(score) {
   return Math.max(0, score);
 }
 
-export function createHistoryEntry({ hand, value, result }) {
+export function createHistoryEntry({ hand, value, result, getTileValue }) {
   return {
-    hand,
+    hand: hand.map(tile => ({
+      ...tile,
+      historicalValue: getTileValue(tile)
+    })),
     value,
     result
   };

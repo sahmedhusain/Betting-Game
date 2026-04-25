@@ -56,7 +56,7 @@ export function ScoreBoard({ state }) {
         iconClass: 'icon-refresh',
         iconColorClass: 'text-amber-400',
         label: TEXT.game.reshuffles,
-        value: `${state.reshuffleCount || 0}/${GAME_CONFIG.MAX_RESHUFFLES}`,
+        value: `${state.reshuffleCount || 0}/${GAME_CONFIG.MAX_RESHUFFLES - 1}`,
         colorClass: 'text-amber-400',
         bgColor: 'bg-amber-500/[0.03]'
       }),

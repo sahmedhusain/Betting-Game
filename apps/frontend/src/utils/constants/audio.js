@@ -28,6 +28,14 @@ export const SFX_PROFILES = {
     type: 'sawtooth',
     slideTo: 110
   },
+  PUSH: {
+    notes: [
+      { frequency: 440, duration: 0.1, offset: 0 },
+      { frequency: 440, duration: 0.1, offset: 0.15 }
+    ],
+    volume: 0.1,
+    type: 'sine'
+  },
   GAME_OVER: {
     notes: [
       { frequency: 440, duration: 0.2, offset: 0 },
@@ -41,7 +49,7 @@ export const SFX_PROFILES = {
 
 export const AMBIENT_CONFIG = {
   FREQUENCIES: [110, 164.81],
-  VOLUME: 0.02,
+  VOLUME: 0.01,
   FILTER_FREQ: 300,
   FADE_IN_DURATION: 3,
   FADE_OUT_DURATION: 1.5

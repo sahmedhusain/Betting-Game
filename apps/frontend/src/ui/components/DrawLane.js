@@ -29,6 +29,24 @@ export function DrawLane({ state, isDistributing = false }) {
     h(
       'div',
       { class: 'relative w-full flex-1 flex items-center justify-center' },
+      
+      isReshuffling && Array.from({ length: 6 }).map((_, i) => {
+        return h('div', {
+          class: 'absolute w-[var(--play-tile-w)] h-[var(--play-tile-h)] rounded-2xl border border-white/10 bg-[#f8fafc] animate-card-fly-in opacity-0',
+          style: {
+            zIndex: 50,
+            animationDelay: `${i * 120}ms`,
+            transform: `rotate(${i * 15}deg) scale(0.8)`,
+          }
+        }, 
+          h('img', {
+            src: ASSETS.TILES.BACK,
+            alt: '',
+            class: 'w-full h-full object-cover rounded-2xl'
+          })
+        );
+      }),
+
       previewCount > 0
         ? Array.from({ length: previewCount }).map((_, i) => {
           const offset = i * 1.5;
